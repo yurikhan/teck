@@ -1,0 +1,148 @@
+body { font-family: Ubuntu, Arial, Helvetica, sans-serif; }
+
+address { float: right; text-align: right; opacity: 0.5; font-size: smaller; }
+form { display: block; margin-top: 5mm; background-color: #d3d7cf; color: black; padding: 5mm; }
+textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216; font-family: monospace; }
+.hidden { display: none; }
+.warning { background-color: #f78787; color: #000000; border-radius: 5mm; }
+
+#targets>div { display: inline-block; vertical-align: top; width: 157mm; }
+#targets>#teck { text-align: center;
+	padding: 5mm 5mm 20mm 5mm; background-color: #2e3436; color: #f7f8f5;
+	border-top: 2px solid #555753; border-left: 2px solid #555753;
+	border-bottom: 2px solid #000000; border-right: 2px solid #000000;
+	border-radius: 3mm;
+}
+#targets>#notes { display: inline-block; width: 81mm; }
+#layer-selector { margin-bottom: 10mm; text-align: left; }
+#pc { float: left; } #mac { float: right; } #t-fkeys { clear: both; }
+#t-keys input { width: 9mm; height: 9mm;
+	background-color: #2e3436; color: #f7f8f5;
+	background: linear-gradient(to right, rgba(85,87,83,0) 0%, rgba(85,87,83,0.3) 100%);
+	border-top: 2px solid #555753; border-left: 2px solid #555753;
+	border-bottom: 2px solid #000000; border-right: 2px solid #000000;
+	border-radius: 4px; font-size: 100%;
+}
+#targets #layer-selector { color: #d3d7cf; }
+#targets #teck.layer-1 #t-num, #targets #teck.layer-4 #t-num {
+	background: radial-gradient(circle at center 75%,
+		rgba(32,32,255,1) 0%,
+		rgba(32,32,255,0.25) 50%,
+		rgba(32,32,255,0) 100%);
+}
+#targets #teck.layer-2 .pc-fn, #targets #teck.layer-5 .mac-fn {
+	background-color: #171a1b; color: #f7f8f5;
+	border-top: 2px solid #000000; border-left: 2px solid #000000;
+	border-bottom: 2px solid #000000; border-right: 2px solid #000000;
+}
+#targets #teck.layer-2 input, #targets #teck.layer-5 input {
+	color: #97c4f0;
+}
+#targets .spacer { display: inline-block; width: 4mm; }
+#targets #t-fkeys { margin-bottom: 4mm; }
+#targets #t-gui, #targets #t-hen, #targets #t-tab, #targets #t-bksp,
+#targets #t-enter { background: rgba(85,87,83,0.15); width: 14.75mm; }
+#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl,
+#targets #t-apps, #targets #t-space { width: 19mm; }
+#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl
+{ background: rgba(85,87,83,0.15); }
+#targets #t-apps, #targets #t-space { background: linear-gradient(to bottom, rgba(85,87,83,0.3) 0%,rgba(85,87,83,0) 100%); }
+.stagger-1 input:nth-child(4), .stagger-1 input:nth-child(6),
+.stagger-1 input:nth-child(10), .stagger-1 input:nth-child(12),
+.stagger-2 input:nth-child(3), .stagger-2 input:nth-child(5),
+.stagger-2 input:nth-child(9), .stagger-2 input:nth-child(11),
+.cross {
+	position: relative; top: -1.5mm;
+}
+.stagger-1 input:nth-child(5), .stagger-1 input:nth-child(11),
+.stagger-2 input:nth-child(4), .stagger-2 input:nth-child(10)
+{
+	position: relative; top: -3mm;
+}
+.cross { vertical-align: top; display: inline-block; height: 19.5mm; margin-bottom: -12mm; }
+.cross>input, .cross>.stack { vertical-align: middle; display: inline-block; }
+.cross>.stack>input { display: block; }
+
+section header a { font-weight: normal; margin: 1mm 0mm;
+	text-decoration: none; border-bottom: dotted 1px; color: #000000; }
+section header a:before { content: '▽'; margin-right: 0.5em;
+	border-bottom: none; }
+section.collapsed header a:before { content: '▷'; }
+#sources section.collapsed kbd { display: none; }
+
+#sources { width: 233mm; padding: 3mm; clear: both;
+	border-left: 2px solid #d3d7cf; border-top: 2px solid #d3d7cf;
+	border-right: 4px solid #d3d7cf; border-bottom: 4px solid #d3d7cf;
+	margin-bottom: 5mm;
+	background-color: #f7f8f5; color: #000000; }
+#kbd div, #keypad div { margin: 0.75mm 0mm 0.75mm 0mm; }
+#kbd .row { display: table-row; }
+#kbd .main, #kbd .nav, #kbd .keypad { display: table-cell; padding: 1mm 1mm; }
+#kbd .main div, #kbd .nav div, #kbd .keypad div { height: 9.5mm; }
+#kbd .nav div { text-align: center; }
+#kbd .nav div * { text-align: left; }
+
+#kbd, #keypad, #rare, #media-note, #media, #al, #ac, #exotic { display: none; }
+.ansi #kbd, .iso #kbd, .jis #kbd, .keypad #keypad, .rare #rare,
+.media #media-note, .al #media-note, .ac #media-note, .exotic #media-note,
+.media #media, .al #al, .ac #ac, .exotic #exotic { display: block; }
+.ansi .iso-only, .ansi .jis-only,
+.iso .ansi-only, .iso .jis-only,
+.jis .ansi-only, .jis .iso-only, .jis .ansi-iso { display: none; }
+
+kbd {
+	display: inline-block; border-radius: 3px; cursor: default;
+	background-color: #f7f8f5; color: #000000; font-family: sans-serif; font-size: 4mm;
+	border-left: 0.25mm solid #d3d7cf; border-top: 0.25mm solid #d3d7cf;
+	border-right: 0.75mm solid #d3d7cf; border-bottom: 0.75mm solid #d3d7cf;
+	width: 8mm; height: 8mm;
+	margin: 0mm 0.5mm 0mm 0.5mm; padding: 0.5mm 0mm 0mm 0.5mm;
+}
+#rare kbd { min-width: 8mm; width: auto; margin: 0.5mm; padding: 0.5mm; }
+#media kbd, #al kbd, #ac kbd {
+	min-width: 6mm; min-height: 6mm;
+	height: auto; width: auto;
+	margin: 0.5mm; padding: 0.5mm;
+}
+kbd.dark, #media kbd, #al kbd, #ac kbd {
+	background-color: #d3d7cf; color: #000000;
+	border-left: 0.25mm solid #babdb6; border-top: 0.25mm solid #babdb6;
+	border-right: 0.75mm solid #babdb6; border-bottom: 0.75mm solid #babdb6;
+}
+kbd.red, #media kbd.red, #al kbd.red, #ac kbd.red {
+	background-color: #fff0d7; color: #000000;
+	border-left: 0.25mm solid #fcaf3e; border-top: 0.25mm solid #fcaf3e;
+	border-right: 0.75mm solid #fcaf3e; border-bottom: 0.75mm solid #fcaf3e;
+}
+.warn kbd.incompatible, .warn #media kbd.incompatible,
+.warn #al kbd.incompatible, .warn #ac kbd.incompatible {
+	background-color: #ecf0eb; color: #babdb6;
+	border: 0.25mm solid #babdb6;
+	padding-right: 0.25mm; padding-bottom: 0.25mm;
+}
+
+.spacer { display: inline-block; width: 5.75mm; vertical-align: top; }
+#esc+.spacer { width: 8.75mm; }
+.ansi #bksp, .iso #bksp { width: 18.25mm; }
+#tab, #bksl-ansi { width: 13.125mm; }
+#caps { width: 16.75mm; }
+.ansi #enter { width: 19.75mm; }
+.iso #enter, .jis #enter { width: 9.75mm; height: 18mm;
+	position: relative; top: -10mm; left: -0.25mm; }
+.ansi #lsh, .jis #lsh { width: 22mm; }
+.iso #lsh { width: 11.75mm; }
+.ansi #rsh, .iso #rsh { width: 24.75mm; }
+.jis #rsh { width: 14.5mm; }
+.ansi #lctrl, .iso #lctrl,
+.ansi #rctrl, .iso #rctrl { width: 14.5mm; }
+.ansi #lgui, .iso #lgui, .ansi #rgui, .iso #rgui,
+.ansi #lalt, .iso #lalt, .ansi #ralt, .iso #ralt,
+.ansi #apps, .iso #apps,
+#muhen, #hen, #kana { width: 11mm; }
+.jis #lctrl, .jis #rctrl, .jis #lalt, .jis #ralt { width: 9.5mm; }
+.ansi #space, .iso #space { width: 41.75mm; }
+.jis #space { width: 23.75mm; }
+#kplus, #kenter { height: 18.25mm; margin-bottom: -12mm;}
+#k0 { width: 18.5mm; }
+
+#fkeys { padding-bottom: 4mm; }
