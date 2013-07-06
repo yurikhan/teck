@@ -223,12 +223,7 @@
 CSEG AT 0000h
   0000 021B31           LJMP START
 
-pc_keycode:                                     ;byte __register(R7) pc_keycode(byte __register(R7) keyindex) {
-  0003 EF               MOV A, R7
-  0004 90072B           MOV DPTR, #072Bh
-  0007 93               MOVC A, @A+DPTR
-  0008 FF               MOV R7, A               ;   return pc_keycodes[keyindex];
-  0009 22               RET                     ;}
+;;; free 10 bytes
 
 CSEG AT 000Bh
 TIMER0:
@@ -387,7 +382,7 @@ L0042:                                          ;               do {
   00DD E6               MOV A, @R0
   00DE 6401             XRL A, #1h
   00E0 6003             JZ L0039                ;               } while (usb1_transmitting == 1);
-  00E2 0203B4           LJMP L0040
+  00E2 0203E0           LJMP L0024
 
 L0039:
   00E5 80F4             SJMP L0042
@@ -396,7 +391,7 @@ L0037:                                          ;           } else // not phanto
   00E7 783E             MOV R0, #3Eh
   00E9 E6               MOV A, @R0
   00EA 7003             JNZ L0043               ;           if (normal_key) {
-  00EC 0203B4           LJMP L0040
+  00EC 0203E0           LJMP L0024
 
 L0043:
   00EF 12191E           LCALL process_shift_f12 ;               process_shift_f12();
@@ -407,282 +402,68 @@ L0043:
   00F9 02030C           LJMP L0046
 
 L0045:
-  00FC 784D             MOV R0, #4Dh
-  00FE E6               MOV A, @R0
-  00FF 64EE             XRL A, #0EEh
-  0101 6005             JZ L0095                ;                   if ((keys_down[0] == 0xEE    // IntNum
-  0103 08               INC R0
-  0104 E6               MOV A, @R0
-  0105 B4EE0B           CJNE A, #0EEh, L0096    ;                           or keys_down[1] == 0xEE)
-L0095:
-  0108 784D             MOV R0, #4Dh
-  010A E6               MOV A, @R0
-  010B 6004             JZ L0097                ;                       and (keys_down[0] == 0
-  010D 08               INC R0
-  010E E6               MOV A, @R0
-  010F 7002             JNZ L0096               ;                           or keys_down[1] == 0))
-L0097:                                          ;                   {
-  0111 B2B5             CPL P3.5                ;                       P3./NUM = not P3./NUM;
-L0096:                                          ;                   }
-  0113 30B10A           JNB P3.1, L0098         ;                   if (P3./DIP4
-  0116 784D             MOV R0, #4Dh
-  0118 E6               MOV A, @R0
-  0119 B46404           CJNE A, #64h, L0098     ;                       and keys_down[0] == 0x64) // Euro2
-                                                ;                   {
-  011C 7689             MOV @R0, #89h           ;                       keys_down[0] = 0x89; // Yen
-  011E 800B             SJMP L0099
-L0098:                                          ;                   } else
-  0120 30B108           JNB P3.1, L0099         ;                   if (P3./DIP4
-  0123 784E             MOV R0, #4Eh
-  0125 E6               MOV A, @R0
-  0126 B46402           CJNE A, #64h, L0099     ;                       and keys_down[1] == 0x64) // Euro2
-                                                ;                   {
-  0129 7689             MOV @R0, #89h           ;                       keys_down[1] = 0x89; // Yen
-L0099:                                          ;                   }
-  012B 784D             MOV R0, #4Dh
-  012D E6               MOV A, @R0
-  012E 64DF             XRL A, #0DFh
-  0130 600B             JZ L0100                ;                   if ((keys_down[0] == 0xDF  // Fn
-  0132 08               INC R0
-  0133 E6               MOV A, @R0
-  0134 64DF             XRL A, #0DFh
-  0136 6005             JZ L0100                ;                           or keys_down[1] == 0xDF
-  0138 08               INC R0
-  0139 E6               MOV A, @R0
-  013A B4DF0A           CJNE A, #0DFh, L0101    ;                           or keys_down[2] == 0xDF)
-L0100:
-  013D 7803             MOV R0, #3h
-  013F E2               MOVX A, @R0
-  0140 7005             JNZ L0101               ;                       and fn_down == 0)
-                                                ;                   {
-  0142 7480             MOV A, #80h
-  0144 F2               MOVX @R0, A             ;                       fn_down = 0x80;
-  0145 8011             SJMP L0102
+  00FC 02027B           LJMP L9800
 
-L0101:                                          ;                   } else
-  0147 784D             MOV R0, #4Dh
-  0149 E6               MOV A, @R0
-  014A 6008             JZ L0143                ;                   if (keys_down[0] == 0
-  014C 08               INC R0
-  014D E6               MOV A, @R0
-  014E 6004             JZ L0143                ;                       or keys_down[1] == 0
-  0150 08               INC R0
-  0151 E6               MOV A, @R0
-  0152 7004             JNZ L0102               ;                       or keys_down[2] == 0)
-L0143:                                          ;                   {
-  0154 E4               CLR A
-  0155 7803             MOV R0, #3h
-  0157 F2               MOVX @R0, A             ;                       fn_down = 0;
-L0102:                                          ;                   }
-  0158 784D             MOV R0, #4Dh
-  015A E6               MOV A, @R0
-  015B 64DF             XRL A, #0DFh
-  015D 6009             JZ L0103                ;                   if (keys_down[0] == 0xDF // Fn
-  015F 08               INC R0
-  0160 E6               MOV A, @R0
-  0161 64DF             XRL A, #0DFh
-  0163 6003             JZ L0103                ;                       or keys_down[1] == 0xDF)
-  0165 020206           LJMP L0104              ;                   {
-L0103:
-  0168 784D             MOV R0, #4Dh
-  016A E6               MOV A, @R0
-  016B B43905           CJNE A, #39h, L0129     ;                       if (keys_down[0] == 0x39) { // Caps
-  016E 7649             MOV @R0, #49h           ;                           keys_down[0] = 0x49; // Ins
-  0170 020206           LJMP L0104
-L0129:                                          ;                       } else
-  0173 784E             MOV R0, #4Eh
-  0175 E6               MOV A, @R0
-  0176 B43905           CJNE A, #39h, L0130     ;                       if (keys_down[1] == 0x39) {
-  0179 7649             MOV @R0, #49h           ;                           keys_down[1] = 0x49;
-  017B 020206           LJMP L0104
-L0130:                                          ;                       } else
-  017E 784F             MOV R0, #4Fh
-  0180 E6               MOV A, @R0
-  0181 B43904           CJNE A, #39h, L0131     ;                       if (keys_down[2] == 0x39) {
-  0184 7649             MOV @R0, #49h           ;                           keys_down[2] = 0x49;
-  0186 807E             SJMP L0104
-
-L0131:                                          ;                       } else
-  0188 784D             MOV R0, #4Dh
-  018A E6               MOV A, @R0
-  018B B4EE04           CJNE A, #0EEh, L0132    ;                       if (keys_down[0] == 0xEE) { // IntNum
-  018E 7646             MOV @R0, #46h           ;                           keys_down[0] = 0x46; // PrtScr
-  0190 8074             SJMP L0104
-L0132:                                          ;                       } else
-  0192 784E             MOV R0, #4Eh
-  0194 E6               MOV A, @R0
-  0195 B4EE04           CJNE A, #0EEh, L0133    ;                       if (keys_down[1] == 0xEE) {
-  0198 7646             MOV @R0, #46h           ;                           keys_down[1] = 0x46;
-  019A 806A             SJMP L0104
-L0133:                                          ;                       } else
-  019C 784F             MOV R0, #4Fh
-  019E E6               MOV A, @R0
-  019F B4EE04           CJNE A, #0EEh, L0134    ;                       if (keys_down[2] == 0xEE) {
-  01A2 7646             MOV @R0, #46h           ;                           keys_down[2] = 0x46;
-  01A4 8060             SJMP L0104
-
-L0134:                                          ;                       } else
-  01A6 784B             MOV R0, #4Bh
-  01A8 E6               MOV A, @R0
-  01A9 30E30A           JNB ACC.3, L0135        ;                       if (key_modifiers.LWin) {
-  01AC E6               MOV A, @R0
-  01AD 54F7             ANL A, #0F7h
-  01AF F6               MOV @R0, A              ;                           key_modifiers.LWin = false;
-  01B0 784E             MOV R0, #4Eh
-  01B2 7647             MOV @R0, #47h           ;                           keys_down[1] = 0x47; // Scroll
-  01B4 8050             SJMP L0104
-
-L0135:                                          ;                       } else
-  01B6 784D             MOV R0, #4Dh
-  01B8 E6               MOV A, @R0
-  01B9 B42207           CJNE A, #22h, L0136     ;                       if (keys_down[0] == 0x22) { // 5%
-  01BC 784B             MOV R0, #4Bh
-  01BE E6               MOV A, @R0
-  01BF 4480             ORL A, #80h
-  01C1 8018             SJMP L0137              ;                           key_modifiers.RWin = true;
-                                                ;                           keys_down[0] = 0x48; // Pause
-L0136:                                          ;                       } else
-  01C3 784E             MOV R0, #4Eh
-  01C5 E6               MOV A, @R0
-  01C6 B42207           CJNE A, #22h, L0138     ;                       if (keys_down[1] == 0x22) {
-  01C9 784B             MOV R0, #4Bh
-  01CB E6               MOV A, @R0
-  01CC 4480             ORL A, #80h
-  01CE 801D             SJMP L0139              ;                           key_modifiers.RWin = true;
-                                                ;                           keys_down[1] = 0x48;
-
-L0138:                                          ;                       } else
-  01D0 784D             MOV R0, #4Dh
-  01D2 E6               MOV A, @R0
-  01D3 B4230C           CJNE A, #23h, L0140     ;                       if (keys_down[0] == 0x23) { // 6^
-  01D6 784B             MOV R0, #4Bh
-  01D8 E6               MOV A, @R0
-  01D9 4410             ORL A, #10h
-L0137:
-  01DB F6               MOV @R0, A              ;                           key_modifiers.RCtrl = true;
-  01DC 784D             MOV R0, #4Dh
-  01DE 7648             MOV @R0, #48h           ;                           keys_down[0] = 0x48; // Pause
-  01E0 8024             SJMP L0104
-L0140:                                          ;                       } else
-  01E2 784E             MOV R0, #4Eh
-  01E4 E6               MOV A, @R0
-  01E5 B4230C           CJNE A, #23h, L0141     ;                       if (keys_down[1] == 0x23) { // 6^
-  01E8 784B             MOV R0, #4Bh
-  01EA E6               MOV A, @R0
-  01EB 4410             ORL A, #10h
-L0139:
-  01ED F6               MOV @R0, A              ;                           key_modifiers.RCtrl = true;
-  01EE 784E             MOV R0, #4Eh
-  01F0 7648             MOV @R0, #48h           ;                           keys_down[1] = 0x48;
-  01F2 8012             SJMP L0104
-
-L0141:                                          ;                       } else
-  01F4 784D             MOV R0, #4Dh
-  01F6 E6               MOV A, @R0
-  01F7 B42904           CJNE A, #29h, L0142     ;                       if (keys_down[0] == 0x29) { // Esc
-  01FA 7693             MOV @R0, #93h           ;                           keys_down[0] = 0x93; // Hiragana
-  01FC 8008             SJMP L0104
-L0142:                                          ;                       } else
-  01FE 784E             MOV R0, #4Eh
-  0200 E6               MOV A, @R0
-  0201 B42902           CJNE A, #29h, L0104     ;                       if (keys_down[1] == 0x29) {
-  0204 7693             MOV @R0, #93h           ;                           keys_down[1] = 0x93;
-L0104:                                          ;                   }   } // if 0xDF in [keys_down[0], keys_down[1]]
-
-
-  0206 20EA0A           JB 0EAh, L0105          ;                   if (not P4./DIP1
-  0209 784D             MOV R0, #4Dh
-  020B E6               MOV A, @R0
-  020C B48A04           CJNE A, #8Ah, L0105     ;                       and keys_down[0] == 0x8A) // Henkan
-                                                ;                   {
-  020F 764C             MOV @R0, #4Ch           ;                       keys_down[0] = 0x4C; // Del
-  0211 800B             SJMP L0106
-L0105:                                          ;                   } else
-  0213 20EA08           JB 0EAh, L0106          ;                   if (not P4./DIP1
-  0216 784E             MOV R0, #4Eh
-  0218 E6               MOV A, @R0
-  0219 B48A02           CJNE A, #8Ah, L0106     ;                       and keys_down[1] == 0x8A) // Henkan
-                                                ;                   {
-  021C 764C             MOV @R0, #4Ch           ;                       keys_down[1] = 0x4C; // Del
-L0106:                                          ;                   }
-  021E 784D             MOV R0, #4Dh
-  0220 E6               MOV A, @R0
-  0221 64DF             XRL A, #0DFh
-  0223 6005             JZ L0107                ;                   if (keys_down[0] == 0xDF
-  0225 08               INC R0
-  0226 E6               MOV A, @R0
-  0227 B4DF18           CJNE A, #0DFh, L0108    ;                       or keys_down[1] == 0xDF)
-L0107:                                          ;                   {
-  022A 30EA0A           JNB 0EAh, L0109         ;                       if (P4./DIP1
-  022D 784D             MOV R0, #4Dh
-  022F E6               MOV A, @R0
-  0230 B48A04           CJNE A, #8Ah, L0109     ;                           and keys_down[0] == 0x8A) // Henkan
-                                                ;                       {
-  0233 768B             MOV @R0, #8Bh           ;                           keys_down[0] = 0x8B; // Muhenkan
-  0235 800B             SJMP L0108
-L0109:                                          ;                       } else
-  0237 30EA08           JNB 0EAh, L0108         ;                       if (P4./DIP1
-  023A 784E             MOV R0, #4Eh
-  023C E6               MOV A, @R0
-  023D B48A02           CJNE A, #8Ah, L0108     ;                           and keys_down[1] == 0x8A)
-                                                ;                       {
-  0240 768B             MOV @R0, #8Bh           ;                           keys_down[1] = 0x8B;
-L0108:                                          ;                   }   }
-  0242 784D             MOV R0, #4Dh
-  0244 E6               MOV A, @R0
-  0245 B4DF09           CJNE A, #0DFh, L0110    ;                   if (keys_down[0] == 0xDF // Fn
-  0248 08               INC R0
-  0249 E6               MOV A, @R0
-  024A B4CF04           CJNE A, #0CFh, L0110    ;                       and keys_down[1] == 0xCF) // MGUI
-                                                ;                   {
-  024D 7647             MOV @R0, #47h           ;                       keys_down[1] = 0x47; // Scroll
-  024F 8025             SJMP L0111
-L0110:                                          ;                   } else
-  0251 784E             MOV R0, #4Eh
-  0253 E6               MOV A, @R0
-  0254 B4DF09           CJNE A, #0DFh, L0126    ;                   if (keys_down[1] == 0xDF
-  0257 18               DEC R0
-  0258 E6               MOV A, @R0
-  0259 B4CF04           CJNE A, #0CFh, L0126    ;                       and keys_down[0] == 0xCF)
-                                                ;                   {
-  025C 7647             MOV @R0, #47h           ;                       keys_down[0] = 0x47;
-  025E 8016             SJMP L0111
-L0126:                                          ;                   } else
-  0260 784D             MOV R0, #4Dh
-  0262 E6               MOV A, @R0
-  0263 B4CF02           CJNE A, #0CFh, L0127    ;                   if (*(R0 = &keys_down[0]) == 0xCF
-  0266 8006             SJMP L0128
-L0127:
-  0268 784E             MOV R0, #4Eh
-  026A E6               MOV A, @R0
-  026B B4CF08           CJNE A, #0CFh, L0111    ;                       or *(R0 = &keys_down[1]) == 0xCF)
-L0128:                                          ;                   {
-  026E E4               CLR A
-  026F F6               MOV @R0, A              ;                       *R0 = 0;
-  0270 784B             MOV R0, #4Bh
-  0272 E6               MOV A, @R0
-  0273 4408             ORL A, #8h
-  0275 F6               MOV @R0, A              ;                       key_modifiers.LWin = true;
-L0111:                                          ;                   }
-  0276 784D             MOV R0, #4Dh
-  0278 E6               MOV A, @R0
-  0279 B4DF09           CJNE A, #0DFh, L0112    ;                   if (keys_down[0] == 0xDF) { // Fn
-  027C E4               CLR A
-  027D F6               MOV @R0, A              ;                       keys_down[0] = 0;
-  027E 7803             MOV R0, #3h
-  0280 74DD             MOV A, #0DDh
-  0282 F2               MOVX @R0, A             ;                       fn_down = 0xDD;
-  0283 800D             SJMP L0113
-L0112:                                          ;                   } else
-  0285 784E             MOV R0, #4Eh
-  0287 E6               MOV A, @R0
-  0288 B4DF07           CJNE A, #0DFh, L0113    ;                   if (keys_down[1] == 0xDF) {
-  028B E4               CLR A
-  028C F6               MOV @R0, A              ;                       keys_down[1] = 0;
-  028D 7803             MOV R0, #3h
-  028F 7477             MOV A, #77h
-  0291 F2               MOVX @R0, A             ;                       fn_down = 0x77;
-L0113:                                          ;                   }
+pc_fn_keycodes:                                 ;static const byte pc_fn_keycodes[18*8] = {
+  00FF 00008B0000000000                         ;   0,    0,      Muhen,  0,       0,    0,         0,      0,
+  0107 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  010F 0000004700000000                         ;   0,    0,      0,      Scroll,  0,    0,         0,      0,
+  0117 0000490000000000                         ;   0,    0,      Ins,    0,       0,    0,         0,      0,
+  011F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0127 0000004600000000                         ;   0,    0,      0,      PrtScr,  0,    0,         0,      0,
+  012F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0137 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  013F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0147 00E900EA00930000                         ;   0,    Media1, 0,      Media2,  0,    Hiragana,  0,      0,
+  014F 00EBF5EC00000000                         ;   0,    Media3, Media13,Media4,  0,    0,         0,      0,
+  0157 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  015F 000000AD00000000                         ;   0,    0,      0,      WinBrk,  0,    0,         0,      0,
+  0167 00AE000000000000                         ;   0,    CtrlBrk,0,      0,       0,    0,         0,      0,
+  016F 00ED00EE00000000                         ;   0,    Media5, 0,      Media6,  0,    0,         0,      0,
+  0177 00EF00F000000000                         ;   0,    Media7, 0,      Media8,  0,    0,         0,      0,
+  017F 00F100F200000000                         ;   0,    Media9, 0,      Media10, 0,    0,         0,      0,
+  0187 00F300F400000000                         ;   0,    Media11,0,      Media12, 0,    0,         0,      0
+                                                ;}
+mac_fn_keycodes:                                ;static const byte mac_fn_keycodes[18*8] = {
+  018F 00008B0000000000                         ;   0,    0,      Muhen,  0,       0,    0,         0,      0,
+  0197 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  019F 0000004700000000                         ;   0,    0,      0,      Scroll,  0,    0,         0,      0,
+  01A7 0000490000000000                         ;   0,    0,      Ins,    0,       0,    0,         0,      0,
+  01AF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  01B7 0000004600000000                         ;   0,    0,      0,      PrtScr,  0,    0,         0,      0,
+  01BF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  01C7 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  01CF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  01D7 00E900EA00930000                         ;   0,    Media1, 0,      Media2,  0,    Hiragana,  0,      0,
+  01DF 00EBF5EC00000000                         ;   0,    Media3, Media13,Media4,  0,    0,         0,      0,
+  01E7 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  01EF 000000AD00000000                         ;   0,    0,      0,      WinBrk,  0,    0,         0,      0,
+  01F7 00AE000000000000                         ;   0,    CtrlBrk,0,      0,       0,    0,         0,      0,
+  01FF 00ED00EE00000000                         ;   0,    Media5, 0,      Media6,  0,    0,         0,      0,
+  0207 00EF00F000000000                         ;   0,    Media7, 0,      Media8,  0,    0,         0,      0,
+  020F 00F100F200000000                         ;   0,    Media9, 0,      Media10, 0,    0,         0,      0,
+  0217 00F300F400000000                         ;   0,    Media11,0,      Media12, 0,    0,         0,      0
+                                                ;}
+;;; 92 bytes free
+CSEG AT 027Bh
+L9800:
+  027B 784D             MOV R0, #4Dh
+  027D E6               MOV A, @R0
+  027E B4AD04           CJNE A, #0ADh, L9401    ;                   if (keys_down[0] == 0xAD) { // WinBrk
+  0281 7480             MOV A, #80h
+  0283 8005             SJMP L9402              ;                       key_modifiers.RWin = true;
+                                                ;                       keys_down[0] = 0x48; // Pause
+                                                ;                   } else
+L9401:
+  0285 B4AE0A           CJNE A, #0AEh, L0104    ;                   if (keys_down[0] == 0xAE) { // CtrlBrk
+  0288 7410             MOV A, #10h
+L9402:
+  028A 784B             MOV R0, #4Bh
+  028C 46               ORL A, @R0
+  028D F6               MOV @R0, A              ;                       key_modifiers.RCtrl = true;
+  028E 784D             MOV R0, #4Dh
+  0290 7648             MOV @R0, #48h           ;                       keys_down[0] = 0x48; // Pause
+L0104:                                          ;                   }
   0292 121502           LCALL numlock_on        ;                   numlock_on();
   0295 7805             MOV R0, #5h
   0297 E2               MOVX A, @R0
@@ -731,28 +512,28 @@ L0117:                                          ;                   do {
   02D9 784B             MOV R0, #4Bh
   02DB E6               MOV A, @R0
   02DC 6003             JZ L0118                ;                   if (key_modifiers == 0
-  02DE 0203B4           LJMP L0040
+  02DE 0203E0           LJMP L0024
 L0118:
   02E1 784D             MOV R0, #4Dh
   02E3 E6               MOV A, @R0
   02E4 6003             JZ L0119                ;                       and keys_down[0] == 0
-  02E6 0203B4           LJMP L0040
+  02E6 0203E0           LJMP L0024
 L0119:
   02E9 08               INC R0
   02EA E6               MOV A, @R0
   02EB 6003             JZ L0120                ;                       and keys_down[1] == 0
-  02ED 0203B4           LJMP L0040
+  02ED 0203E0           LJMP L0024
 L0120:
   02F0 7804             MOV R0, #4h
   02F2 E2               MOVX A, @R0
   02F3 6003             JZ L0121                ;                       and numlock_timer == 0
-  02F5 0203B4           LJMP L0040
+  02F5 0203E0           LJMP L0024
 L0121:
   02F8 08               INC R0
   02F9 E2               MOVX A, @R0
   02FA 64CC             XRL A, #0CCh
   02FC 6003             JZ L0122                ;                       and numlock_state == 0xCC)
-  02FE 0203B4           LJMP L0040
+  02FE 0203E0           LJMP L0024
 L0122:                                          ;                   {
   0301 18               DEC R0
   0302 74FF             MOV A, #0FFh
@@ -760,7 +541,7 @@ L0122:                                          ;                   {
   0305 08               INC R0
   0306 7488             MOV A, #88h
   0308 F2               MOVX @R0, A             ;                       numlock_state = 0x88;
-  0309 0203B4           LJMP L0040
+  0309 0203E0           LJMP L0024
                                                 ;                   }
 L0046:                                          ;               } else /*kb_mode != 0x5A*/
   030C 7844             MOV R0, #44h
@@ -774,7 +555,7 @@ L0046:                                          ;               } else /*kb_mode
   031A 7006             JNZ L0047               ;                   and keys_down[0] == 0)
   031C 7844             MOV R0, #44h            ;               {
   031E F6               MOV @R0, A              ;                   after_macro = 0;
-  031F 0203B4           LJMP L0040
+  031F 0203E0           LJMP L0024
 L0047:                                          ;               } else {
   0322 E4               CLR A
   0323 784A             MOV R0, #4Ah
@@ -785,7 +566,7 @@ L0054:                                          ;                   for (keydown
   0329 C3               CLR C
   032A 9406             SUBB A, #6h
   032C 4003             JC L0048
-  032E 0203B4           LJMP L0040
+  032E 0203E0           LJMP L0024
 L0048:
   0331 120B69           LCALL find_macro        ;                       if (find_macro(&keydown_index)) {
   0334 500C             JNC L0050
@@ -873,38 +654,12 @@ L0053:
   03AB 244D             ADD A, #4Dh
   03AD F8               MOV R0, A
   03AE E6               MOV A, @R0
-  03AF 6003             JZ L0040
+  03AF 602F             JZ L0024
   03B1 020326           LJMP L0054              ;                   }
-
-L0040:                                          ;           }   }
-  03B4 784D             MOV R0, #4Dh
-  03B6 E6               MOV A, @R0
-  03B7 7012             JNZ L0041               ;           if (keys_down[0] == 0
-  03B9 7803             MOV R0, #3h
-  03BB E2               MOVX A, @R0
-  03BC B4DD0C           CJNE A, #0DDh, L0041    ;               and fn_down == 0xDD
-  03BF 7821             MOV R0, #21h
-  03C1 E6               MOV A, @R0
-  03C2 B45A06           CJNE A, #5Ah, L0041     ;               and kb_mode == 0x5A)
-                                                ;           {
-  03C5 784D             MOV R0, #4Dh
-  03C7 76DF             MOV @R0, #0DFh          ;               keys_down[0] = 0xDF; // Fn
-  03C9 8015             SJMP L0024
-
-L0041:                                          ;           } else
-  03CB 784E             MOV R0, #4Eh
-  03CD E6               MOV A, @R0
-  03CE 7010             JNZ L0024               ;           if (keys_down[1] == 0
-  03D0 7803             MOV R0, #3h
-  03D2 E2               MOVX A, @R0
-  03D3 B4770A           CJNE A, #77h, L0024     ;               and fn_down == 0x77
-  03D6 7821             MOV R0, #21h
-  03D8 E6               MOV A, @R0
-  03D9 B45A04           CJNE A, #5Ah, L0024     ;               and kb_mode == 0x5A)
-                                                ;           {
-  03DC 784E             MOV R0, #4Eh
-  03DE 76DF             MOV @R0, #0DFh          ;               keys_down[1] = 0xDF; // Fn
-L0024:                                          ;       }   } // column_index == 0x12
+                                                ;           }   }
+;;; 44 bytes free
+CSEG AT 03E0h
+L0024:                                          ;       } // column_index == 0x12
   03E0 7846             MOV R0, #46h
   03E2 E6               MOV A, @R0
   03E3 603B             JZ L0025                ;       if (media_report_ready) {
@@ -1558,7 +1313,7 @@ L0370:                                          ;   } else {
   0743 8781392C83E0E48B                         ;   Ro,   Vol-,   Caps,   Space,   Num,  LCtrl,     RCtrl,  Muhenkan,
                                                 ;   ^^                                   ^^^^^      ^^^^^
   074B 004FE76552008A88                         ;   0,    Right,  RGUI,   App,     Up,   0,         Henkan, Kata/Hira,
-  0753 E25600EE890087E6                         ;   LAlt, KP-,    0,      IntNum,  Yen,  0,         Ro,     RAlt,
+  0753 E25600DE890087E6                         ;   LAlt, KP-,    0,      IntNum,  Yen,  0,         Ro,     RAlt,
   075B 0048000000E1E500                         ;   0,    Pause,  0,      0,       0,    LShift,    RShift, 0,
   0763 00474858DF880000                         ;   0,    Scroll, Pause,  KPEnter, Fn,   Kata/Hira, 0,      0,
                                                 ;                                        ^^^^^^^^^
@@ -1578,12 +1333,12 @@ L0370:                                          ;   } else {
                                                 ;byte mac_keycodes[18*8] = {
   07BB 00008A0000643500                         ;   0,     0,      Henkan, 0,       0,    Euro2,  `~,     0,
   07C3 0000000000000000                         ;   0,     0,      0,      0,       0,    0,      0,      0,
-  07CB 041F2BCF1E141D00                         ;   A,     2@,     Tab,    0CFh,    1!,   Q,      Z,      0,
+  07CB 041F2BE31E141D00                         ;   A,     2@,     Tab,    LGUI,    1!,   Q,      Z,      0,
                                                 ;                          ^^^^
   07D3 E481392C83E3E78B                         ;   RCtrl, Vol-,   Caps,   Space,   Num,  LGUI,   RGUI,   Muhenkan,
                                                 ;   ^^^^^                                 ^^^^    ^^^^
   07DB 004FE76552008A88                         ;   0,     Right,  RGUI,   App,     Up,   0,      Henkan, Kata/Hira,
-  07E3 E25600EE890087E6                         ;   LAlt,  KP-,    0,      IntNum,  Yen,  0,      Ro,     RAlt,
+  07E3 E25600DE890087E6                         ;   LAlt,  KP-,    0,      IntNum,  Yen,  0,      Ro,     RAlt,
   07EB 0048000000E1E500                         ;   0,     Pause,  0,      0,       0,    LShift, RShift, 0,
   07F3 00474858DFE00000                         ;   0,     Scroll, Pause,  KPEnter, Fn,   LCtrl,  0,      0,
                                                 ;                                         ^^^^^
@@ -1612,7 +1367,7 @@ L0160:                                          ;   for (byte __volatile(v53) i 
   0856 C3               CLR C
   0857 9408             SUBB A, #8h
   0859 4003             JC L0156
-  085B 02095F           LJMP L0157
+  085B 020898           LJMP L0157
 
 L0156:
   085E 7924             MOV R1, #24h
@@ -1620,7 +1375,7 @@ L0156:
   0861 7856             MOV R0, #56h
   0863 56               ANL A, @R0
   0864 7003             JNZ L0158               ;       if (column_value & mask) {
-  0866 020953           LJMP L0159
+  0866 02088D           LJMP L0159
 
 L0158:
   0869 7823             MOV R0, #23h
@@ -1629,166 +1384,58 @@ L0158:
   086D 33               RLC A
   086E 33               RLC A
   086F 54F8             ANL A, #0F8h
-  0871 783B             MOV R0, #3Bh
-  0873 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3;
-  0874 7853             MOV R0, #53h
-  0876 E6               MOV A, @R0
-  0877 783B             MOV R0, #3Bh
-  0879 26               ADD A, @R0
-  087A F6               MOV @R0, A              ;           key_index += i;
-  087B 30E907           JNB 0E9h, L0161         ;           if (P4./DIP2) {
-  087E E6               MOV A, @R0
-  087F FF               MOV R7, A
-  0880 121B46           LCALL mac_keycode       ;               R7 = mac_keycode(key_index);
-  0883 8007             SJMP L0163
-L0161:                                          ;           } else {
-  0885 783B             MOV R0, #3Bh
-  0887 E6               MOV A, @R0
-  0888 FF               MOV R7, A
-  0889 120003           LCALL pc_keycode        ;               R7 = pc_keycode(key_index);
-L0163:                                          ;           }
-  088C 783C             MOV R0, #3Ch
-  088E EF               MOV A, R7
-  088F F6               MOV @R0, A              ;           keycode = R7;
-  0890 20B208           JB P3.2, L0164          ;           if (not P3./DIP3) {
-  0893 783C             MOV R0, #3Ch
-  0895 E6               MOV A, @R0
-  0896 B46502           CJNE A, #65h, L0164     ;               if (keycode == 0x65) // App
-  0899 762C             MOV @R0, #2Ch           ;                   keycode = 0x2C; // Space
-L0164:                                          ;           }
-  089B 30B503           JNB P3.5, L0165         ;           if (not P3./NUM
-  089E 020950           LJMP L0166
-L0165:
-  08A1 7821             MOV R0, #21h
-  08A3 E6               MOV A, @R0
-  08A4 645A             XRL A, #5Ah
-  08A6 6003             JZ L0172                ;               and kb_mode == KBMODE_NORMAL)
-  08A8 020950           LJMP L0166              ;           {
-L0172:
-  08AB 783C             MOV R0, #3Ch
-  08AD E6               MOV A, @R0
-  08AE FF               MOV R7, A               ;               switch (keycode) {
-  08AF B42405           CJNE A, #24h, L0173     ;               case 0x24: // 7&
-  08B2 765F             MOV @R0, #5Fh           ;                   keycode = 0x5F; // KP7
-  08B4 02094D           LJMP L0174              ;                   break;
-L0173:
-  08B7 EF               MOV A, R7
-  08B8 B42507           CJNE A, #25h, L0177     ;               case 0x25: // 8*
-  08BB 783C             MOV R0, #3Ch
-  08BD 7660             MOV @R0, #60h           ;                   keycode = 0x60; // KP8
-  08BF 02094D           LJMP L0174              ;                   break;
-
-L0177:
-  08C2 EF               MOV A, R7
-  08C3 B42607           CJNE A, #26h, L0178     ;               case 0x26: // 9(
-  08C6 783C             MOV R0, #3Ch
-  08C8 7661             MOV @R0, #61h           ;                   keycode = 0x61; // KP9
-  08CA 02094D           LJMP L0174              ;                   break;
-
-L0178:
-  08CD EF               MOV A, R7
-  08CE B41806           CJNE A, #18h, L0179     ;               case 0x18: // U
-  08D1 783C             MOV R0, #3Ch
-  08D3 765C             MOV @R0, #5Ch           ;                   keycode = 0x5C; // KP4
-  08D5 8076             SJMP L0174              ;                   break;
-
-L0179:
-  08D7 EF               MOV A, R7
-  08D8 B40C06           CJNE A, #0Ch, L0180     ;               case 0x0C: // I
-  08DB 783C             MOV R0, #3Ch
-  08DD 765D             MOV @R0, #5Dh           ;                   keycode = 0x5D; // KP5
-  08DF 806C             SJMP L0174              ;                   break;
-
-L0180:
-  08E1 EF               MOV A, R7
-  08E2 B41206           CJNE A, #12h, L0181     ;               case 0x12: // O
-  08E5 783C             MOV R0, #3Ch
-  08E7 765E             MOV @R0, #5Eh           ;                   keycode = 0x5E; // KP6
-  08E9 8062             SJMP L0174              ;                   break;
-
-L0181:
-  08EB EF               MOV A, R7
-  08EC B41306           CJNE A, #13h, L0182     ;               case 0x13: // P
-  08EF 783C             MOV R0, #3Ch
-  08F1 7654             MOV @R0, #54h           ;                   keycode = 0x54; // KP/
-  08F3 8058             SJMP L0174              ;                   break;
-
-L0182:
-  08F5 EF               MOV A, R7
-  08F6 B40D06           CJNE A, #0Dh, L0183     ;               case 0x0D: // J
-  08F9 783C             MOV R0, #3Ch
-  08FB 7659             MOV @R0, #59h           ;                   keycode = 0x59; // KP1
-  08FD 804E             SJMP L0174              ;                   break;
-
-L0183:
-  08FF EF               MOV A, R7
-  0900 B40E06           CJNE A, #0Eh, L0184     ;               case 0x0E: // K
-  0903 783C             MOV R0, #3Ch
-  0905 765A             MOV @R0, #5Ah           ;                   keycode = 0x5A; // KP2
-  0907 8044             SJMP L0174              ;                   break;
-
-L0184:
-  0909 EF               MOV A, R7
-  090A B40F06           CJNE A, #0Fh, L0185     ;               case 0x0F: // L
-  090D 783C             MOV R0, #3Ch
-  090F 765B             MOV @R0, #5Bh           ;                   keycode = 0x5B; // KP3
-  0911 803A             SJMP L0174              ;                   break;
-
-L0185:
-  0913 EF               MOV A, R7
-  0914 B43306           CJNE A, #33h, L0186     ;               case 0x33: // ;:
-  0917 783C             MOV R0, #3Ch
-  0919 7655             MOV @R0, #55h           ;                   keycode = 0x55; // KP*
-  091B 8030             SJMP L0174              ;                   break;
-
-L0186:
-  091D EF               MOV A, R7
-  091E B41006           CJNE A, #10h, L0187     ;               case 0x10: // M
-  0921 783C             MOV R0, #3Ch
-  0923 7662             MOV @R0, #62h           ;                   keycode = 0x62; // KP0
-  0925 8026             SJMP L0174              ;                   break;
-
-L0187:
-  0927 EF               MOV A, R7
-  0928 B43706           CJNE A, #37h, L0188     ;               case 0x37: // .>
-  092B 783C             MOV R0, #3Ch
-  092D 7663             MOV @R0, #63h           ;                   keycode = 0x63; // KP.
-  092F 801C             SJMP L0174              ;                   break;
-
-L0188:
-  0931 EF               MOV A, R7
-  0932 B42D06           CJNE A, #2Dh, L0189     ;               case 0x2D: // -_
-  0935 783C             MOV R0, #3Ch
-  0937 7656             MOV @R0, #56h           ;                   keycode = 0x56; // KP-
-  0939 8012             SJMP L0174              ;                   break;
-
-L0189:
-  093B EF               MOV A, R7
-  093C B42E06           CJNE A, #2Eh, L0190     ;               case 0x2E: // =+
-  093F 783C             MOV R0, #3Ch
-  0941 7657             MOV @R0, #57h           ;                   keycode = 0x57; // KP+
-  0943 8008             SJMP L0174              ;                   break;
-
-L0190:
-  0945 EF               MOV A, R7
-  0946 B42807           CJNE A, #28h, L0166     ;               case 0x28: // Enter
-  0949 783C             MOV R0, #3Ch
-  094B 7658             MOV @R0, #58h           ;                   keycode = 0x58; // KPEnter
-L0174:                                          ;               } // switch (keycode)
-  094D 121B01           LCALL trigger_numlock   ;               trigger_numlock();
+  0871 7853             MOV R0, #53h
+  0873 26               ADD A, @R0
+  0874 783B             MOV R0, #3Bh
+  0876 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3 + i;
+  0877 FF               MOV R7, A
+  0878 120B1E           LCALL get_keycode       ;           R7 = get_keycode(key_index);
+  087B 08               INC R0
+  087C EF               MOV A, R7
+  087D F6               MOV @R0, A              ;           keycode = R7
+  087E C3               CLR C                   ;           // keycode is still in R7 and A
+  087F 9459             SUBB A, #59h
+  0881 4007             JC L0166
+  0883 940B             SUBB A, #0Bh
+  0885 5003             JNC L0166               ;           if (0x59 <= keycode <= 0x63) { // NumLock-dependent
+  0887 121B01           LCALL trigger_numlock   ;               trigger_numlock();
 L0166:                                          ;           } // if NumLock and kb_mode == 0x5A
-  0950 1213E9           LCALL store_key         ;           store_key();
+  088A 1213E9           LCALL store_key         ;           store_key();
 L0159:                                          ;       } // if
-  0953 7853             MOV R0, #53h
-  0955 06               INC @R0
-  0956 7856             MOV R0, #56h
-  0958 E6               MOV A, @R0
-  0959 25E0             ADD A, ACC
-  095B F6               MOV @R0, A
-  095C 020853           LJMP L0160              ;   } // for
+  088D 7853             MOV R0, #53h
+  088F 06               INC @R0
+  0890 7856             MOV R0, #56h
+  0892 E6               MOV A, @R0
+  0893 25E0             ADD A, ACC
+  0895 F6               MOV @R0, A
+  0896 80BB             SJMP L0160              ;   } // for
 L0157:
-  095F 22               RET                     ;}
+  0898 22               RET                     ;}
+;;; 21 bytes free
 
+pc_num_keycodes:                                ;static const byte pc_num_keycodes[18*8] = {
+  08AE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08B6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08BE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08C6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08CE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08D6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08DE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08E6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08EE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08F6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  08FE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0906 00000054605D5A00                         ;   0,   0, 0,       KP/, KP8, KP5, KP2, 0,
+  090E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0916 5C005F6700005900                         ;   KP4, 0, KP7,     KP=, 0,   0,   KP1, 0,
+  091E 0000580000000000                         ;   0,   0, KPEnter, 0,   0,   0,   0,   0,
+  0926 0000000055615B5E                         ;   0,   0, 0,       0,   KP*, KP9, KP3, KP6,
+  092E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
+  0936 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
+                                                ;}
+;;; 34 bytes free
+
+CSEG AT 0960h
 do_usb_2:                                       ;void do_usb_2() {
   0960 90FFC9           MOV DPTR, #0FFC9h
   0963 E0               MOVX A, @DPTR
@@ -1978,7 +1625,72 @@ L9000:                                          ;    }
   0A8B E4               CLR A
   0A8C F6               MOV @R0, A              ;    hid_report2[1] = 0;
   0A8D 22               RET                     ;}
-;;; 219 bytes free
+
+mac_num_keycodes:                               ;static const byte mac_num_keycodes[18*8] = {
+  0A8E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0A96 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0A9E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AA6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AAE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AB6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0ABE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AC6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0ACE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AD6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0ADE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AE6 00000054605D5A00                         ;   0,   0, 0,       KP/, KP8, KP5, KP2, 0,
+  0AEE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0AF6 5C005F6700005900                         ;   KP4, 0, KP7,     KP=, 0,   0,   KP1, 0,
+  0AFE 0000580000000000                         ;   0,   0, KPEnter, 0,   0,   0,   0,   0,
+  0B06 0000000055615B5E                         ;   0,   0, 0,       0,   KP*, KP9, KP3, KP6,
+  0B0E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
+  0B16 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
+                                                ;}
+get_keycode:                                    ;byte __register(R7) get_keycode(byte __register(R7) keyindex) { // R1 A DPTR R7
+  0B1E 7921             MOV R1, #21h
+  0B20 B75A2A           CJNE @R1, #5Ah, L9505   ;   if (kb_mode == KBMODE_NORMAL) {
+  0B23 7903             MOV R1, #3h
+  0B25 E3               MOVX A, @R1
+  0B26 6011             JZ L9503                ;       if (fn_down) {
+  0B28 EF               MOV A, R7
+  0B29 30E905           JNB 0E9h, L9501         ;           if (P4./DIP2) {
+  0B2C 90018F           MOV DPTR, #018Fh
+  0B2F 8003             SJMP L9502              ;               A = mac_fn_keycodes[keyindex];
+L9501:                                          ;           } else {
+  0B31 9000FF           MOV DPTR, #00FFh
+L9502:
+  0B34 93               MOVC A, @A+DPTR         ;               A = pc_fn_keycodes[keyindex];
+                                                ;           }
+  0B35 6002             JZ L9503                ;           if (A) {
+  0B37 FF               MOV R7, A               ;               return A;
+  0B38 22               RET                     ;       }   }
+L9503:
+  0B39 20B511           JB P3.5, L9505          ;       if (not P3./NUM) {
+  0B3C EF               MOV A, R7
+  0B3D 30E905           JNB 0E9h, L9506         ;           if (P4./DIP2) {
+  0B40 900A8E           MOV DPTR, #0A8Eh
+  0B43 8003             SJMP L9507              ;               A = mac_num_keycodes[keyindex];
+L9506:                                          ;           } else {
+  0B45 9008AE           MOV DPTR, #08AEh
+L9507:
+  0B48 93               MOVC A, @A+DPTR         ;               A = pc_num_keycodes[keyindex];
+                                                ;           }
+  0B49 6002             JZ L9505                ;           if (A) {
+  0B4B FF               MOV R7, A               ;               return A;
+  0B4C 22               RET                     ;   }   }   }
+L9505:
+  0B4D EF               MOV A, R7
+  0B4E 30E905           JNB 0E9h, L9504         ;   if (P4./DIP2) {
+  0B51 9007BB           MOV DPTR, #07BBh
+  0B54 8003             SJMP L9508              ;       A = mac_keycodes[keyindex];
+L9504:                                          ;   } else {
+  0B56 90072B           MOV DPTR, #072Bh
+L9508:
+  0B59 93               MOVC A, @A+DPTR         ;       A = pc_keycodes[keyindex];
+                                                ;   }
+  0B5A FF               MOV R7, A               ;   return R7;
+  0B5B 22               RET                     ;}
+;;; 13 bytes free
 
 CSEG AT 0B69h
 find_macro:                                     ;bool __register(C) find_macro(byte* __register(R0) p) {
@@ -2208,52 +1920,49 @@ L0194:
   0C8A 33               RLC A
   0C8B 33               RLC A
   0C8C 54F8             ANL A, #0F8h
-  0C8E 783B             MOV R0, #3Bh
-  0C90 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3;
-  0C91 7853             MOV R0, #53h
-  0C93 E6               MOV A, @R0
-  0C94 783B             MOV R0, #3Bh
-  0C96 26               ADD A, @R0
-  0C97 F6               MOV @R0, A              ;           key_index += i;
-  0C98 30E907           JNB 0E9h, L0197         ;           if (P4./DIP2) {
-  0C9B E6               MOV A, @R0
-  0C9C FF               MOV R7, A
-  0C9D 121B46           LCALL mac_keycode       ;               R7 = mac_keycode(key_index);
-  0CA0 8007             SJMP L0198
-L0197:                                          ;           } else {
-  0CA2 783B             MOV R0, #3Bh
-  0CA4 E6               MOV A, @R0
-  0CA5 FF               MOV R7, A
-  0CA6 120003           LCALL pc_keycode        ;               R7 = pc_keycode(key_index);
-L0198:                                          ;           }
-  0CA9 783C             MOV R0, #3Ch
-  0CAB EF               MOV A, R7
-  0CAC F6               MOV @R0, A              ;           keycode = R7;
-  0CAD 20B208           JB P3.2, L0199          ;           if (not P3./DIP3) {
-  0CB0 783C             MOV R0, #3Ch
-  0CB2 E6               MOV A, @R0
-  0CB3 B46502           CJNE A, #65h, L0199     ;               if (keycode == 0x65) // App
-  0CB6 762C             MOV @R0, #2Ch           ;                   keycode = 0x2C; // Space
-L0199:                                          ;           }
-  0CB8 784D             MOV R0, #4Dh
-  0CBA E6               MOV A, @R0
-  0CBB FF               MOV R7, A               ;               R7 = keys_down[0];
-  0CBC 64DF             XRL A, #0DFh
-  0CBE 7029             JNZ L0200               ;           if (keys_down[0] == 0xDF
-  0CC0 7821             MOV R0, #21h
-  0CC2 E6               MOV A, @R0
-  0CC3 645A             XRL A, #5Ah
-  0CC5 7022             JNZ L0200               ;               and kb_mode == KBMODE_NORMAL
+  0C8E 7853             MOV R0, #53h
+  0C90 26               ADD A, @R0
+  0C91 783B             MOV R0, #3Bh
+  0C93 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3 + i;
+  0C94 FF               MOV R7, A
+  0C95 120B1E           LCALL get_keycode       ;           R7 = get_keycode(key_index);
+  0C98 08               INC R0
+  0C99 EF               MOV A, R7
+  0C9A F6               MOV @R0, A              ;           keycode = R7;
+  0C9B B4DF0D           CJNE A, #0DFh, L9700    ;           if (keycode == 0xDF) { // Fn
+  0C9E E524             MOV A, 24h
+  0CA0 5556             ANL A, 56h
+  0CA2 7803             MOV R0, #3h
+  0CA4 6002             JZ L9701                ;               if (column_value & mask) { // pressed
+  0CA6 7480             MOV A, #80h             ;                   fn_down = true;
+                                                ;               } else {
+                                                ;                   fn_down = false;
+L9701:
+  0CA8 F2               MOVX @R0, A
+                                                ;               }
+  0CA9 8068             SJMP L0195              ;               continue;
+                                                ;           }
+L9700:
+  0CAB B4DE19           CJNE A, #0DEh, L9702    ;           if (keycode == 0xDE) { // IntNum
+  0CAE E524             MOV A, 24h
+  0CB0 5556             ANL A, 56h
+  0CB2 6002             JZ L9703                ;               if (column_value & mask) {
+  0CB4 B2B5             CPL P3.5                ;                   P3./NUM = not P3./NUM;
+L9703:                                          ;               }
+  0CB6 807F             SJMP L0195              ;               continue;
+;;; 15 bytes free
+CSEG AT 0CC7h
+L9702:                                          ;           }
   0CC7 783C             MOV R0, #3Ch
   0CC9 E6               MOV A, @R0
   0CCA FE               MOV R6, A
   0CCB C3               CLR C
-  0CCC 943A             SUBB A, #3Ah
-  0CCE 4019             JC L0200                ;               and keycode >= 0x3A // Caps [ F1
+  0CCC 94E8             SUBB A, #0E8h
+  0CCE 4045             JC L0208                ;           if (keycode >= 0xE8 // MediaFirst
   0CD0 EE               MOV A, R6
   0CD1 D3               SETB C
-  0CD2 9445             SUBB A, #45h
-  0CD4 5013             JNC L0200               ;               and keycode < 0x46) // F12 ] PrtScr
+  0CD2 94FE             SUBB A, #0FEh
+  0CD4 503F             JNC L0208               ;               and keycode <= 0xFE) // MediaLast
                                                 ;           {
   0CD6 7847             MOV R0, #47h
   0CD8 E6               MOV A, @R0
@@ -2262,34 +1971,12 @@ L0199:                                          ;           }
   0CDC 7601             MOV @R0, #1h            ;               media_report_ready = 1;
   0CDE 783C             MOV R0, #3Ch
   0CE0 E6               MOV A, @R0
-  0CE1 24AF             ADD A, #0AFh
-  0CE3 F6               MOV @R0, A              ;               keycode += 0xAF;
-  0CE4 7847             MOV R0, #47h
-  0CE6 F6               MOV @R0, A              ;               media_keycode = keycode; // [E9..F4]
-  0CE7 801D             SJMP L0202              ;               process_fn();
-                                                ;               media_key_down = 0xCC;
-                                                ;               continue;
-
-L0200:                                          ;           } else
-  0CE9 EF               MOV A, R7
-  0CEA 64DF             XRL A, #0DFh
-  0CEC 7027             JNZ L0208               ;           if (keys_down[0] == 0xDF
-  0CEE 783C             MOV R0, #3Ch
-  0CF0 E6               MOV A, @R0
-  0CF1 644C             XRL A, #4Ch
-  0CF3 7020             JNZ L0208               ;               and keycode == 0x4C // Del
-  0CF5 7821             MOV R0, #21h
-  0CF7 E6               MOV A, @R0
-  0CF8 B45A1A           CJNE A, #5Ah, L0208     ;               and kb_mode == 0x5A)
-                                                ;           {
-  0CFB 7847             MOV R0, #47h
-  0CFD E6               MOV A, @R0
-  0CFE 7010             JNZ L0201               ;               if (media_keycode) { stop_fn(); continue; }
-  0D00 18               DEC R0
-  0D01 7601             MOV @R0, #1h            ;               media_report_ready = 1;
-  0D03 08               INC R0
-  0D04 76F5             MOV @R0, #0F5h          ;               media_keycode = 0xF5;
-L0202:
+  0CE1 7847             MOV R0, #47h
+  0CE3 F6               MOV @R0, A              ;               media_keycode = keycode; // [E8..FE]
+;;; 34 bytes free
+  0CE4 8020             SJMP L9804
+CSEG AT 0D06h
+L9804:
   0D06 120A76           LCALL process_fn        ;               process_fn();
   0D09 7807             MOV R0, #7h
   0D0B 74CC             MOV A, #0CCh
@@ -2301,25 +1988,10 @@ L0201:
   0D13 8022             SJMP L0195
 
 L0208:                                          ;           }
-  0D15 784D             MOV R0, #4Dh
-  0D17 E6               MOV A, @R0
-  0D18 7019             JNZ L0209               ;           if (keys_down[0] == 0
-  0D1A 08               INC R0
-  0D1B E6               MOV A, @R0
-  0D1C 7015             JNZ L0209               ;               and keys_down[1] == 0
-  0D1E 7807             MOV R0, #7h
-  0D20 E2               MOVX A, @R0
-  0D21 B4CC0F           CJNE A, #0CCh, L0209    ;               and media_key_down == 0xCC
-  0D24 7821             MOV R0, #21h
-  0D26 E6               MOV A, @R0
-  0D27 B45A09           CJNE A, #5Ah, L0209     ;               and kb_mode = 0x5A)
-                                                ;           {
-  0D2A 120A6F           LCALL stop_fn           ;               stop_fn();
-  0D2D E4               CLR A
-  0D2E 7807             MOV R0, #7h
-  0D30 F2               MOVX @R0, A             ;               media_key_down = 0;
-  0D31 8004             SJMP L0195              ;               continue;
-L0209:                                          ;           }
+  0D15 801C             SJMP L0209
+;;; 28 bytes free
+CSEG AT 0D33h
+L0209:
   0D33 783E             MOV R0, #3Eh
   0D35 7601             MOV @R0, #1h            ;           normal_key = true;
 L0195:                                          ;       }
@@ -3662,84 +3334,44 @@ store_key:                                      ;void store_key() {
   13EC FF               MOV R7, A
   13ED 54F8             ANL A, #0F8h
   13EF 64E0             XRL A, #0E0h
-  13F1 7066             JNZ L0168               ;   switch (keycode) {
-  13F3 EF               MOV A, R7
-  13F4 2420             ADD A, #20h
-  13F6 B40800           CJNE A, #8h, L0169
-L0169:
-  13F9 507B             JNC L0170
-  13FB 901409           MOV DPTR, #01409h
-  13FE 75F003           MOV B, #3h
-  1401 A4               MUL AB
-  1402 C583             XCH A, DPH
-  1404 25F0             ADD A, B
-  1406 C583             XCH A, DPH
-  1408 73               JMP @A+DPTR
-  1409 021421           LJMP L0426
-  140C 021428           LJMP L0427
-  140F 02142F           LJMP L0428
-  1412 021436           LJMP L0429
-  1415 02143D           LJMP L0430
-  1418 021444           LJMP L0431
-  141B 02144B           LJMP L0432
-  141E 021452           LJMP L0433
-
-L0426:                                          ;   case 0xE0:
-  1421 784B             MOV R0, #4Bh
-  1423 E6               MOV A, @R0
-  1424 4401             ORL A, #1h
-  1426 F6               MOV @R0, A              ;       key_modifiers.LCtrl = true;
-  1427 22               RET                     ;       return;
-
-L0427:                                          ;   case 0xE1:
-  1428 784B             MOV R0, #4Bh
-  142A E6               MOV A, @R0
-  142B 4402             ORL A, #2h
-  142D F6               MOV @R0, A              ;       key_modifiers.LShift = true;
-  142E 22               RET                     ;       return;
-
-L0428:                                          ;   case 0xE2:
-  142F 784B             MOV R0, #4Bh
-  1431 E6               MOV A, @R0
-  1432 4404             ORL A, #4h
-  1434 F6               MOV @R0, A              ;       key_modifiers.LAlt = true;
-  1435 22               RET                     ;       return;
-
-L0429:                                          ;   case 0xE3:
-  1436 784B             MOV R0, #4Bh
-  1438 E6               MOV A, @R0
-  1439 4408             ORL A, #8h
-  143B F6               MOV @R0, A              ;       key_modifiers.LWin = true;
-  143C 22               RET                     ;       return;
-
-L0430:                                          ;   case 0xE4:
-  143D 784B             MOV R0, #4Bh
-  143F E6               MOV A, @R0
-  1440 4410             ORL A, #10h
-  1442 F6               MOV @R0, A              ;       key_modifiers.RCtrl = true;
-  1443 22               RET                     ;       return;
-
-L0431:                                          ;   case 0xE5:
-  1444 784B             MOV R0, #4Bh
-  1446 E6               MOV A, @R0
-  1447 4420             ORL A, #20h
-  1449 F6               MOV @R0, A              ;       key_modifiers.RShift = true;
-  144A 22               RET                     ;       return;
-
-L0432:                                          ;   case 0xE6:
-  144B 784B             MOV R0, #4Bh
-  144D E6               MOV A, @R0
-  144E 4440             ORL A, #40h
-  1450 F6               MOV @R0, A              ;       key_modifiers.RAlt = true;
-  1451 22               RET                     ;       return;
-
-L0433:                                          ;   case 0xE7:
-  1452 784B             MOV R0, #4Bh
-  1454 E6               MOV A, @R0
-  1455 4480             ORL A, #80h
-  1457 F6               MOV @R0, A              ;       key_modifiers.RWin = true;
-  1458 22               RET                     ;       return;
-
+  13F1 7012             JNZ L9602               ;   switch (keycode) {
+                                                ;   case 0xE0: case 0xE1: case 0xE2: case 0xE3:
+                                                ;   case 0xE4: case 0xE5: case 0xE6: case 0xE7: // Modifiers
+  13F3 7E01             MOV R6, #1h
+  13F5 EF               MOV A, R7
+  13F6 2420             ADD A, #20h
+  13F8 6005             JZ L9600
+  13FA CE               XCH A, R6
+L9601:
+  13FB 23               RL A
+  13FC DEFD             DJNZ R6, L9601
+  13FE CE               XCH A, R6
+L9600:
+  13FF 784B             MOV R0, #4Bh
+  1401 E6               MOV A, @R0
+  1402 4E               ORL A, R6
+  1403 F6               MOV @R0, A              ;       key_modifiers |= 1 << (keycode - 0xE0);
+  1404 22               RET                     ;       return;
+L9602:
+  1405 EF               MOV A, R7
+  1406 C3               CLR C
+  1407 94E8             SUBB A, #0E8h
+  1409 506B             JNC L0170               ;   case 0xE8: case 0xE9: case 0xEA: case 0xEB:
+                                                ;   case 0xEC: case 0xED: case 0xEE: case 0xEF:
+                                                ;   case 0xF0: case 0xF1: case 0xF2: case 0xF3:
+                                                ;   case 0xF4: case 0xF5: case 0xF6: case 0xF7:
+                                                ;   case 0xF8: case 0xF9: case 0xFA: case 0xFB:
+                                                ;   case 0xFC: case 0xFD: case 0xFE: case 0xFF: // Media keys
+                                                ;       return;
+  140B EF               MOV A, R7
+  140C 94DE             SUBB A, #0DEh           ;       // carry was set
+  140E 6066             JZ L0170                ;   case 0xDF: // Fn
+  1410 04               INC A
+  1411 6063             JZ L0170                ;   case 0xDE: // IntNum
+                                                ;       return;
+;;; 70 bytes free
+  1413 8044             SJMP L0168
+CSEG AT 1459h
 L0168:                                          ;   default:
   1459 784A             MOV R0, #4Ah
   145B E6               MOV A, @R0
@@ -3869,7 +3501,9 @@ numlock_on:                                     ;void numlock_on() {
   1504 E2               MOVX A, @R0
   1505 64EA             XRL A, #0EAh
   1507 7071             JNZ L0123               ;   if (numlock_state == 0xEA
-  1509 20B56E           JB P3.5, L0123          ;       and not P3./NUM         // Internal NumLock is ON
+  1509 00               NOP
+  150A 00               NOP
+  150B 00               NOP
   150C 20006B           JB 0h, L0123            ;       and not led_state.1)    // OS NumLock if OFF
                                                 ;   {
   150F C2AF             CLR EA                  ;       __uninterrupted {       // Send NumLock keypress
@@ -4985,12 +4619,5 @@ leds_off:                                       ;void leds_off() {
   1B41 D2B7             SETB P3.7               ;   P3./SCROLL = true;
   1B43 D2E8             SETB 0E8h               ;   P4.0 = true;
   1B45 22               RET                     ;}
-
-mac_keycode:                                    ;void mac_keycode(byte __register(R7) keyindex) {
-  1B46 EF               MOV A, R7
-  1B47 9007BB           MOV DPTR, #07BBh
-  1B4A 93               MOVC A, @A+DPTR
-  1B4B FF               MOV R7, A               ;   return mac_keycodes[keyindex];
-  1B4C 22               RET                     ;}
-
+;;; 7 bytes free
 END
