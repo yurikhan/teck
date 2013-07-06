@@ -10,10 +10,17 @@ listing: TrulyErgonomic_209_v3.lst.orig
 
 listing-mod: TrulyErgonomic_v3yk.lst.orig
 
+_build:
+	mkdir -p _build
+
+
+_build/TrulyErgonomic_v3yk.ref: _build TrulyErgonomic_v3yk_conf.refi TrulyErgonomic_v3yk_code.refi
+	cat TrulyErgonomic_v3yk_conf.refi TrulyErgonomic_v3yk_code.refi >$@
+
 TrulyErgonomic_209_v3.lst.orig: TrulyErgonomic_209_v3.hex Makefile
 	dis51 -l $(ENTRYPOINTS) <$< >$@
 TrulyErgonomic_v3yk.lst.orig: TrulyErgonomic_v3yk.hex Makefile
 	dis51 -l $(ENTRYPOINTS_MOD) <$< >$@
 
-TrulyErgonomic_v3yk.hex: TrulyErgonomic_209_v3.lst.annotated TrulyErgonomic_v3yk.ref
-	tools/undump.py TrulyErgonomic_v3yk.ref TrulyErgonomic_209_v3.lst.annotated >$@
+TrulyErgonomic_v3yk.hex: TrulyErgonomic_209_v3.lst.annotated _build/TrulyErgonomic_v3yk.ref
+	tools/undump.py _build/TrulyErgonomic_v3yk.ref TrulyErgonomic_209_v3.lst.annotated >$@
