@@ -1962,180 +1962,25 @@ stop_fn:                                        ;void stop_fn() {
 process_fn:                                     ;void process_fn() {
   0A76 7847             MOV R0, #47h
   0A78 E6               MOV A, @R0
-  0A79 2419             ADD A, #19h
-  0A7B 14               DEC A
-  0A7C B41300           CJNE A, #13h, L0204
-L0204:
-  0A7F 4003             JC L0205
-  0A81 020B61           LJMP L0206
-L0205:
-  0A84 900A92           MOV DPTR, #0A92h
-  0A87 75F003           MOV B, #3h
-  0A8A A4               MUL AB
-  0A8B C583             XCH A, DPH
-  0A8D 25F0             ADD A, B
-  0A8F C583             XCH A, DPH
-  0A91 73               JMP @A+DPTR             ;   switch (media_keycode) {
-  0A92 020ACB           LJMP L0406
-  0A95 020AD3           LJMP L0407
-  0A98 020ADB           LJMP L0408
-  0A9B 020AE3           LJMP L0409
-  0A9E 020AEB           LJMP L0410
-  0AA1 020AF3           LJMP L0411
-  0AA4 020AFB           LJMP L0412
-  0AA7 020B03           LJMP L0413
-  0AAA 020B0B           LJMP L0414
-  0AAD 020B13           LJMP L0415
-  0AB0 020B1B           LJMP L0416
-  0AB3 020B41           LJMP L0417
-  0AB6 020B29           LJMP L0418
-  0AB9 020B31           LJMP L0419
-  0ABC 020B39           LJMP L0420
-  0ABF 020B23           LJMP L0421
-  0AC2 020B49           LJMP L0423
-  0AC5 020B51           LJMP L0424
-  0AC8 020B59           LJMP L0425
-L0406:                                          ;   case 0xE8:
-  0ACB 7848             MOV R0, #48h
-  0ACD 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0ACF 08               INC R0
-  0AD0 7601             MOV @R0, #1h            ;       hid_report2[1] = 1;
-  0AD2 22               RET                     ;       return;
+  0A79 C3               CLR C
+  0A7A 94E8             SUBB A, #0E8h
+  0A7C 4008             JC L9000                ;    if (media_keycode >= 0xE8) {
+  0A7E 7848             MOV R0, #48h
+  0A80 7601             MOV @R0, #1h            ;        hid_report2[0] = 1;
+  0A82 08               INC R0
+  0A83 04               INC A
+  0A84 F6               MOV @R0, A              ;        hid_report2[1] = media_keycode - 0xE7;
+  0A85 22               RET                     ;        return;
+L9000:                                          ;    }
+  0A86 7848             MOV R0, #48h
+  0A88 7601             MOV @R0, #1h            ;    hid_report2[0] = 1;
+  0A8A 08               INC R0
+  0A8B E4               CLR A
+  0A8C F6               MOV @R0, A              ;    hid_report2[1] = 0;
+  0A8D 22               RET                     ;}
+;;; 219 bytes free
 
-L0407:                                          ;   case 0xE9:
-  0AD3 7848             MOV R0, #48h
-  0AD5 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0AD7 08               INC R0
-  0AD8 7602             MOV @R0, #2h            ;       hid_report2[1] = 2;
-  0ADA 22               RET                     ;       return;
-
-L0408:                                          ;   case 0xEA:
-  0ADB 7848             MOV R0, #48h
-  0ADD 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0ADF 08               INC R0
-  0AE0 7603             MOV @R0, #3h            ;       hid_report2[1] = 3;
-  0AE2 22               RET                     ;       return;
-
-L0409:                                          ;   case 0xEB:
-  0AE3 7848             MOV R0, #48h
-  0AE5 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0AE7 08               INC R0
-  0AE8 7604             MOV @R0, #4h            ;       hid_report2[1] = 4;
-  0AEA 22               RET                     ;       return;
-
-L0410:                                          ;   case 0xEC:
-  0AEB 7848             MOV R0, #48h
-  0AED 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0AEF 08               INC R0
-  0AF0 7605             MOV @R0, #5h            ;       hid_report2[1] = 5;
-  0AF2 22               RET                     ;       return;
-
-L0411:                                          ;   case 0xED:
-  0AF3 7848             MOV R0, #48h
-  0AF5 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0AF7 08               INC R0
-  0AF8 7606             MOV @R0, #6h            ;       hid_report2[1] = 6;
-  0AFA 22               RET                     ;       return;
-
-L0412:                                          ;   case 0xEE:
-  0AFB 7848             MOV R0, #48h
-  0AFD 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0AFF 08               INC R0
-  0B00 7607             MOV @R0, #7h            ;       hid_report2[1] = 7;
-  0B02 22               RET                     ;       return;
-
-L0413:                                          ;   case 0xEF:
-  0B03 7848             MOV R0, #48h
-  0B05 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B07 08               INC R0
-  0B08 7608             MOV @R0, #8h            ;       hid_report2[1] = 8;
-  0B0A 22               RET                     ;       return;
-
-L0414:                                          ;   case 0xF0:
-  0B0B 7848             MOV R0, #48h
-  0B0D 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B0F 08               INC R0
-  0B10 7609             MOV @R0, #9h            ;       hid_report2[1] = 9;
-  0B12 22               RET                     ;       return;
-
-L0415:                                          ;   case 0xF1:
-  0B13 7848             MOV R0, #48h
-  0B15 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B17 08               INC R0
-  0B18 760A             MOV @R0, #0Ah           ;       hid_report2[1] = 0x0A;
-  0B1A 22               RET                     ;       return;
-
-L0416:                                          ;   case 0xF2:
-  0B1B 7848             MOV R0, #48h
-  0B1D 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B1F 08               INC R0
-  0B20 760B             MOV @R0, #0Bh           ;       hid_report2[1] = 0x0B;
-  0B22 22               RET                     ;       return;
-
-L0421:                                          ;   case 0xF7:
-  0B23 7848             MOV R0, #48h
-  0B25 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B27 8024             SJMP L0422              ;       hid_report2[1] = 0x10;
-                                                ;       return;
-
-L0418:                                          ;   case 0xF4:
-  0B29 7848             MOV R0, #48h
-  0B2B 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B2D 08               INC R0
-  0B2E 760D             MOV @R0, #0Dh           ;       hid_report2[1] = 0x0D;
-  0B30 22               RET                     ;       return;
-
-L0419:                                          ;   case 0xF5:
-  0B31 7848             MOV R0, #48h
-  0B33 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B35 08               INC R0
-  0B36 760E             MOV @R0, #0Eh           ;       hid_report2[1] = 0x0E;
-  0B38 22               RET                     ;       return;
-
-L0420:                                          ;   case 0xF6:
-  0B39 7848             MOV R0, #48h
-  0B3B 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B3D 08               INC R0
-  0B3E 760F             MOV @R0, #0Fh           ;       hid_report2[1] = 0x0F;
-  0B40 22               RET                     ;       return;
-
-L0417:                                          ;   case 0xF3:
-  0B41 7848             MOV R0, #48h
-  0B43 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B45 08               INC R0
-  0B46 760C             MOV @R0, #0Ch           ;       hid_report2[1] = 0x0C;
-  0B48 22               RET                     ;       return;
-
-L0423:                                          ;   case 0xF8:
-  0B49 7848             MOV R0, #48h
-  0B4B 7602             MOV @R0, #2h            ;       hid_report2[0] = 2;
-L0422:
-  0B4D 08               INC R0
-  0B4E 7610             MOV @R0, #10h           ;       hid_report2[1] = 0x10;
-  0B50 22               RET                     ;       return;
-
-L0424:                                          ;   case 0xF9:
-  0B51 7848             MOV R0, #48h
-  0B53 7602             MOV @R0, #2h            ;       hid_report2[0] = 2;
-  0B55 08               INC R0
-  0B56 7611             MOV @R0, #11h           ;       hid_report2[1] = 0x11;
-  0B58 22               RET                     ;       return;
-
-L0425:                                          ;   case 0xFA:
-  0B59 7848             MOV R0, #48h
-  0B5B 7602             MOV @R0, #2h            ;       hid_report2[0] = 2;
-  0B5D 08               INC R0
-  0B5E 7612             MOV @R0, #12h           ;       hid_report2[1] = 0x12;
-  0B60 22               RET                     ;       return;
-
-L0206:                                          ;   default:
-  0B61 7848             MOV R0, #48h
-  0B63 7601             MOV @R0, #1h            ;       hid_report2[0] = 1;
-  0B65 E4               CLR A
-  0B66 08               INC R0
-  0B67 F6               MOV @R0, A              ;       hid_report2[1] = 0;
-  0B68 22               RET                     ;}  }
-
+CSEG AT 0B69h
 find_macro:                                     ;bool __register(C) find_macro(byte* __register(R0) p) {
   0B69 E6               MOV A, @R0
   0B6A 244D             ADD A, #4Dh
@@ -2539,41 +2384,33 @@ L0193:
   0D91 A101             DB 0A1h, 001h           ;   Collection(Application);
   0D93 8501             DB 085h, 001h           ;       Report ID(1);
   0D95 1501             DB 015h, 001h           ;       Logical Minimum(1);
-  0D97 2510             DB 025h, 010h           ;       Logical Maximum(0x10);
+  0D97 2517             DB 025h, 017h           ;       Logical Maximum(0x17);
   0D99 7508             DB 075h, 008h           ;       Report Size(8);
   0D9B 9501             DB 095h, 001h           ;       Report Count(1);
-  0D9D 0AAE01           DB 00Ah, 0AEh, 001h     ;       Usage(0x01AE);  // 1 => AL Keyboard Layout
+  0D9D 0A2702           DB 00Ah, 027h, 002h     ;       Usage(0x0227);  // 1 => AC Refresh
   0DA0 0A2302           DB 00Ah, 023h, 002h     ;       Usage(0x0223);  // 2 => AC Home
   0DA3 0A8A01           DB 00Ah, 08Ah, 001h     ;       Usage(0x018A);  // 3 => AL Email Reader
   0DA6 0A2102           DB 00Ah, 021h, 002h     ;       Usage(0x0221);  // 4 => AC Search
   0DA9 0A9401           DB 00Ah, 094h, 001h     ;       Usage(0x0194);  // 5 => AL Local Machine Browser
   0DAC 0A9201           DB 00Ah, 092h, 001h     ;       Usage(0x0192);  // 6 => AL Calculator
   0DAF 0A8301           DB 00Ah, 083h, 001h     ;       Usage(0x0183);  // 7 => AL Consumer Control Configuration
-  0DB2 09B6             DB 009h, 0B6h           ;       Usage(0xB6);    // 8 => Scan Previous Track
-  0DB4 09CD             DB 009h, 0CDh           ;       Usage(0xCD);    // 9 => Play/Pause
-  0DB6 09B5             DB 009h, 0B5h           ;       Usage(0xB5);    // 0x0A => Scan Next Track
-  0DB8 09E2             DB 009h, 0E2h           ;       Usage(0xE2);    // 0x0B => Mute
-  0DBA 09EA             DB 009h, 0EAh           ;       Usage(0xEA);    // 0x0C => Volume Decrement
-  0DBC 09E9             DB 009h, 0E9h           ;       Usage(0xE9);    // 0x0D => Volume Increment
-  0DBE 09B8             DB 009h, 0B8h           ;       Usage(0xB8);    // 0x0E => Eject
-  0DC0 09B7             DB 009h, 0B7h           ;       Usage(0xB7);    // 0x0F => Stop
-  0DC2 0A9601           DB 00Ah, 096h, 001h     ;       Usage(0x0196);  // 0x10 => AL Internet Browser
-  0DC5 8160             DB 081h, 060h           ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null State);
-  0DC7 C0               DB 0C0h                 ;   End Collection;
-  0DC8 0501             DB 005h, 001h           ;   Usage Page(0x01);   // Generic Desktop
-  0DCA 0980             DB 009h, 080h           ;   Usage(0x80);
-  0DCC A101             DB 0A1h, 001h           ;   Collection(Application);
-  0DCE 8502             DB 085h, 002h           ;       Report ID(2);
-  0DD0 1501             DB 015h, 001h           ;       Logical Minimum(1);
-  0DD2 2503             DB 025h, 003h           ;       Logical Maximum(3);
-  0DD4 7502             DB 075h, 002h           ;       Report Size(2);
-  0DD6 9501             DB 095h, 001h           ;       Report Count(1);
-  0DD8 0982             DB 009h, 082h           ;       Usage(0x82);    // 1 => System Sleep
-  0DDA 0981             DB 009h, 081h           ;       Usage(0x81);    // 2 => System Power Down
-  0DDC 0983             DB 009h, 083h           ;       Usage(0x83);    // 3 => System Wake Up
-  0DDE 8160             DB 081h, 060h           ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null);
-  0DE0 7506             DB 075h, 006h           ;       Report Size(6);
-  0DE2 8103             DB 081h, 003h           ;       Input(Constant|Variable|Absolute|No Wrap|Linear|Preferred|No Null);
+  0DB2 0AB600           DB 00Ah, 0B6h, 000h     ;       Usage(0x00B6);  // 8 => Scan Previous Track
+  0DB5 0ACD00           DB 00Ah, 0CDh, 000h     ;       Usage(0x00CD);  // 9 => Play/Pause
+  0DB8 0AB500           DB 00Ah, 0B5h, 000h     ;       Usage(0x00B5);  // 0x0A => Scan Next Track
+  0DBB 0AE200           DB 00Ah, 0E2h, 000h     ;       Usage(0x00E2);  // 0x0B => Mute
+  0DBE 0AEA00           DB 00Ah, 0EAh, 000h     ;       Usage(0x00EA);  // 0x0C => Volume Decrement
+  0DC1 0AE900           DB 00Ah, 0E9h, 000h     ;       Usage(0x00E9);  // 0x0D => Volume Increment
+  0DC4 0AB800           DB 00Ah, 0B8h, 000h     ;       Usage(0x00B8);  // 0x0E => Eject
+  0DC7 0AB700           DB 00Ah, 0B7h, 000h     ;       Usage(0x00B7);  // 0x0F => Stop
+  0DCA 0A9601           DB 00Ah, 096h, 001h     ;       Usage(0x0196);  // 0x10 => AL Internet Browser
+  0DCD 0A9901           DB 00Ah, 099h, 001h     ;       Usage(0x0199);  // 0x11 => AL Network Chat
+  0DD0 0AA701           DB 00Ah, 0A7h, 001h     ;       Usage(0x01A7);  // 0x12 => AL Documents
+  0DD3 0A9E01           DB 00Ah, 09Eh, 001h     ;       Usage(0x019E);  // 0x13 => AL Terminal Lock/Screensaver
+  0DD6 0A2402           DB 00Ah, 024h, 002h     ;       Usage(0x0224);  // 0x14 => AC Back
+  0DD9 0A2502           DB 00Ah, 025h, 002h     ;       Usage(0x0225);  // 0x15 => AC Forward
+  0DDC 0A2A02           DB 00Ah, 02Ah, 002h     ;       Usage(0x022A);  // 0x16 => AC Bookmarks
+  0DDF 0A9101           DB 00Ah, 091h, 001h     ;       Usage(0x0191);  // 0x17 => AL Checkbook/Finance
+  0DE2 8160             DB 081h, 060h           ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null State);
   0DE4 C0               DB 0C0h                 ;   End Collection;
                                                 ;};
 
