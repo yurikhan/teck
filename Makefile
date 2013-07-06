@@ -4,23 +4,47 @@ ENTRYPOINTS = 0 11 107 123 0x115f 0x1162 0x1165 0x1168  0x116b 0x116e 0x1171 0x1
 
 ENTRYPOINTS_MOD =  0 11 107 123 0x115f 0x1162 0x1165 0x1168  0x116b 0x116e 0x1171 0x1174  0x1177 0x117a 0x117d 0x1180  0x1183
 
-hex: TrulyErgonomic_v3yk.hex
+all: hex listing-mod www-all
 
-listing: TrulyErgonomic_209_v3.lst.orig
+clean:
+	-rm -rf www _build
 
-listing-mod: TrulyErgonomic_v3yk.lst.orig
+hex: _build/TrulyErgonomic_v3yk.hex
+
+listing: _build/TrulyErgonomic_209_v3.lst.orig
+
+listing-mod: _build/TrulyErgonomic_v3yk.lst.orig
+
+check: listing-mod
+	meld TrulyErgonomic_209_v3.lst.annotated _build/TrulyErgonomic_v3yk.lst.orig
+
+www-all: www/index.html www/styles.css www/configurator.js
 
 _build:
 	mkdir -p _build
 
 
-_build/TrulyErgonomic_v3yk.ref: _build TrulyErgonomic_v3yk_conf.refi TrulyErgonomic_v3yk_code.refi
-	cat TrulyErgonomic_v3yk_conf.refi TrulyErgonomic_v3yk_code.refi >$@
+www:
+	mkdir -p www
 
-TrulyErgonomic_209_v3.lst.orig: TrulyErgonomic_209_v3.hex Makefile
+www/index.html: configurator/index.html | www
+	cp $< $@
+www/styles.css: configurator/styles.css | www
+	cp $< $@
+
+www/configurator.js: configurator/configurator.js _build/TrulyErgonomic_v3yk_code.jsi | www
+	sed -e "/^:/d; /^var firmware_code/r_build/TrulyErgonomic_v3yk_code.jsi" configurator/configurator.js >$@
+
+_build/TrulyErgonomic_v3yk_code.jsi: TrulyErgonomic_209_v3.lst.annotated TrulyErgonomic_v3yk_code.refi | _build
+	tools/undump.py TrulyErgonomic_v3yk_code.refi TrulyErgonomic_209_v3.lst.annotated | sed -e 's/\r\?\n\?$$/\\r\\n\\/' >$@
+
+_build/TrulyErgonomic_v3yk.ref: TrulyErgonomic_v3yk_conf.refi TrulyErgonomic_v3yk_code.refi | _build
+	cat $+ >$@
+
+_build/TrulyErgonomic_209_v3.lst.orig: _build/TrulyErgonomic_209_v3.hex Makefile
 	dis51 -l $(ENTRYPOINTS) <$< >$@
-TrulyErgonomic_v3yk.lst.orig: TrulyErgonomic_v3yk.hex Makefile
+_build/TrulyErgonomic_v3yk.lst.orig: _build/TrulyErgonomic_v3yk.hex Makefile
 	dis51 -l $(ENTRYPOINTS_MOD) <$< >$@
 
-TrulyErgonomic_v3yk.hex: TrulyErgonomic_209_v3.lst.annotated _build/TrulyErgonomic_v3yk.ref
+_build/TrulyErgonomic_v3yk.hex: TrulyErgonomic_209_v3.lst.annotated _build/TrulyErgonomic_v3yk.ref
 	tools/undump.py _build/TrulyErgonomic_v3yk.ref TrulyErgonomic_209_v3.lst.annotated >$@
