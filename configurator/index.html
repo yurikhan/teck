@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>TrulyErgonomic Configurator — v3yk firmware</title>
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <link rel="icon" type="image/png" href="favicon.png" />
@@ -589,7 +590,7 @@ firmware used under permission from Truly Ergonomic
 		<p>It is not guaranteed that your OS will detect such codes.</p>
 	</div>
 </div></div>
-<div id="targets"><div id="teck">
+<div id="targets" class="m209"><div id="teck">
 	<div id="layer-selector">
 		<div id="pc">Primary:
 			<label><input type="radio" name="layer" value="0" checked="checked" />Main</label>
@@ -601,6 +602,11 @@ firmware used under permission from Truly Ergonomic
 			<label><input type="radio" name="layer" value="4" />Num</label>
 			<label><input type="radio" name="layer" value="5" />Fn</label>
 		</div>
+		<select id="model">
+			<option value="209" selected="selected">209/109</option>
+			<option value="207">207</option>
+			<option value="105">104/105</option>
+		</select>
 	</div>
 	<div id="t-keys">
 	<div id="t-fkeys"
@@ -627,9 +633,10 @@ firmware used under permission from Truly Ergonomic
 		/><input id="t-fn"
 		/><input id="t-num"
 	/></div>
-	<div class="stagger-1"
+	<div class="stagger-0"
 		><input id="t-euro2"
 		/><input id="t-grave"
+		/><input id="t-minus105"
 		/><input id="t-1"
 		/><input id="t-2"
 		/><input id="t-3"

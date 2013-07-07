@@ -1,5 +1,8 @@
 window.onload=function(){
 
+document.getElementById('t-minus').dual = document.getElementById('t-minus105');
+document.getElementById('t-minus105').dual = document.getElementById('t-minus');
+
 var _ = null;
 
 function warn(warning) {
@@ -377,6 +380,12 @@ function set_usage(target, u, nosave)
 	target.dataset.u = u;
 	target.value = usage_display_name(u);
 	target.title = usage_description(u);
+	if (target.dual)
+	{
+		target.dual.dataset.u = u;
+		target.dual.value = usage_display_name(u);
+		target.dual.title = usage_description(u);
+	}
 	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('pc-fn');
 	if (current_layer == 3) target.classList[u == 0xDF ? 'add' : 'remove']('mac-fn');
 	if (!nosave)
@@ -431,6 +440,11 @@ function layout(event)
 function show_hide_warnings(event)
 {
 	document.getElementById('warning-wrapper').className = event.target.checked ? 'warn' : '';
+}
+
+function model(event)
+{
+	document.getElementById('targets').className = 'm' + event.target.value;
 }
 
 var key_names = [
@@ -815,6 +829,7 @@ xpath_foreach('//input[@name="layer"]', document, function(rb)
 {
 	rb.onclick = set_layer;
 })
+document.getElementById('model').onchange = model;
 
 window.URL = window.URL || window.webkitURL;
 
