@@ -15,7 +15,7 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 }
 #targets>#notes { display: inline-block; width: 81mm; }
 #layer-selector { margin-bottom: 10mm; text-align: left; }
-#pc { float: left; } #mac { float: right; } #t-fkeys { clear: both; }
+#pc { float: left; } #mac { float: right; } #model { display: block; margin-left: auto; margin-right: auto; } #t-fkeys { clear: both; }
 #t-keys input { width: 9mm; height: 9mm;
 	background-color: #2e3436; color: #f7f8f5;
 	background: linear-gradient(to right, rgba(85,87,83,0) 0%, rgba(85,87,83,0.3) 100%);
@@ -38,15 +38,25 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 #targets #teck.layer-2 input, #targets #teck.layer-5 input {
 	color: #97c4f0;
 }
+#targets.m207 #t-lblank, #targets.m207 #t-rblank,
+#targets.m105 #t-lblank, #targets.m105 #t-rblank, #targets.m105 #t-euro2, #targets.m105 #t-grave, #targets.m105 #t-minus,
+#targets.m207 #t-minus105, #targets.m209 #t-minus105 { display: none; }
+#targets.m207 #t-lalt, #targets.m207 #t-ralt,
+#targets.m105 #t-lalt, #targets.m105 #t-ralt, #targets.m105 #t-minus105, #targets.m105 #t-equal { width: 19mm; }
 #targets .spacer { display: inline-block; width: 4mm; }
 #targets #t-fkeys { margin-bottom: 4mm; }
 #targets #t-gui, #targets #t-hen, #targets #t-tab, #targets #t-bksp,
 #targets #t-enter { background: rgba(85,87,83,0.15); width: 14.75mm; }
 #targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl,
 #targets #t-apps, #targets #t-space { width: 19mm; }
-#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl
+#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl,
+#targets.m207 #t-lalt, #targets.m207 #t-ralt,
+#targets.m105 #t-lalt, #targets.m105 #t-lalt,
+#targets.m105 #t-minus105, #targets.m105 #t-equal
 { background: rgba(85,87,83,0.15); }
 #targets #t-apps, #targets #t-space { background: linear-gradient(to bottom, rgba(85,87,83,0.3) 0%,rgba(85,87,83,0) 100%); }
+.stagger-0 input:nth-child(5), .stagger-0 input:nth-child(7),
+.stagger-0 input:nth-child(11), .stagger-0 input:nth-child(13),
 .stagger-1 input:nth-child(4), .stagger-1 input:nth-child(6),
 .stagger-1 input:nth-child(10), .stagger-1 input:nth-child(12),
 .stagger-2 input:nth-child(3), .stagger-2 input:nth-child(5),
@@ -54,6 +64,7 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 .cross {
 	position: relative; top: -1.5mm;
 }
+.stagger-0 input:nth-child(6), .stagger-0 input:nth-child(12),
 .stagger-1 input:nth-child(5), .stagger-1 input:nth-child(11),
 .stagger-2 input:nth-child(4), .stagger-2 input:nth-child(10)
 {
