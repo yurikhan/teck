@@ -4497,17 +4497,17 @@ micro_delay_750:                                ;void micro_delay_750() {…}
   1A9B 121AA5           LCALL micro_delay
 micro_delay_500:                                ;void micro_delay_500() {
   1A9E 7FFA             MOV R7, #0FAh
-  1AA0 121AA5           LCALL micro_delay       ;   micro_delay(250); // 250
-  1AA3 7FFA             MOV R7, #0FAh           ;   micro_delay(250); // 250
+  1AA0 121AA5           LCALL micro_delay       ;   micro_delay(250);
+  1AA3 7FFA             MOV R7, #0FAh           ;   micro_delay(250);
                                                 ;}
 micro_delay:                                    ;void micro_delay(byte __register(R7) iters) {
   1AA5 EF               MOV A, R7               ;   for (; iters >= 1; --iters) { // 1 clock
   1AA6 D3               SETB C                  ;                                 // 1 clock
-  1AA7 9400             SUBB A, #0h             ;                                 // 1 clock
-  1AA9 4004             JC L0017                ;                                 // 2 clocks
+  1AA7 9400             SUBB A, #0h             ;                                 // 2 clocks
+  1AA9 4004             JC L0017                ;                                 // 3 clocks
   1AAB 00               NOP                     ;                                 // 1 clock
-  1AAC 1F               DEC R7                  ;                                 // 1 clock
-  1AAD 80F6             SJMP micro_delay        ;   }                             // 2 clocks, total 9 = 0.75 microseconds per iter
+  1AAC 1F               DEC R7                  ;                                 // 3 clock
+  1AAD 80F6             SJMP micro_delay        ;   }                             // 3 clocks, total 14 = 1.1(6) microseconds per iter
 L0017:
   1AAF 22               RET                     ;}
 
