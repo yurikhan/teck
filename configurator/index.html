@@ -14,9 +14,9 @@ firmware used under permission from Truly Ergonomic
 </address>
 
 <select id="layout">
-	<option value="ansi" selected="selected">ANSI</option>
-	<option value="iso">ISO</option>
-	<option value="jis">JIS</option>
+	<option value="ansi" selected="selected">US 104 key (ANSI)</option>
+	<option value="iso">Europe 105 key (ISO)</option>
+	<option value="jis">Japanese 109 key (JIS)</option>
 	<option value="keypad">Keypad</option>
 	<option value="rare">Rare keys</option>
 	<option value="media">Media and Power</option>
@@ -28,232 +28,233 @@ firmware used under permission from Truly Ergonomic
 <label><input type="checkbox" id="warn"/>Dim Linux-incompatible keys</label>
 
 <div id="sources" class="ansi"><div id="warning-wrapper">
+	<div id="sized">
 	<div id="kbd">
 	<div id="fkeys" class="row">
 		<div class="main"
-			><kbd id="esc" class="dark" data-u="29">Esc</kbd
+			><kbd id="s-esc" class="dark" data-u="29">Esc</kbd
 			><span class="spacer"></span
-			><kbd data-u="3A">F1</kbd
-			><kbd data-u="3B">F2</kbd
-			><kbd data-u="3C">F3</kbd
-			><kbd data-u="3D">F4</kbd
+			><kbd id="s-f1" data-u="3A">F1</kbd
+			><kbd id="s-f2" data-u="3B">F2</kbd
+			><kbd id="s-f3" data-u="3C">F3</kbd
+			><kbd id="s-f4" data-u="3D">F4</kbd
 			><span class="spacer"></span
-			><kbd class="dark" data-u="3E">F5</kbd
-			><kbd class="dark" data-u="3F">F6</kbd
-			><kbd class="dark" data-u="40">F7</kbd
-			><kbd class="dark" data-u="41">F8</kbd
+			><kbd id="s-f5" class="dark" data-u="3E">F5</kbd
+			><kbd id="s-f6" class="dark" data-u="3F">F6</kbd
+			><kbd id="s-f7" class="dark" data-u="40">F7</kbd
+			><kbd id="s-f8" class="dark" data-u="41">F8</kbd
 			><span class="spacer"></span
-			><kbd data-u="42">F9</kbd
-			><kbd data-u="43">F10</kbd
-			><kbd data-u="44">F11</kbd
-			><kbd data-u="45">F12</kbd
+			><kbd id="s-f9" data-u="42">F9</kbd
+			><kbd id="s-f10" data-u="43">F10</kbd
+			><kbd id="s-f11" data-u="44">F11</kbd
+			><kbd id="s-f12" data-u="45">F12</kbd
 		></div>
 		<div class="nav"
-			><kbd class="dark" data-u="46">⎙</kbd
-			><kbd class="dark" data-u="47">⇳</kbd
-			><kbd class="dark" data-u="48">⎊</kbd
+			><kbd id="s-prtscr" class="dark" data-u="46">⎙</kbd
+			><kbd id="s-scroll" class="dark" data-u="47">⇳</kbd
+			><kbd id="s-pause" class="dark" data-u="48">⎊</kbd
 		></div>
 		<div class="keypad"
-			><kbd class="dark" data-u="DE">T⇭</kbd
-			><kbd class="dark" data-u="AD"></kbd
-			><kbd class="dark" data-u="AE"></kbd
+			><kbd id="s-tnum" class="dark" data-u="DE">T⇭</kbd
+			><kbd id="s-winpause" class="dark" data-u="AD"></kbd
+			><kbd id="s-break" class="dark" data-u="AE"></kbd
+			><kbd id="s-fn" class="dark" data-u="DF">Fn</kbd
 		></div>
 	</div>
 	<div class="row">
 		<div class="main">
-			<div><kbd id="grave" class="ansi-iso" data-u="35">`~</kbd
-				><kbd id="hankaku" class="dark jis-only" data-u="94">半角</kbd
-				><kbd data-u="1E">1!</kbd
-				><kbd data-u="1F">2@</kbd
-				><kbd data-u="20">3#</kbd
-				><kbd data-u="21">4$</kbd
-				><kbd data-u="22">5%</kbd
-				><kbd data-u="23">6^</kbd
-				><kbd data-u="24">7&amp;</kbd
-				><kbd data-u="25">8*</kbd
-				><kbd data-u="26">9(</kbd
-				><kbd data-u="27">0)</kbd
-				><kbd data-u="2D">-_</kbd
-				><kbd data-u="2E">=+</kbd
-				><kbd id="yen" class="jis-only" data-u="89">¥</kbd
-				><kbd class="dark" id="bksp" data-u="2A">⌫</kbd
+			<div><kbd id="s-grave" class="ansi-iso" data-u="35">`~</kbd
+				><kbd id="s-hankaku" class="dark" data-u="94">半角</kbd
+				><kbd id="s-1" data-u="1E">1!</kbd
+				><kbd id="s-2" data-u="1F">2@</kbd
+				><kbd id="s-3" data-u="20">3#</kbd
+				><kbd id="s-4" data-u="21">4$</kbd
+				><kbd id="s-5" data-u="22">5%</kbd
+				><kbd id="s-6" data-u="23">6^</kbd
+				><kbd id="s-7" data-u="24">7&amp;</kbd
+				><kbd id="s-8" data-u="25">8*</kbd
+				><kbd id="s-9" data-u="26">9(</kbd
+				><kbd id="s-0" data-u="27">0)</kbd
+				><kbd id="s-minus" data-u="2D">-_</kbd
+				><kbd id="s-equal" data-u="2E">=+</kbd
+				><kbd id="s-yen" class="jis-only" data-u="89">¥</kbd
+				><kbd id="s-bksp" class="dark" data-u="2A">⌫</kbd
 			></div>
-			<div><kbd class="dark" id="tab" data-u="2B">Tab ↹</kbd
-				><kbd data-u="14">Q</kbd
-				><kbd data-u="1A">W</kbd
-				><kbd data-u="08">E</kbd
-				><kbd data-u="15">R</kbd
-				><kbd data-u="17">T</kbd
-				><kbd data-u="1C">Y</kbd
-				><kbd data-u="18">U</kbd
-				><kbd data-u="0C">I</kbd
-				><kbd data-u="12">O</kbd
-				><kbd data-u="13">P</kbd
-				><kbd data-u="2F">[{</kbd
-				><kbd data-u="30">]}</kbd
-				><kbd id="bksl-ansi" class="ansi-only" data-u="31">\|</kbd
+			<div><kbd id="s-tab" class="dark" data-u="2B">Tab ↹</kbd
+				><kbd id="s-q" data-u="14">Q</kbd
+				><kbd id="s-w" data-u="1A">W</kbd
+				><kbd id="s-e" data-u="08">E</kbd
+				><kbd id="s-r" data-u="15">R</kbd
+				><kbd id="s-t" data-u="17">T</kbd
+				><kbd id="s-y" data-u="1C">Y</kbd
+				><kbd id="s-u" data-u="18">U</kbd
+				><kbd id="s-i" data-u="0C">I</kbd
+				><kbd id="s-o" data-u="12">O</kbd
+				><kbd id="s-p" data-u="13">P</kbd
+				><kbd id="s-bra" data-u="2F">[{</kbd
+				><kbd id="s-ket" data-u="30">]}</kbd
+				><kbd id="s-bksl" data-u="31">\|</kbd
 			></div>
-			<div><kbd class="dark" id="caps" data-u="39">⇪ Caps</kbd
-				><kbd data-u="04">A</kbd
-				><kbd data-u="16">S</kbd
-				><kbd data-u="07">D</kbd
-				><kbd data-u="09">F</kbd
-				><kbd data-u="0A">G</kbd
-				><kbd data-u="0B">H</kbd
-				><kbd data-u="0D">J</kbd
-				><kbd data-u="0E">K</kbd
-				><kbd data-u="0F">L</kbd
-				><kbd data-u="33">;:</kbd
-				><kbd data-u="34">'&quot;</kbd
-				><kbd id="euro1" class="iso-only" data-u="32">€#~</kbd
-				><kbd id="bksl-jis" class="jis-only" data-u="31">\|</kbd
-				><kbd class="dark" id="enter" data-u="28">⏎</kbd
+			<div><kbd id="s-caps" class="dark" data-u="39">⇪ Caps</kbd
+				><kbd id="s-a" data-u="04">A</kbd
+				><kbd id="s-s" data-u="16">S</kbd
+				><kbd id="s-d" data-u="07">D</kbd
+				><kbd id="s-f" data-u="09">F</kbd
+				><kbd id="s-g" data-u="0A">G</kbd
+				><kbd id="s-h" data-u="0B">H</kbd
+				><kbd id="s-j" data-u="0D">J</kbd
+				><kbd id="s-k" data-u="0E">K</kbd
+				><kbd id="s-l" data-u="0F">L</kbd
+				><kbd id="s-semi" data-u="33">;:</kbd
+				><kbd id="s-quote" data-u="34">'&quot;</kbd
+				><kbd id="s-euro1" class="iso-only" data-u="32">€#~</kbd
+				><kbd id="s-enter" class="dark" data-u="28">⏎</kbd
 			></div>
-			<div><kbd class="dark" id="lsh" data-u="E1">L⇧</kbd
-				><kbd id="euro2" class="iso-only" data-u="64">€\|</kbd
-				><kbd data-u="1D">Z</kbd
-				><kbd data-u="1B">X</kbd
-				><kbd data-u="06">C</kbd
-				><kbd data-u="19">V</kbd
-				><kbd data-u="05">B</kbd
-				><kbd data-u="11">N</kbd
-				><kbd data-u="10">M</kbd
-				><kbd data-u="36">,&lt;</kbd
-				><kbd data-u="37">.&gt;</kbd
-				><kbd data-u="38">/?</kbd
-				><kbd id="ro" class="jis-only" data-u="87">ろ</kbd
-				><kbd class="dark" id="rsh" data-u="E5">R⇧</kbd
+			<div><kbd id="s-lsh" class="dark" data-u="E1">L⇧</kbd
+				><kbd id="s-euro2" class="iso-only" data-u="64">€\|</kbd
+				><kbd id="s-z" data-u="1D">Z</kbd
+				><kbd id="s-x" data-u="1B">X</kbd
+				><kbd id="s-c" data-u="06">C</kbd
+				><kbd id="s-v" data-u="19">V</kbd
+				><kbd id="s-b" data-u="05">B</kbd
+				><kbd id="s-n" data-u="11">N</kbd
+				><kbd id="s-m" data-u="10">M</kbd
+				><kbd id="s-comma" data-u="36">,&lt;</kbd
+				><kbd id="s-dot" data-u="37">.&gt;</kbd
+				><kbd id="s-slash" data-u="38">/?</kbd
+				><kbd id="s-ro" class="jis-only" data-u="87">ろ</kbd
+				><kbd id="s-rsh" class="dark" data-u="E5">R⇧</kbd
 			></div>
 			<div
-				><kbd class="dark" id="lctrl" data-u="E0">L⎈</kbd
-				><kbd class="dark" id="fn" data-u="DF">Fn</kbd
-				><kbd class="dark" id="lgui" data-u="E3">L⌘</kbd
-				><kbd class="dark" id="lalt" data-u="E2">L⎇</kbd
-				><kbd class="dark jis-only" id="muhen" data-u="8B">無変</kbd
-				><kbd id="space" data-u="2C">Space</kbd
-				><kbd class="dark jis-only" id="hen" data-u="8A">変</kbd
-				><kbd class="dark jis-only" id="kana" data-u="88">カ/ひ</kbd
-				><kbd class="dark" id="ralt" data-u="E6">R⎇</kbd
-				><kbd class="dark" id="rgui" data-u="E7">R⌘</kbd
-				><kbd class="dark" id="apps" data-u="65">▤</kbd
-				><kbd class="dark" id="rctrl" data-u="E4">R⎈</kbd
+				><kbd id="s-lctrl" class="dark" data-u="E0">L⎈</kbd
+				><kbd id="s-lgui" class="dark" data-u="E3">L⌘</kbd
+				><kbd id="s-lalt" class="dark" data-u="E2">L⎇</kbd
+				><kbd id="s-muhen" class="dark jis-only" data-u="8B">無変</kbd
+				><kbd id="s-space" data-u="2C">Space</kbd
+				><kbd id="s-hen" class="dark jis-only" data-u="8A">変</kbd
+				><kbd id="s-kana" class="dark jis-only" data-u="88">カ/ひ</kbd
+				><kbd id="s-ralt" class="dark" data-u="E6">R⎇</kbd
+				><kbd id="s-rgui" class="dark" data-u="E7">R⌘</kbd
+				><kbd id="s-apps" class="dark" data-u="65">▤</kbd
+				><kbd id="s-rctrl" class="dark" data-u="E4">R⎈</kbd
 			></div>
 		</div>
 		<div class="nav">
-			<div><kbd class="dark" data-u="49">Ins</kbd
-				><kbd class="dark" data-u="4A">⇱</kbd
-				><kbd class="dark" data-u="4B">⇞</kbd
+			<div><kbd id="s-ins" class="dark" data-u="49">Ins</kbd
+				><kbd id="s-home" class="dark" data-u="4A">⇱</kbd
+				><kbd id="s-pgup" class="dark" data-u="4B">⇞</kbd
 			></div>
-			<div><kbd class="dark" data-u="4C">Del</kbd
-				><kbd class="dark" data-u="4D">⇲</kbd
-				><kbd class="dark" data-u="4E">⇟</kbd
+			<div><kbd id="s-del" class="dark" data-u="4C">Del</kbd
+				><kbd id="s-end" class="dark" data-u="4D">⇲</kbd
+				><kbd id="s-pgdn" class="dark" data-u="4E">⇟</kbd
 			></div>
 			<div></div>
-			<div><kbd class="dark" id="up" data-u="52">↑</kbd
+			<div><kbd id="s-up" class="dark" data-u="52">↑</kbd
 			></div>
-			<div><kbd class="dark" data-u="50">←</kbd
-				><kbd class="dark" data-u="51">↓</kbd
-				><kbd class="dark" data-u="4F">→</kbd
+			<div><kbd id="s-left" class="dark" data-u="50">←</kbd
+				><kbd id="s-down" class="dark" data-u="51">↓</kbd
+				><kbd id="s-right" class="dark" data-u="4F">→</kbd
 			></div>
 		</div>
 		<div class="keypad">
-			<div><kbd class="dark" data-u="53">⇭</kbd
-				><kbd class="dark" data-u="54">K/</kbd
-				><kbd class="dark" data-u="55">K*</kbd
-				><kbd class="dark" data-u="56">K-</kbd
+			<div><kbd id="s-num" class="dark" data-u="53">⇭</kbd
+				><kbd id="s-kdivide" class="dark" data-u="54">K/</kbd
+				><kbd id="s-ktimes" class="dark" data-u="55">K*</kbd
+				><kbd id="s-kminus" class="dark" data-u="56">K-</kbd
 			></div>
-			<div><kbd data-u="5F">K7</kbd
-				><kbd data-u="60">K8</kbd
-				><kbd data-u="61">K9</kbd
-				><kbd class="dark" id="kplus" data-u="57">K+</kbd
+			<div><kbd id="s-k7" data-u="5F">K7</kbd
+				><kbd id="s-k8" data-u="60">K8</kbd
+				><kbd id="s-k9" data-u="61">K9</kbd
+				><kbd id="s-kplus" class="dark" data-u="57">K+</kbd
 			></div>
-			<div><kbd data-u="5C">K4</kbd
-				><kbd data-u="5D">K5</kbd
-				><kbd data-u="5E">K6</kbd
+			<div><kbd id="s-k4" data-u="5C">K4</kbd
+				><kbd id="s-k5" data-u="5D">K5</kbd
+				><kbd id="s-k6" data-u="5E">K6</kbd
 			></div>
-			<div><kbd data-u="59">K1</kbd
-				><kbd data-u="5A">K2</kbd
-				><kbd data-u="5B">K3</kbd
-				><kbd class="dark" id="kenter" data-u="58">K⏎</kbd
+			<div><kbd id="s-k1" data-u="59">K1</kbd
+				><kbd id="s-k2" data-u="5A">K2</kbd
+				><kbd id="s-k3" data-u="5B">K3</kbd
+				><kbd id="s-kenter" class="dark" data-u="58">K⏎</kbd
 			></div>
-			<div><kbd id="k0" data-u="62">K0</kbd
-				><kbd data-u="63">K.</kbd
+			<div><kbd id="s-k0" data-u="62">K0</kbd
+				><kbd id="s-kdot" data-u="63">K.</kbd
 			></div>
 		</div>
 	</div></div>
 	<div id="keypad">
-		<div><kbd class="dark" data-u="DD">Hex</kbd
-			><kbd class="dark" data-u="DC">Dec</kbd
-			><kbd class="dark" data-u="DB">Oct</kbd
-			><kbd class="dark" data-u="DA">Bin</kbd
-			><kbd data-u="85">,</kbd
-			><kbd data-u="B4">$<sup>2</sup></kbd
-			><kbd data-u="B5">¢<sup>2</sup></kbd
-			><kbd class="dark" data-u="BA">↹</kbd
-			><kbd class="red" data-u="BB">⌫</kbd
-			><kbd class="red" data-u="D9">CE</kbd
-			><kbd class="red" data-u="D8">C</kbd
+		<div><kbd id="sk-hex" class="dark" data-u="DD">Hex</kbd
+			><kbd id="sk-dec" class="dark" data-u="DC">Dec</kbd
+			><kbd id="sk-oct" class="dark" data-u="DB">Oct</kbd
+			><kbd id="sk-bin" class="dark" data-u="DA">Bin</kbd
+			><kbd id="sk-comma" data-u="85">,</kbd
+			><kbd id="sk-curr" data-u="B4">$<sup>2</sup></kbd
+			><kbd id="sk-subcurr" data-u="B5">¢<sup>2</sup></kbd
+			><kbd id="sk-tab" class="dark" data-u="BA">↹</kbd
+			><kbd id="sk-bksp" class="red" data-u="BB">⌫</kbd
+			><kbd id="sk-ce" class="red" data-u="D9">CE</kbd
+			><kbd id="sk-clear" class="red" data-u="D8">C</kbd
 		></div>
-		<div><kbd data-u="B8">{</kbd
-			><kbd data-u="B9">}</kbd
-			><kbd data-u="CB">:</kbd
-			><kbd class="dark" data-u="D2">MC</kbd
-			><kbd data-u="B3">.,<sup>3</sup></kbd
-			><kbd data-u="5F">7</kbd
-			><kbd data-u="60">8</kbd
-			><kbd data-u="61">9</kbd
-			><kbd data-u="54">÷</kbd
-			><kbd data-u="C4">%</kbd
-			><kbd data-u="C2">Xor</kbd
+		<div><kbd id="sk-lbrace" data-u="B8">{</kbd
+			><kbd id="sk-rbrace" data-u="B9">}</kbd
+			><kbd id="sk-colon" data-u="CB">:</kbd
+			><kbd id="sk-mc" class="dark" data-u="D2">MC</kbd
+			><kbd id="sk-decsep" data-u="B3">.,<sup>3</sup></kbd
+			><kbd id="sk-7" data-u="5F">7</kbd
+			><kbd id="sk-8" data-u="60">8</kbd
+			><kbd id="sk-9" data-u="61">9</kbd
+			><kbd id="sk-divide" data-u="54">÷</kbd
+			><kbd id="sk-percent" data-u="C4">%</kbd
+			><kbd id="sk-xor" data-u="C2">Xor</kbd
 		></div>
-		<div><kbd data-u="B6">(</kbd
-			><kbd data-u="B7">)</kbd
-			><kbd data-u="CC">#</kbd
-			><kbd class="dark" data-u="D1">MR</kbd
-			><kbd data-u="B2">,'<sup>3</sup></kbd
-			><kbd data-u="5C">4</kbd
-			><kbd data-u="5D">5</kbd
-			><kbd data-u="5E">6</kbd
-			><kbd data-u="55">×</kbd
-			><kbd data-u="C9">|</kbd
-			><kbd data-u="C7">&amp;</kbd
+		<div><kbd id="sk-lparen" data-u="B6">(</kbd
+			><kbd id="sk-rparen" data-u="B7">)</kbd
+			><kbd id="sk-hash" data-u="CC">#</kbd
+			><kbd id="sk-mr" class="dark" data-u="D1">MR</kbd
+			><kbd id="sk-grpsep" data-u="B2">,'<sup>3</sup></kbd
+			><kbd id="sk-4" data-u="5C">4</kbd
+			><kbd id="sk-5" data-u="5D">5</kbd
+			><kbd id="sk-6" data-u="5E">6</kbd
+			><kbd id="sk-times" data-u="55">×</kbd
+			><kbd id="sk-bar" data-u="C9">|</kbd
+			><kbd id="sk-amp" data-u="C7">&amp;</kbd
 		></div>
-		<div><kbd data-u="C5">&lt;</kbd
-			><kbd data-u="C6">&gt;</kbd
-			><kbd data-u="CE">@</kbd
-			><kbd class="dark" data-u="D0">MS</kbd
-			><kbd data-u="B1">000</kbd
-			><kbd data-u="59">1</kbd
-			><kbd data-u="5A">2</kbd
-			><kbd data-u="5B">3</kbd
-			><kbd data-u="56">−</kbd
-			><kbd data-u="CA">||</kbd
-			><kbd data-u="C8">&amp;&amp;</kbd
+		<div><kbd id="sk-lt" data-u="C5">&lt;</kbd
+			><kbd id="sk-gt" data-u="C6">&gt;</kbd
+			><kbd id="sk-at" data-u="CE">@</kbd
+			><kbd id="sk-ms" class="dark" data-u="D0">MS</kbd
+			><kbd id="sk-000" data-u="B1">000</kbd
+			><kbd id="sk-1" data-u="59">1</kbd
+			><kbd id="sk-2" data-u="5A">2</kbd
+			><kbd id="sk-3" data-u="5B">3</kbd
+			><kbd id="sk-minus" data-u="56">−</kbd
+			><kbd id="sk-barbar" data-u="CA">||</kbd
+			><kbd id="sk-ampamp" data-u="C8">&amp;&amp;</kbd
 		></div>
-		<div><kbd data-u="C3">^</kbd
-			><kbd data-u="CF">!</kbd
-			><kbd class="dark" data-u="D5">M×</kbd
-			><kbd class="dark" data-u="D3">M+</kbd
-			><kbd data-u="B0">00</kbd
-			><kbd data-u="62">0</kbd
-			><kbd data-u="D7">+/−</kbd
-			><kbd data-u="63">.</kbd
-			><kbd data-u="57">+</kbd
-			><kbd data-u="67">=</kbd
-			><kbd data-u="86">=<sup>1</sup></kbd
+		<div><kbd id="sk-circum" data-u="C3">^</kbd
+			><kbd id="sk-exclam" data-u="CF">!</kbd
+			><kbd id="sk-mtimes" class="dark" data-u="D5">M×</kbd
+			><kbd id="sk-mplus" class="dark" data-u="D3">M+</kbd
+			><kbd id="sk-00" data-u="B0">00</kbd
+			><kbd id="sk-0" data-u="62">0</kbd
+			><kbd id="sk-pm" data-u="D7">+/−</kbd
+			><kbd id="sk-dot" data-u="63">.</kbd
+			><kbd id="sk-plus" data-u="57">+</kbd
+			><kbd id="sk-equal" data-u="67">=</kbd
+			><kbd id="sk-eq-as400" data-u="86">=<sup>1</sup></kbd
 		></div>
-		<div><kbd class="dark" data-u="53">⇭</kbd
-			><kbd class="dark" data-u="58">⏎</kbd
-			><kbd class="dark" data-u="D6">M÷</kbd
-			><kbd class="dark" data-u="D4">M−</kbd
-			><kbd data-u="CD">␣</kbd
-			><kbd data-u="BC">A</kbd
-			><kbd data-u="BD">B</kbd
-			><kbd data-u="BE">C</kbd
-			><kbd data-u="BF">D</kbd
-			><kbd data-u="C0">E</kbd
-			><kbd data-u="C1">F</kbd
+		<div><kbd id="sk-num" class="dark" data-u="53">⇭</kbd
+			><kbd id="sk-enter" class="dark" data-u="58">⏎</kbd
+			><kbd id="sk-mdivide" class="dark" data-u="D6">M÷</kbd
+			><kbd id="sk-mminus" class="dark" data-u="D4">M−</kbd
+			><kbd id="sk-space" data-u="CD">␣</kbd
+			><kbd id="sk-a" data-u="BC">A</kbd
+			><kbd id="sk-b" data-u="BD">B</kbd
+			><kbd id="sk-c" data-u="BE">C</kbd
+			><kbd id="sk-d" data-u="BF">D</kbd
+			><kbd id="sk-e" data-u="C0">E</kbd
+			><kbd id="sk-f" data-u="C1">F</kbd
 		></div>
+	</div>
 	</div>
 	<div id="rare">
 		<p>This page presents keys rarely found on modern keyboards. Some are from the mainframe era (3270 terminal) and the Sun world; others from Korean and Japanese keyboards.</p>
@@ -610,119 +611,129 @@ firmware used under permission from Truly Ergonomic
 	</div>
 	<div id="t-keys">
 	<div id="t-fkeys"
-		><input id="t-esc"
-		/><span class="spacer"></span
-		><input id="t-f1"
-		/><input id="t-f2"
-		/><input id="t-f3"
-		/><input id="t-f4"
-		/><span class="spacer"></span
-		><input id="t-f5"
-		/><input id="t-f6"
-		/><input id="t-f7"
-		/><input id="t-f8"
-		/><span class="spacer"></span
-		><input id="t-f9"
-		/><input id="t-f10"
-		/><input id="t-f11"
-		/><input id="t-f12"
-		/><span class="spacer"></span
-		><input id="t-del"
-		/><br
-		/><input id="t-caps"
-		/><input id="t-fn"
-		/><input id="t-num"
-	/></div>
-	<div class="stagger-0"
-		><input id="t-euro2"
-		/><input id="t-grave"
-		/><input id="t-minus105"
-		/><input id="t-1"
-		/><input id="t-2"
-		/><input id="t-3"
-		/><input id="t-4"
-		/><input id="t-5"
-		/><input id="t-gui"
-		/><input id="t-6"
-		/><input id="t-7"
-		/><input id="t-8"
-		/><input id="t-9"
-		/><input id="t-0"
-		/><input id="t-minus"
-		/><input id="t-equal"
-	/></div>
-	<div class="stagger-1"
-		><input id="t-bksl"
-		/><input id="t-slash"
-		/><input id="t-q"
-		/><input id="t-w"
-		/><input id="t-e"
-		/><input id="t-r"
-		/><input id="t-t"
-		/><input id="t-hen"
-		/><input id="t-y"
-		/><input id="t-u"
-		/><input id="t-i"
-		/><input id="t-o"
-		/><input id="t-p"
-		/><input id="t-bra"
-		/><input id="t-ket"
-	/></div>
-	<div class="stagger-2"
-		><input id="t-lsh"
-		/><input id="t-a"
-		/><input id="t-s"
-		/><input id="t-d"
-		/><input id="t-f"
-		/><input id="t-g"
-		/><input id="t-tab"
-		/><input id="t-h"
-		/><input id="t-j"
-		/><input id="t-k"
-		/><input id="t-l"
-		/><input id="t-semi"
-		/><input id="t-rsh"
-	/></div>
-	<div class="stagger-2"
-		><input id="t-lctrl"
-		/><input id="t-z"
-		/><input id="t-x"
-		/><input id="t-c"
-		/><input id="t-v"
-		/><input id="t-b"
-		/><input id="t-bksp"
-		/><input id="t-n"
-		/><input id="t-m"
-		/><input id="t-comma"
-		/><input id="t-dot"
-		/><input id="t-quote"
-		/><input id="t-rctrl"
-	/></div>
+		><kbd id="t-esc">Esc</kbd
+		><span class="spacer"></span
+		><kbd id="t-f1">F1</kbd
+		><kbd id="t-f2">F2</kbd
+		><kbd id="t-f3">F3</kbd
+		><kbd id="t-f4">F4</kbd
+		><span class="spacer"></span
+		><kbd id="t-f5">F5</kbd
+		><kbd id="t-f6">F6</kbd
+		><kbd id="t-f7">F7</kbd
+		><kbd id="t-f8">F8</kbd
+		><span class="spacer"></span
+		><kbd id="t-f9">F9</kbd
+		><kbd id="t-f10">F10</kbd
+		><kbd id="t-f11">F11</kbd
+		><kbd id="t-f12">F12</kbd
+		><span class="spacer"></span
+		><kbd id="t-del">Delete</kbd
+		><br
+		/><kbd id="t-caps">Caps</kbd
+		><kbd id="t-fn">Fn</kbd
+		><kbd id="t-num">TNum Lock</kbd
+	></div>
+	<div id="t-main">
+	<div id="t-leftside">
+		<div
+			><kbd id="t-minus105">-_</kbd
+			><kbd id="t-euro2">Euro2</kbd
+			><kbd id="t-grave">`~</kbd
+			><kbd id="t-1">1!</kbd
+			><kbd id="t-2">2@</kbd
+			><kbd id="t-3">3#</kbd
+			><kbd id="t-4">4$</kbd
+			><kbd id="t-5">5%</kbd
+		></div>
+		<div
+			><kbd id="t-bksl">\|</kbd
+			><kbd id="t-slash">/?</kbd
+			><kbd id="t-q">Q</kbd
+			><kbd id="t-w">W</kbd
+			><kbd id="t-e">E</kbd
+			><kbd id="t-r">R</kbd
+			><kbd id="t-t">T</kbd
+		></div>
+		<div
+			><kbd id="t-lsh">LShift</kbd
+			><kbd id="t-a">A</kbd
+			><kbd id="t-s">S</kbd
+			><kbd id="t-d">D</kbd
+			><kbd id="t-f">F</kbd
+			><kbd id="t-g">G</kbd
+		></div>
+		<div
+			><kbd id="t-lctrl">LCtrl</kbd
+			><kbd id="t-z">Z</kbd
+			><kbd id="t-x">X</kbd
+			><kbd id="t-c">C</kbd
+			><kbd id="t-v">V</kbd
+			><kbd id="t-b">B</kbd
+		></div>
 	<div
-		><input id="t-lblank"
-		/><input id="t-lalt"
-		/><span class="cross"
-			><input id="t-home"
-			/><span class="stack"
-			><input id="t-pgup"
-			/><input id="t-pgdn"
-			/></span
-			><input id="t-end"
-			/></span
-		><input id="t-apps"
-		/><input id="t-enter"
-		/><input id="t-space"
-		/><span class="cross"
-			><input id="t-left"
-			/><span class="stack"
-			><input id="t-up"
-			/><input id="t-down"
-			/></span
-			><input id="t-right"
-		/></span
-		><input id="t-ralt"
-		/><input id="t-rblank"
-	/></div>
+		><kbd id="t-lblank">LBlank</kbd
+		><kbd id="t-lalt">LAlt</kbd
+		><kbd id="t-home">Home</kbd
+		><kbd id="t-pgup">Page Up</kbd
+		><kbd id="t-pgdn">Page Down</kbd
+		><kbd id="t-end">End</kbd
+		><kbd id="t-apps">Apps</kbd
+	></div>
+	</div>
+	<div id="t-centercolumn"
+		><kbd id="t-gui">LGUI</kbd
+		><kbd id="t-hen">Henkan</kbd
+		><kbd id="t-tab">Tab</kbd
+		><kbd id="t-bksp">Bksp</kbd
+		><kbd id="t-enter">Enter</kbd
+	></div>
+	<div id="t-rightside">
+		<div
+			><kbd id="t-6">6^</kbd
+			><kbd id="t-7">7&amp;</kbd
+			><kbd id="t-8">8*</kbd
+			><kbd id="t-9">9(</kbd
+			><kbd id="t-0">0)</kbd
+			><kbd id="t-minus">-_</kbd
+			><kbd id="t-equal">=+</kbd
+		></div>
+		<div
+			><kbd id="t-y">Y</kbd
+			><kbd id="t-u">U</kbd
+			><kbd id="t-i">I</kbd
+			><kbd id="t-o">O</kbd
+			><kbd id="t-p">P</kbd
+			><kbd id="t-bra">[{</kbd
+			><kbd id="t-ket">]}</kbd
+		></div>
+		<div
+			><kbd id="t-h">H</kbd
+			><kbd id="t-j">J</kbd
+			><kbd id="t-k">K</kbd
+			><kbd id="t-l">L</kbd
+			><kbd id="t-semi">;:</kbd
+			><kbd id="t-rsh">RShift</kbd
+		></div>
+		<div
+			><kbd id="t-n">N</kbd
+			><kbd id="t-m">M</kbd
+			><kbd id="t-comma">,&lt;</kbd
+			><kbd id="t-dot">.&gt;</kbd
+			><kbd id="t-quote">'"</kbd
+			><kbd id="t-rctrl">RCtrl</kbd
+		></div>
+		<div
+			><kbd id="t-space">Space</kbd
+			><kbd id="t-left">Left</kbd
+			><kbd id="t-up">Up</kbd
+			><kbd id="t-down">Down</kbd
+			><kbd id="t-right">Right</kbd
+			><kbd id="t-ralt">RAlt</kbd
+			><kbd id="t-rblank">RBlank</kbd
+		></div>
+	</div>
+	</div>
 	</div>
 </div>
 <div id="notes">

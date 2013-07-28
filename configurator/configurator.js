@@ -5,6 +5,13 @@ document.getElementById('t-minus105').dual = document.getElementById('t-minus');
 
 var _ = null;
 
+xpath_foreach('//*[@id="t-keys"]//kbd', document, function (key)
+{
+	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
+	var button = document.createElement('button');
+	key.appendChild(button);
+});
+
 function warn(warning) {
 	function _warn(data)
 	{
@@ -353,7 +360,11 @@ function parse_name(name)
 
 function dragstart(event)
 {
-	event.dataTransfer.setData('text/x-keycode', event.target.dataset.u);
+	var key = document.evaluate('./ancestor-or-self::kbd', event.target, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	event.dataTransfer.setData('text/x-keycode', key.dataset.u);
+	event.dataTransfer.setData('text/plain', key.dataset.u);
+	event.dataTransfer.effectAllowed = 'copy';
+	event.stopPropagation();
 }
 
 function count_media_keys()
@@ -378,12 +389,12 @@ function count_media_keys()
 function set_usage(target, u, nosave)
 {
 	target.dataset.u = u;
-	target.value = usage_display_name(u);
+	target.firstChild.textContent = usage_display_name(u);
 	target.title = usage_description(u);
 	if (target.dual)
 	{
 		target.dual.dataset.u = u;
-		target.dual.value = usage_display_name(u);
+		target.dual.firstChild.textContent = usage_display_name(u);
 		target.dual.title = usage_description(u);
 	}
 	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('pc-fn');
@@ -426,10 +437,28 @@ function drop(event)
 	event.preventDefault();
 }
 
+function target_click(event)
+{
+	var key = event.target.parentNode;
+	var input = document.createElement('input');
+	input.setAttribute('type', 'text');
+	input.value = event.target.textContent;
+	input.onchange = change;
+	input.onblur = change;
+	input.owner = event.target;
+	input.id = event.target.id;
+
+	key.replaceChild(input, event.target);
+	input.focus();
+	input.select();
+}
+
 function change(event)
 {
+	var key = event.target/*input*/.parentNode/*kbd*/;
+	key.replaceChild(event.target.owner, event.target);
 	var u = parse_name(event.target.value);
-	set_usage(event.target, u);
+	set_usage(key, u);
 }
 
 function layout(event)
@@ -781,26 +810,32 @@ function xpath_foreach(xpath, context, action, actionContext)
 	return actionContext;
 }
 
-xpath_foreach('//kbd', document, function (key)
+xpath_foreach('//*[@id="sources"]//kbd', document, function (key)
 {
 	key.draggable = true;
 	key.ondragstart = dragstart;
 	var u = parseInt(key.dataset.u, 16);
 	key.dataset.u = u;
-	key.textContent = usage_display_name(u);
 	key.title = usage_description(u);
 	if (usage_warning(u))
 	{
 		key.className = key.className + ' incompatible';
 	}
+	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
+	var label = document.createElement('span'); // Really wanted to use <label> but then drag-n-drop is flaky in Firefox
+	label.className = 'label';
+	label.textContent = usage_display_name(u);
+	// label.draggable = true;
+	// label.ondragstart = dragstart;
+	key.appendChild(label);
 });
 
-xpath_foreach('//*[@id="targets"]//input[@data-u]', document, function (i)
+xpath_foreach('//*[@id="targets"]//button', document, function (i)
 {
 	i.ondragover = dragover;
 	i.ondragenter = dragenter;
 	i.ondrop = drop;
-	i.onchange = change;
+	i.onclick = target_click;
 });
 
 function expand_collapse(event)

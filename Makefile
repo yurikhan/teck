@@ -18,7 +18,9 @@ listing-mod: _build/TrulyErgonomic_v3yk.lst.orig
 check: listing-mod
 	meld TrulyErgonomic_209_v3.lst.annotated _build/TrulyErgonomic_v3yk.lst.orig
 
-www-all: www/index.html www/styles.css www/configurator.js
+WWW_FILES = index.html styles.css
+
+www-all: www/configurator.js $(addprefix www/,$(WWW_FILES))
 
 _build:
 	mkdir -p _build
@@ -27,13 +29,12 @@ _build:
 www:
 	mkdir -p www
 
-www/index.html: configurator/index.html | www
-	cp $< $@
-www/styles.css: configurator/styles.css | www
-	cp $< $@
+$(addprefix www/,$(WWW_FILES)): $(addprefix configurator/,$(WWW_FILES)) | www
+	install -m 644 -t www $?
 
 www/configurator.js: configurator/configurator.js _build/TrulyErgonomic_v3yk_code.jsi | www
 	sed -e "/^:/d; /^var firmware_code/r_build/TrulyErgonomic_v3yk_code.jsi" configurator/configurator.js >$@
+	chmod 644 $@
 
 _build/TrulyErgonomic_v3yk_code.jsi: TrulyErgonomic_209_v3.lst.annotated TrulyErgonomic_v3yk_code.refi | _build
 	tools/undump.py TrulyErgonomic_v3yk_code.refi TrulyErgonomic_209_v3.lst.annotated | sed -e 's/\r\?\n\?$$/\\r\\n\\/' >$@
