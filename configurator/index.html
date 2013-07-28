@@ -16,6 +16,8 @@ firmware used under permission from Truly Ergonomic
 <select id="layout">
 	<option value="ansi" selected="selected">US 104 key (ANSI)</option>
 	<option value="iso">Europe 105 key (ISO)</option>
+	<option value="ko">Korean 106 key (Dubeolsik)</option>
+	<option value="abnt">Brazilian 107 key (ABNT-2)</option>
 	<option value="jis">Japanese 109 key (JIS)</option>
 	<option value="keypad">Keypad</option>
 	<option value="rare">Rare keys</option>
@@ -77,7 +79,7 @@ firmware used under permission from Truly Ergonomic
 				><kbd id="s-0" data-u="27">0)</kbd
 				><kbd id="s-minus" data-u="2D">-_</kbd
 				><kbd id="s-equal" data-u="2E">=+</kbd
-				><kbd id="s-yen" class="jis-only" data-u="89">¥</kbd
+				><kbd id="s-yen" data-u="89">¥</kbd
 				><kbd id="s-bksp" class="dark" data-u="2A">⌫</kbd
 			></div>
 			<div><kbd id="s-tab" class="dark" data-u="2B">Tab ↹</kbd
@@ -107,11 +109,11 @@ firmware used under permission from Truly Ergonomic
 				><kbd id="s-l" data-u="0F">L</kbd
 				><kbd id="s-semi" data-u="33">;:</kbd
 				><kbd id="s-quote" data-u="34">'&quot;</kbd
-				><kbd id="s-euro1" class="iso-only" data-u="32">€#~</kbd
+				><kbd id="s-euro1" data-u="32">€#~</kbd
 				><kbd id="s-enter" class="dark" data-u="28">⏎</kbd
 			></div>
 			<div><kbd id="s-lsh" class="dark" data-u="E1">L⇧</kbd
-				><kbd id="s-euro2" class="iso-only" data-u="64">€\|</kbd
+				><kbd id="s-euro2" data-u="64">€\|</kbd
 				><kbd id="s-z" data-u="1D">Z</kbd
 				><kbd id="s-x" data-u="1B">X</kbd
 				><kbd id="s-c" data-u="06">C</kbd
@@ -122,17 +124,19 @@ firmware used under permission from Truly Ergonomic
 				><kbd id="s-comma" data-u="36">,&lt;</kbd
 				><kbd id="s-dot" data-u="37">.&gt;</kbd
 				><kbd id="s-slash" data-u="38">/?</kbd
-				><kbd id="s-ro" class="jis-only" data-u="87">ろ</kbd
+				><kbd id="s-ro" data-u="87">ろ</kbd
 				><kbd id="s-rsh" class="dark" data-u="E5">R⇧</kbd
 			></div>
 			<div
 				><kbd id="s-lctrl" class="dark" data-u="E0">L⎈</kbd
 				><kbd id="s-lgui" class="dark" data-u="E3">L⌘</kbd
 				><kbd id="s-lalt" class="dark" data-u="E2">L⎇</kbd
-				><kbd id="s-muhen" class="dark jis-only" data-u="8B">無変</kbd
+				><kbd id="s-muhen" class="dark" data-u="8B">無変</kbd
+				><kbd id="s-hanja" class="dark" data-u="91">Hanja</kbd
 				><kbd id="s-space" data-u="2C">Space</kbd
-				><kbd id="s-hen" class="dark jis-only" data-u="8A">変</kbd
-				><kbd id="s-kana" class="dark jis-only" data-u="88">カ/ひ</kbd
+				><kbd id="s-hangul" class="dark" data-u="90">Hangul</kbd
+				><kbd id="s-hen" class="dark" data-u="8A">変</kbd
+				><kbd id="s-kana" class="dark" data-u="88">カ/ひ</kbd
 				><kbd id="s-ralt" class="dark" data-u="E6">R⎇</kbd
 				><kbd id="s-rgui" class="dark" data-u="E7">R⌘</kbd
 				><kbd id="s-apps" class="dark" data-u="65">▤</kbd
@@ -170,6 +174,7 @@ firmware used under permission from Truly Ergonomic
 			<div><kbd id="s-k4" data-u="5C">K4</kbd
 				><kbd id="s-k5" data-u="5D">K5</kbd
 				><kbd id="s-k6" data-u="5E">K6</kbd
+				><kbd id="s-kcomma" class="dark" data-u="85">K,</kbd
 			></div>
 			<div><kbd id="s-k1" data-u="59">K1</kbd
 				><kbd id="s-k2" data-u="5A">K2</kbd

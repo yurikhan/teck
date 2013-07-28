@@ -159,13 +159,15 @@ section.collapsed header a:before { content: '▷'; }
 #kbd .nav div * { text-align: left; }
 
 #sized, #kbd, #keypad, #rare, #media-note, #media, #al, #ac, #exotic { display: none; }
-.ansi #sized, .ansi #kbd, .iso #sized, .iso #kbd, .jis #sized, .jis #kbd,
+.ansi #sized, .ansi #kbd, .iso #sized, .iso #kbd, .jis #sized, .jis #kbd, .ko #sized, .ko #kbd, .abnt #sized, .abnt #kbd,
 .keypad #sized, .keypad #keypad, .rare #rare,
 .media #media-note, .al #media-note, .ac #media-note, .exotic #media-note,
 .media #media, .al #al, .ac #ac, .exotic #exotic { display: block; }
 
-.iso #s-bksl, #s-euro1, #s-euro2, #s-yen, #s-ro, #s-muhen, #s-hen, #s-kana, #s-hankaku, .jis #s-grave { display: none; }
-.iso #s-euro1, .iso #s-euro2, .jis #s-yen, .jis #s-ro, .jis #s-muhen, .jis #s-hen, .jis #s-kana, .jis #s-hankaku { display: block; }
+.iso #s-bksl, .abnt #s-bksl, #s-euro1, #s-euro2, #s-yen, #s-ro, #s-muhen, #s-hen, #s-kana, #s-hankaku, .jis #s-grave, #s-hanja, #s-hangul, #s-kcomma { display: none; }
+.iso #s-euro1, .iso #s-euro2, .abnt #s-euro1, .abnt #s-euro2,
+.jis #s-yen, .jis #s-ro, .abnt #s-ro, .jis #s-muhen, .jis #s-hen,
+.jis #s-kana, .jis #s-hankaku, .ko #s-hanja, .ko #s-hangul, .abnt #s-kcomma { display: block; }
 
 #sized {
 	background-color: #f7f8f5; color: #000000;
@@ -176,7 +178,7 @@ section.collapsed header a:before { content: '▷'; }
 	padding: 0.25em;
 }
 #kbd, #keypad { position: relative; }
-.ansi #sized, .iso #sized, .jis #sized { width: 23em; height: 6.25em; }
+#sized { width: 23em; height: 6.25em; }
 .keypad #sized { width: 11em; height: 6em; }
 .row .main, .row .nav, .row .keypad { display: block; position: absolute; }
 .main { left: 0em; width: 15em; }
@@ -210,26 +212,28 @@ kbd .label {
 }
 
 #kbd kbd, #keypad kbd { width: 0.85em; height: 0.85em; }
-.jis #s-bksp, .jis #s-lgui, .jis #s-rgui, .jis #s-apps { width: 0.85em; }
+.jis #s-bksp, .jis #s-lgui, .jis #s-rgui, .jis #s-apps,
+.ko #s-lgui, .ko #s-rgui, .ko #s-apps { width: 0.85em; }
 kbd#s-kplus, kbd#s-kenter { height: 1.85em; }
 .jis #s-lctrl, .jis #s-lalt, .jis #s-ralt, .jis #s-rctrl { width: 1.005em; }
 kbd#s-lgui, kbd#s-lalt, kbd#s-ralt, kbd#s-rgui, kbd#s-apps { width: 1.085em; }
-.iso #s-lsh { width: 1.1em; }
+.iso #s-lsh, .abnt #s-lsh, .ko #s-lctrl, .ko #s-rctrl { width: 1.1em; }
 kbd#s-muhen, kbd#s-hen, kbd#s-kana { width: 1.165em; }
 kbd#s-enter { width: 1.1em; height: 1.85em; }
-kbd#s-tab, .ansi #s-bksl { width: 1.35em; }
+kbd#s-tab, .ansi #s-bksl, .ko #s-bksl { width: 1.35em; }
 kbd#s-lctrl, kbd#s-rctrl { width: 1.38em; }
-kbd#s-caps, .jis #s-rsh { width: 1.6em; }
+kbd#s-caps, .jis #s-rsh, .abnt #s-rsh { width: 1.6em; }
 kbd#s-bksp, kbd#s-k0 { width: 1.85em; }
-.ansi #s-enter { height: 0.85em; }
-.ansi #s-enter, kbd#s-lsh, kbd#s-lsh { width: 2.1em; }
+.ansi #s-enter, .ko #s-enter { height: 0.85em; }
+.ansi #s-enter, .ko #s-enter, kbd#s-lsh, kbd#s-lsh { width: 2.1em; }
 .jis #s-space { width: 3.285em; }
+.ko #s-space { width: 4.88em; }
 kbd#s-rsh { width: 2.6em; }
 kbd#s-space { width: 5.615em; }
 
 #fkeys kbd { top: 0em; }
 .main>div:first-child>kbd, .nav>div:first-child>kbd, .keypad>div:first-child>kbd { top: 0em; }
-.main>div:nth-child(2)>kbd, .nav>div:nth-child(2)>kbd, .keypad>div:nth-child(2)>kbd, .ansi #s-bksl, .iso #s-enter, .jis #s-enter { top: 1em; }
+.main>div:nth-child(2)>kbd, .nav>div:nth-child(2)>kbd, .keypad>div:nth-child(2)>kbd, .ansi #s-bksl, .iso #s-enter, .jis #s-enter, .abnt #s-enter { top: 1em; }
 .main>div:nth-child(3)>kbd, .keypad>div:nth-child(3)>kbd, .jis #s-bksl { top: 2em; }
 .main>div:nth-child(4)>kbd, .nav>div:nth-child(4)>kbd, .keypad>div:nth-child(4)>kbd { top: 3em; }
 .main>div:nth-child(5)>kbd, .nav>div:nth-child(5)>kbd, .keypad>div:nth-child(5)>kbd { top: 4em; }
@@ -237,6 +241,7 @@ kbd#s-space { width: 5.615em; }
 #s-esc, #s-grave, #s-tab, #s-caps, #s-lsh, #s-lctrl { left: 0em; }
 #s-1 { left: 1em; }
 .jis #s-lgui { left: 1.155em; }
+.ko #s-lgui { left: 1.25em; }
 #s-euro2 { left: 1.25em; }
 #s-q { left: 1.5em; }
 #s-lgui { left: 1.53em; }
@@ -244,17 +249,20 @@ kbd#s-space { width: 5.615em; }
 #s-z { left: 2.25em; }
 #s-f1, #s-2 { left: 2em; }
 .jis #s-lalt { left: 2.155em; }
+.ko #s-lalt { left: 2.25em; }
 #s-w { left: 2.5em; }
 #s-s { left: 2.75em; }
 #s-lalt { left: 2.765em; }
 #s-f2, #s-3 { left: 3em; }
 #s-x { left: 3.25em; }
 #s-muhen { left: 3.31em; }
+#s-hanja { left: 3.485em; }
 #s-e { left: 3.5em; }
 #s-d { left: 3.75em; }
 #s-f3, #s-4 { left: 4em; }
 #s-space { left: 4em; }
 #s-c { left: 4.25em; }
+.ko #s-space { left: 4.485em; }
 #s-r { left: 4.5em; }
 .jis #s-space { left: 4.625em; }
 #s-f { left: 4.75em; }
@@ -279,29 +287,32 @@ kbd#s-space { width: 5.615em; }
 #s-comma { left: 9.25em; }
 #s-kana { left: 9.375em; }
 #s-f8, #s-o { left: 9.5em; }
+#s-hangul { left: 9.515em; }
 #s-l { left: 9.75em; }
 #s-ralt { left: 9.765em; }
 #s-0 { left: 10em; }
 #s-dot { left: 10.25em; }
 #s-p { left: 10.5em; }
+.ko #s-ralt { left: 10.515em; }
 .jis #s-ralt { left: 10.69em; }
 #s-semi { left: 10.75em; }
 #s-f9, #s-minus, #s-rgui { left: 11em; } 
 #s-slash { left: 11.25em; }
 #s-bra { left: 11.5em; }
 #s-quote { left: 11.75em; }
+.ko #s-rgui { left: 11.75em; }
 .jis #s-rgui { left: 11.845em; }
 #s-f10, #s-equal { left: 12em; } 
 #s-apps { left: 12.235em; }
-#s-ro, .ansi #s-rsh, .iso #s-rsh { left: 12.25em; }
+#s-ro, #s-rsh { left: 12.25em; }
 #s-ket { left: 12.5em; } 
-.ansi #s-enter, #s-euro1, .jis #s-bksl { left: 12.75em; }
+.ansi #s-enter, .ko #s-enter, #s-euro1, .jis #s-bksl, .ko #s-apps { left: 12.75em; }
 .jis #s-apps { left: 12.845em; }
 #s-f11, #s-bksp, #s-yen { left: 13em; }
-.jis #s-rsh { left: 13.25em; }
+.jis #s-rsh, .abnt #s-rsh { left: 13.25em; }
 #s-rctrl { left: 13.47em; }
 #s-bksl { left: 13.5em; }
-#s-enter { left: 13.75em; }
+#s-enter, .ko #s-rctrl { left: 13.75em; }
 .jis #s-rctrl { left: 13.845em; }
 #s-f12, .jis #s-bksp { left: 14em; }
 
@@ -312,7 +323,8 @@ kbd#s-space { width: 5.615em; }
 #s-tnum, #s-num, #s-k7, #s-k4, #s-k1, #s-k0 { left: 0em; }
 #s-winpause, #s-kdivide, #s-k8, #s-k5, #s-k2 { left: 1em; }
 #s-break, #s-ktimes, #s-k9, #s-k6, #s-k3, #s-kdot { left: 2em; }
-#s-fn, #s-kminus, #s-kplus, #s-kenter { left: 3em; }
+#s-fn, #s-kminus, #s-kplus, #s-kcomma, #s-kenter { left: 3em; }
+.abnt #s-kplus { height: 0.85em; }
 
 #keypad>div:first-child>kbd { top: 0em; }
 #keypad>div:nth-child(2)>kbd { top: 1em; }
