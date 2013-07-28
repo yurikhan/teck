@@ -11,7 +11,7 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 	padding: 0.25em; background-color: #2e3436; color: #f7f8f5;
 	border-width: 0.125em; border-style: solid;
 	border-color: #555753 #000000 #000000 #555753;
-	border-radius: 0.2em; font-size: 9.5mm;
+	border-radius: 0.2em;
 }
 #targets>#notes { display: inline-block; width: 81mm; }
 #layer-selector { margin-bottom: 10mm; text-align: left; font-size: 0.3em; }
@@ -171,7 +171,6 @@ section.collapsed header a:before { content: '▷'; }
 
 #sized {
 	background-color: #f7f8f5; color: #000000;
-	font-size: 9.5mm;
 	border-radius: 0.2em; 
 	border: solid #d3d7cf;
 	border-width: 0.1em 0.15em 0.15em 0.1em;

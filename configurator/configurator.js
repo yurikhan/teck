@@ -857,6 +857,17 @@ xpath_foreach('//section', document, function(section)
 	});
 });
 
+function body_resize(event)
+{
+	var sources_size = document.getElementById('sources').offsetWidth;
+	var targets_size = document.getElementById('targets').offsetWidth;
+	var size = min(window.innerHeight / 18, min(sources_size / 24.0, targets_size / 16.5));
+	document.getElementById('teck').style.fontSize = size + 'px';
+	document.getElementById('sized').style.fontSize = size + 'px';
+}
+document.body.onresize = body_resize;
+body_resize(null);
+
 document.getElementById('layout').onchange = layout;
 document.getElementById('warn').onclick = show_hide_warnings;
 
