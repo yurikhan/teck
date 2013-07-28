@@ -44,12 +44,14 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 	transform: rotate(7deg); transform-origin: top right;
 	-webkit-transform: rotate(7deg); -webkit-transform-origin: top right;
 }
+#t-leftside button { transform: rotate(-7deg); -webkit-transform: rotate(-7deg); }
 #t-centercolumn { position: absolute; left: 7em; top: 0em; width: 2.5em; height: 5em; }
 #t-rightside {
 	position: absolute; left: 9em; top: 0em; width: 7em; height: 6em;
 	transform: rotate(-7deg); transform-origin: top left;
 	-webkit-transform: rotate(-7deg); -webkit-transform-origin: top left;
 }
+#t-rightside button { transform: rotate(7deg); -webkit-transform: rotate(7deg); }
 #targets #t-apps, #targets #t-space { background: linear-gradient(to bottom, rgba(85,87,83,0.3) 0%,rgba(85,87,83,0) 100%); }
 #targets #t-apps:hover, #targets #t-space:hover { background: linear-gradient(to bottom, rgba(136,138,133,0.6) 0%,rgba(136,138,133,0.3) 100%); }
 #t-centercolumn kbd,
