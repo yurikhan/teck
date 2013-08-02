@@ -192,7 +192,7 @@ kbd { position: relative; }
 #kbd kbd, #keypad kbd { position: absolute; }
 
 kbd {
-	display: inline-block; cursor: default;
+	display: inline-block; cursor: default; cursor: -moz-grab; cursor: -webkit-grab;
 	background-color: #f7f8f5; color: #000000;
 	border-color: #d3d7cf; border-style: solid; border-width: 0.5mm 0.7mm 0.7mm 0.5mm; border-radius: 1mm;
 }
