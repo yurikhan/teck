@@ -166,10 +166,10 @@ section.collapsed header a:before { content: '▷'; }
 .media #media-note, .al #media-note, .ac #media-note, .exotic #media-note,
 .media #media, .al #al, .ac #ac, .exotic #exotic { display: block; }
 
-.iso #s-bksl, .abnt #s-bksl, #s-euro1, #s-euro2, #s-yen, #s-ro, #s-muhen, #s-hen, #s-kana, #s-hankaku, .jis #s-grave, #s-hanja, #s-hangul, #s-kcomma { display: none; }
+.iso #s-bksl, .abnt #s-bksl, .jis #s-bksl, #s-euro1, #s-euro2, #s-yen, #s-ro, #s-muhen, #s-hen, #s-kana, #s-hanja, #s-hangul, #s-kcomma { display: none; }
 .iso #s-euro1, .iso #s-euro2, .abnt #s-euro1, .abnt #s-euro2,
-.jis #s-yen, .jis #s-ro, .abnt #s-ro, .jis #s-muhen, .jis #s-hen,
-.jis #s-kana, .jis #s-hankaku, .ko #s-hanja, .ko #s-hangul, .abnt #s-kcomma { display: block; }
+.jis #s-euro1, .jis #s-yen, .jis #s-ro, .abnt #s-ro, .jis #s-muhen, .jis #s-hen,
+.jis #s-kana, .ko #s-hanja, .ko #s-hangul, .abnt #s-kcomma { display: block; }
 
 #sized {
 	background-color: #f7f8f5; color: #000000;
