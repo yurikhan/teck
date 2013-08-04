@@ -1,26 +1,33 @@
-body { font-family: Ubuntu, Arial, Helvetica, sans-serif; font-weight: 100; }
+/* Configurator reserves the following prefixes for its element IDs and class names:
+ * "cf-", "cfs-", "cft-"
+ */
 
-address { float: right; text-align: right; opacity: 0.5; font-size: smaller; }
-form { display: block; margin-top: 5mm; background-color: #d3d7cf; color: black; padding: 5mm; }
-textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216; font-family: monospace; }
-.hidden { display: none; }
-.warning { background-color: #f78787; color: #000000; border-radius: 5mm; }
+#cf-root { font-family: Ubuntu, Arial, Helvetica, sans-serif; font-weight: 100; }
 
-#targets>div { display: inline-block; vertical-align: top; }
-#targets>#teck {
+#cf-root address { float: right; text-align: right; opacity: 0.5; font-size: smaller; }
+#cf-root form { display: block; margin-top: 5mm; background-color: #d3d7cf; color: black; padding: 5mm; }
+#cf-root textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216; font-family: monospace; }
+#cf-root samp { font-family: inherit; font-weight: 400; }
+.cf-hidden { display: none; }
+.cf-warning { background-color: #f78787; color: #000000; border-radius: 5mm; }
+
+#cf-targets>div { display: inline-block; vertical-align: top; }
+#cf-targets>#cf-teck {
 	padding: 0.25em; background-color: #2e3436; color: #f7f8f5;
 	border-width: 0.125em; border-style: solid;
 	border-color: #555753 #000000 #000000 #555753;
 	border-radius: 0.2em;
 }
-#targets>#notes { display: inline-block; width: 81mm; }
-#layer-selector { margin-bottom: 10mm; text-align: left; font-size: 0.3em; }
-#pc { float: left; } #mac { float: right; } #model { display: block; margin-left: auto; margin-right: auto; } #t-fkeys { clear: both; }
-#t-keys { position: relative; width: 16.5em; height: 8.25em; }
-#t-keys kbd {
+#cf-targets>#cf-notes { display: inline-block; width: 20em; padding: 0em 1em; }
+#cf-layer-selector { margin-bottom: 1em; text-align: left; font-size: 0.3em; }
+#cf-primary { float: left; }
+#cf-secondary { float: right; }
+#cf-model { display: block; margin-left: auto; margin-right: auto; }
+#cft-keys { clear: both; position: relative; width: 16.5em; height: 8em; }
+#cft-keys kbd {
 	font-size: inherit;
-	box-sizing: content-box; -moz-box-sizing: content-box; padding: 0em;
-	width: 0.85em; height: 0.85em; text-align: left; position: relative; 
+	box-sizing: border-box; -moz-box-sizing: border-box; padding: 0em;
+	width: 0.97em; height: 0.97em; text-align: left; position: relative; 
 	background-color: #2e3436; color: #f7f8f5;
 	background: linear-gradient(to right, rgba(85,87,83,0) 0%, rgba(85,87,83,0.3) 100%);
 	border-style: solid;
@@ -29,341 +36,395 @@ textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216;
 	border-radius: 0.1em;
 	position: absolute;
 }
-#t-keys kbd:hover { background-color: #555753; background: linear-gradient(to right, rgba(136,138,133,0.3) 0%, rgba(136,138,133,0.6) 100%); }
-#t-keys kbd button, #t-keys kbd input {
+#cft-keys kbd:hover { background-color: #555753; background: linear-gradient(to right, rgba(136,138,133,0.3) 0%, rgba(136,138,133,0.6) 100%); }
+#cft-keys kbd button,
+#cft-keys kbd input {
 	border: none; background: none; color: currentColor;
 	font-size: 0.3em; font-weight: 100;
 	display: block; vertical-align: top; overflow: hidden;
 	position: absolute;
 	left: 0em; top: 0em; width: 100%; height: 100%;
 }
-#t-fkeys { position: absolute; left: 0.5em; top: 0em; width: 15em; height: 1em; }
-#t-main { position: absolute; left: 0em; top: 2.42em; width: 15.5em; height: 6em; }
-#t-leftside {
+#cft-fkeys { position: absolute; left: 0.5em; top: 0em; width: 15em; height: 1em; }
+#cft-main { position: absolute; left: 0em; top: 2.42em; width: 15.5em; height: 6em; }
+#cft-leftside {
 	position: absolute; left: 0.5em; top: 0em; width: 7em; height: 6em;
 	transform: rotate(7deg); transform-origin: top right;
 	-webkit-transform: rotate(7deg); -webkit-transform-origin: top right;
 }
-#t-leftside button { transform: rotate(-7deg); -webkit-transform: rotate(-7deg); }
-#t-centercolumn { position: absolute; left: 7em; top: 0em; width: 2.5em; height: 5em; }
-#t-rightside {
+#cft-leftside button { transform: rotate(-7deg); -webkit-transform: rotate(-7deg); }
+#cft-centercolumn { position: absolute; left: 7em; top: 0em; width: 2.5em; height: 5em; }
+#cft-rightside {
 	position: absolute; left: 9em; top: 0em; width: 7em; height: 6em;
 	transform: rotate(-7deg); transform-origin: top left;
 	-webkit-transform: rotate(-7deg); -webkit-transform-origin: top left;
 }
-#t-rightside button { transform: rotate(7deg); -webkit-transform: rotate(7deg); }
-#targets #t-apps, #targets #t-space { background: linear-gradient(to bottom, rgba(85,87,83,0.3) 0%,rgba(85,87,83,0) 100%); }
-#targets #t-apps:hover, #targets #t-space:hover { background: linear-gradient(to bottom, rgba(136,138,133,0.6) 0%,rgba(136,138,133,0.3) 100%); }
-#t-centercolumn kbd,
-#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl,
-#targets.m207 #t-lalt, #targets.m207 #t-ralt,
-#targets.m105 #t-lalt, #targets.m105 #t-lalt,
-#targets.m105 #t-minus, #targets.m105 #t-equal
-{ background: rgba(85,87,83,0.15); }
-#t-centercolumn kbd:hover,
-#targets #t-lsh:hover, #targets #t-rsh:hover, #targets #t-lctrl:hover, #targets #t-rctrl:hover,
-#targets.m207 #t-lalt:hover, #targets.m207 #t-ralt:hover,
-#targets.m105 #t-lalt:hover, #targets.m105 #t-lalt:hover,
-#targets.m105 #t-minus:hover, #targets.m105 #t-equal:hover
-{ background: rgba(136,138,133,0.3); }
+#cft-rightside button { transform: rotate(7deg); -webkit-transform: rotate(7deg); }
+#cf-targets #cft-apps,
+#cf-targets #cft-space { background: linear-gradient(to bottom, rgba(85,87,83,0.3) 0%,rgba(85,87,83,0) 100%); }
+#cf-targets #cft-apps:hover,
+#cf-targets #cft-space:hover { background: linear-gradient(to bottom, rgba(136,138,133,0.6) 0%,rgba(136,138,133,0.3) 100%); }
+#cft-centercolumn kbd,
+#cf-targets #cft-lsh,
+#cf-targets #cft-rsh,
+#cf-targets #cft-lctrl,
+#cf-targets #cft-rctrl,
+#cf-targets.cf-207 #cft-lalt,
+#cf-targets.cf-207 #cft-ralt,
+#cf-targets.cf-105 #cft-lalt,
+#cf-targets.cf-105 #cft-ralt,
+#cf-targets.cf-105 #cft-minus,
+#cf-targets.cf-105 #cft-equal { background: rgba(85,87,83,0.15); }
+#cft-centercolumn kbd:hover,
+#cf-targets #cft-lsh:hover,
+#cf-targets #cft-rsh:hover,
+#cf-targets #cft-lctrl:hover,
+#cf-targets #cft-rctrl:hover,
+#cf-targets.cf-207 #cft-lalt:hover,
+#cf-targets.cf-207 #cft-ralt:hover,
+#cf-targets.cf-105 #cft-lalt:hover,
+#cf-targets.cf-105 #cft-lalt:hover,
+#cf-targets.cf-105 #cft-minus:hover,
+#cf-targets.cf-105 #cft-equal:hover { background: rgba(136,138,133,0.3); }
 
-#targets #layer-selector { color: #d3d7cf; }
-#targets #teck.layer-1 #t-num, #targets #teck.layer-4 #t-num {
+#cf-targets #cf-layer-selector { color: #d3d7cf; }
+#cf-targets #cf-teck.cf-layer-1 #cft-num,
+#cf-targets #cf-teck.cf-layer-4 #cft-num {
 	background: radial-gradient(circle at center 75%,
 		rgba(32,32,255,1) 0%,
 		rgba(32,32,255,0.25) 50%,
 		rgba(32,32,255,0) 100%);
 }
-#targets #teck.layer-2 .pc-fn, #targets #teck.layer-5 .mac-fn {
+#cf-targets #cf-teck.cf-layer-2 .cf-primary-fn,
+#cf-targets #cf-teck.cf-layer-5 .cf-secondary-fn {
 	background-color: #171a1b; color: #f7f8f5;
 	border-color: #000000;
 }
-#targets #teck.layer-2 kbd, #targets #teck.layer-5 kbd {
+#cf-targets #cf-teck.cf-layer-2 kbd,
+#cf-targets #cf-teck.cf-layer-5 kbd {
 	color: #97c4f0;
 }
-#targets.m207 #t-lblank, #targets.m207 #t-rblank, #targets.m209 #t-minus105, #targets.m207 #t-minus105,
-#targets.m105 #t-lblank, #targets.m105 #t-rblank, #targets.m105 #t-euro2, #targets.m105 #t-grave, #targets.m105 #t-minus { display: none; }
-#targets.m207 #t-lalt, #targets.m207 #t-ralt,
-#targets.m105 #t-lalt, #targets.m105 #t-ralt, #targets.m105 #t-equal { width: 1.85em; }
-#targets.m207 #t-lalt, #targets.m105 #t-lalt { left: 0em; }
-#targets.m105 #t-equal { left: 5em; }
+#cf-targets.cf-207 #cft-lblank,
+#cf-targets.cf-207 #cft-rblank,
+#cf-targets.cf-209 #cft-minus105,
+#cf-targets.cf-207 #cft-minus105,
+#cf-targets.cf-105 #cft-lblank,
+#cf-targets.cf-105 #cft-rblank,
+#cf-targets.cf-105 #cft-euro2,
+#cf-targets.cf-105 #cft-grave,
+#cf-targets.cf-105 #cft-minus { display: none; }
+#cf-targets.cf-207 #cft-lalt,
+#cf-targets.cf-207 #cft-ralt,
+#cf-targets.cf-105 #cft-lalt,
+#cf-targets.cf-105 #cft-ralt,
+#cf-targets.cf-105 #cft-equal { width: 1.97em; }
+#cf-targets.cf-207 #cft-lalt,
+#cf-targets.cf-105 #cft-lalt { left: 0em; }
+#cf-targets.cf-105 #cft-equal { left: 5em; }
 
-#targets .spacer { display: inline-block; width: 4mm; }
+#cf-targets #cft-fkeys { margin-bottom: 0.5em; }
 
-#targets #t-fkeys { margin-bottom: 0.5em; }
+#cf-targets #cft-lsh,
+#cf-targets #cft-rsh,
+#cf-targets #cft-lctrl,
+#cf-targets #cft-rctrl,
+#cf-targets #cft-minus105,
+#cf-targets #cft-apps,
+#cf-targets #cft-space { width: 1.97em; }
 
-#targets #t-lsh, #targets #t-rsh, #targets #t-lctrl, #targets #t-rctrl,
-#targets #t-minus105, #targets #t-apps, #targets #t-space { width: 1.85em; }
+#cft-fkeys kbd { top: 0em; }
+#cft-fkeys #cft-caps,
+#cft-fkeys #cft-fn,
+#cft-fkeys #cft-num { top: 1em; }
 
-#t-fkeys kbd { top: 0em; } #t-fkeys #t-caps, #t-fkeys #t-fn, #t-fkeys #t-num { top: 1em; }
+#cft-esc, #cft-f1, #cft-f2, #cft-f3, #cft-f4,
+#cft-f5, #cft-f6, #cft-f7, #cft-f8,
+#cft-f9, #cft-f10, #cft-f11, #cft-f12, #cft-del { top: 0em; }
+#cft-caps, #cft-fn, #cft-num { top: 1em; }
 
-#t-esc, #t-f1, #t-f2, #t-f3, #t-f4, #t-f5, #t-f6, #t-f7, #t-f8, #t-f9, #t-f10, #t-f11, #t-f12, #t-del { top: 0em; }
-#t-caps, #t-fn, #t-num { top: 1em; }
+#cft-3, #cft-8 { top: -0.32em; }
+#cft-2, #cft-4, #cft-7, #cft-9 { top: -0.16em; }
+#cft-minus105, #cft-euro2, #cft-grave, #cft-1, #cft-5,
+#cft-gui, #cft-6, #cft-0, #cft-minus, #cft-equal { top: 0em; }
+#cft-e, #cft-i { top: 0.68em; }
+#cft-w, #cft-r, #cft-u, #cft-o { top: 0.84em; }
+#cft-bksl, #cft-slash, #cft-q, #cft-t,
+#cft-hen, #cft-y, #cft-p, #cft-bra, #cft-ket { top: 1em; }
+#cft-d, #cft-k { top: 1.68em; }
+#cft-s, #cft-f, #cft-j, #cft-l { top: 1.84em; }
+#cft-lsh, #cft-a, #cft-g,
+#cft-tab, #cft-h, #cft-semi, #cft-rsh { top: 2em; }
+#cft-c, #cft-comma { top: 2.68em; }
+#cft-x, #cft-v, #cft-m, #cft-dot { top: 2.84em; }
+#cft-lctrl, #cft-z, #cft-b,
+#cft-bksp, #cft-n, #cft-quote, #cft-rctrl { top: 3em; }
+#cft-pgup, #cft-up { top: 3.84em; }
+#cft-lblank, #cft-lalt, #cft-apps,
+#cft-enter, #cft-space, #cft-ralt, #cft-rblank { top: 4em; }
+#cft-home, #cft-end, #cft-left, #cft-right { top: 4.34em; }
+#cft-pgdn, #cft-down { top: 4.84em; }
 
-#t-3, #t-8 { top: -0.32em; }
-#t-2, #t-4, #t-7, #t-9 { top: -0.16em; }
-#t-minus105, #t-euro2, #t-grave, #t-1, #t-5, #t-gui, #t-6, #t-0, #t-minus, #t-equal { top: 0em; }
-#t-e, #t-i { top: 0.68em; }
-#t-w, #t-r, #t-u, #t-o { top: 0.84em; }
-#t-bksl, #t-slash, #t-q, #t-t, #t-hen, #t-y, #t-p, #t-bra, #t-ket { top: 1em; }
-#t-d, #t-k { top: 1.68em; }
-#t-s, #t-f, #t-j, #t-l { top: 1.84em; }
-#t-lsh, #t-a, #t-g, #t-tab, #t-h, #t-semi, #t-rsh { top: 2em; }
-#t-c, #t-comma { top: 2.68em; }
-#t-x, #t-v, #t-m, #t-dot { top: 2.84em; }
-#t-lctrl, #t-z, #t-b, #t-bksp, #t-n, #t-quote, #t-rctrl { top: 3em; }
-#t-pgup, #t-up { top: 3.84em; }
-#t-lblank, #t-lalt, #t-apps, #t-enter, #t-space, #t-ralt, #t-rblank { top: 4em; }
-#t-home, #t-end, #t-left, #t-right { top: 4.34em; }
-#t-pgdn, #t-down { top: 4.84em; }
+#cft-esc { left: 0em; }
+#cft-f1 { left: 1.375em; }
+#cft-f2 { left: 2.375em; }
+#cft-f3 { left: 3.375em; }
+#cft-f4 { left: 4.375em; }
+#cft-f5 { left: 5.75em; }
+#cft-f6 { left: 6.75em; }
+#cft-f7 { left: 7.75em; }
+#cft-f8 { left: 8.75em; }
+#cft-f9 { left: 10.125em; }
+#cft-f10 { left: 11.125em; }
+#cft-f11 { left: 12.125em; }
+#cft-f12 { left: 13.125em; }
+#cft-del { left: 14.5em; }
+#cft-caps { left: 6.25em; }
+#cft-fn { left: 7.25em; }
+#cft-num { left: 8.25em; }
 
-#t-esc { left: 0em; }
-#t-f1 { left: 1.375em; } #t-f2 { left: 2.375em; } #t-f3 { left: 3.375em; } #t-f4 { left: 4.375em; }
-#t-f5 { left: 5.75em; } #t-f6 { left: 6.75em; } #t-f7 { left: 7.75em; } #t-f8 { left: 8.75em; }
-#t-f9 { left: 10.125em; } #t-f10 { left: 11.125em; } #t-f11 { left: 12.125em; } #t-f12 { left: 13.125em; }
-#t-del { left: 14.5em; }
-#t-caps { left: 6.25em; } #t-fn { left: 7.25em; } #t-num { left: 8.25em; }
+#cft-minus105, #cft-euro2, #cft-bksl, #cft-lsh, #cft-lctrl, #cft-lblank { left: 0em; }
+#cft-grave, #cft-slash, #cft-lalt { left: 1em; }
+#cft-1, #cft-q, #cft-a, #cft-z, #cft-home { left: 2em; }
+#cft-2, #cft-w, #cft-s, #cft-x, #cft-pgup, #cft-pgdn { left: 3em; }
+#cft-3, #cft-e, #cft-d, #cft-c, #cft-end { left: 4em; }
+#cft-4, #cft-r, #cft-f, #cft-v, #cft-apps { left: 5em; }
+#cft-5, #cft-t, #cft-g, #cft-b { left: 6em; }
 
-#t-minus105, #t-euro2, #t-bksl, #t-lsh, #t-lctrl, #t-lblank { left: 0em; }
-#t-grave, #t-slash, #t-lalt { left: 1em; }
-#t-1, #t-q, #t-a, #t-z, #t-home { left: 2em; }
-#t-2, #t-w, #t-s, #t-x, #t-pgup, #t-pgdn { left: 3em; }
-#t-3, #t-e, #t-d, #t-c, #t-end { left: 4em; }
-#t-4, #t-r, #t-f, #t-v, #t-apps { left: 5em; }
-#t-5, #t-t, #t-g, #t-b { left: 6em; }
+#cf-targets #cft-gui { left: 0.5em; width: 1.47em; }
+#cf-targets #cft-hen { left: 0.375em; width: 1.72em; }
+#cf-targets #cft-tab { left: 0.25em; width: 1.97em; }
+#cf-targets #cft-bksp { left: 0.125em; width: 2.22em; }
+#cf-targets #cft-enter { left: 0em; width: 2.47em; }
 
-#targets #t-gui { left: 0.5em; width: 1.35em; }
-#targets #t-hen { left: 0.375em; width: 1.6em; }
-#targets #t-tab { left: 0.25em; width: 1.85em; }
-#targets #t-bksp { left: 0.125em; width: 2.1em; }
-#targets #t-enter { left: 0em; width: 2.35em; }
+#cft-6, #cft-y, #cft-h, #cft-n, #cft-space { left: 0em; }
+#cft-7, #cft-u, #cft-j, #cft-m { left: 1em; }
+#cft-8, #cft-i, #cft-k, #cft-comma, #cft-left { left: 2em; }
+#cft-9, #cft-o, #cft-l, #cft-dot, #cft-up, #cft-down { left: 3em; }
+#cft-0, #cft-p, #cft-semi, #cft-quote, #cft-right { left: 4em; }
+#cft-minus, #cft-bra, #cft-rsh, #cft-rctrl, #cft-ralt { left: 5em; }
+#cft-equal, #cft-ket, #cft-rblank { left: 6em; }
 
-#t-6, #t-y, #t-h, #t-n, #t-space { left: 0em; }
-#t-7, #t-u, #t-j, #t-m { left: 1em; }
-#t-8, #t-i, #t-k, #t-comma, #t-left { left: 2em; }
-#t-9, #t-o, #t-l, #t-dot, #t-up, #t-down { left: 3em; }
-#t-0, #t-p, #t-semi, #t-quote, #t-right { left: 4em; }
-#t-minus, #t-bra, #t-rsh, #t-rctrl, #t-ralt { left: 5em; }
-#t-equal, #t-ket, #t-rblank { left: 6em; }
-
-section { margin-left: 1em; } section header { margin-left: -1em; }
-section header a { font-weight: inherit; margin: 1mm 0mm;
+section.collapsible { margin-left: 1em; }
+section.collapsible header { margin-left: -1em; margin-top: 0.25em; }
+section.collapsible header a { font-weight: inherit; margin: 1mm 0mm;
 	text-decoration: none; border-top: dotted 1px; color: #000000; }
-section header a:before { content: '▽'; margin-right: 0.5em; }
-section.collapsed header a:before { content: '▷'; }
-#sources section.collapsed kbd { display: none; }
+section.collapsible header a:before { content: '▽'; margin-right: 0.5em; }
+section.collapsible.collapsed header a:before { content: '▷'; }
+section.collapsible.collapsed>* { display: none !important; }
+section.collapsible.collapsed>header { display: block !important; }
 
-#sources {
+#cf-sources {
 	clear: both;
 	margin-bottom: 1em; 
 }
-#kbd .nav div { text-align: center; }
-#kbd .nav div * { text-align: left; }
 
-#sized, #kbd, #keypad, #rare, #media-note, #media, #al, #ac, #exotic { display: none; }
-.ansi #sized, .ansi #kbd, .iso #sized, .iso #kbd, .jis #sized, .jis #kbd, .ko #sized, .ko #kbd, .abnt #sized, .abnt #kbd,
-.keypad #sized, .keypad #keypad, .rare #rare,
-.media #media-note, .al #media-note, .ac #media-note, .exotic #media-note,
-.media #media, .al #al, .ac #ac, .exotic #exotic { display: block; }
+#cf-sized, #cf-kbd, #cf-keypad, #cf-terminal, #cf-lang, #cf-media-note, #cf-media, #cf-al, #cf-ac, #cf-exotic { display: none; }
+.cf-ansi #cf-sized, .cf-ansi #cf-kbd,
+.cf-iso #cf-sized, .cf-iso #cf-kbd,
+.cf-jis #cf-sized, .cf-jis #cf-kbd,
+.cf-ko #cf-sized, .cf-ko #cf-kbd,
+.cf-abnt #cf-sized, .cf-abnt #cf-kbd,
+.cf-keypad #cf-sized, .cf-keypad #cf-keypad, .cf-terminal #cf-terminal, .cf-lang #cf-lang,
+.cf-media #cf-media-note, .cf-al #cf-media-note, .cf-ac #cf-media-note, .cf-exotic #cf-media-note,
+.cf-media #cf-media, .cf-al #cf-al, .cf-ac #cf-ac, .cf-exotic #cf-exotic { display: block; }
 
-.iso #s-bksl, .abnt #s-bksl, .jis #s-bksl, #s-euro1, #s-euro2, #s-yen, #s-ro, #s-muhen, #s-hen, #s-kana, #s-hanja, #s-hangul, #s-kcomma { display: none; }
-.iso #s-euro1, .iso #s-euro2, .abnt #s-euro1, .abnt #s-euro2,
-.jis #s-euro1, .jis #s-yen, .jis #s-ro, .abnt #s-ro, .jis #s-muhen, .jis #s-hen,
-.jis #s-kana, .ko #s-hanja, .ko #s-hangul, .abnt #s-kcomma { display: block; }
+#cf-sources.cf-iso #cfs-bksl, #cf-sources.cf-abnt #cfs-bksl, #cf-sources.cf-jis #cfs-bksl,
+#cf-sources #cfs-euro1, #cf-sources #cfs-euro2,
+#cf-sources #cfs-yen, #cf-sources #cfs-ro, #cf-sources #cfs-muhen, #cf-sources #cfs-hen, #cf-sources #cfs-kana,
+#cf-sources #cfs-hanja, #cf-sources #cfs-hangul, #cf-sources #cfs-kcomma { display: none; }
+#cf-sources.cf-iso #cfs-euro1, #cf-sources.cf-iso #cfs-euro2,
+#cf-sources.cf-abnt #cfs-euro1, #cf-sources.cf-abnt #cfs-euro2,
+#cf-sources.cf-jis #cfs-euro1, #cf-sources.cf-jis #cfs-yen, #cf-sources.cf-jis #cfs-ro, #cf-sources.cf-abnt #cfs-ro,
+#cf-sources.cf-jis #cfs-muhen, #cf-sources.cf-jis #cfs-hen,
+#cf-sources.cf-jis #cfs-kana, #cf-sources.cf-ko #cfs-hanja, #cf-sources.cf-ko #cfs-hangul, #cf-sources.cf-abnt #cfs-kcomma { display: block; }
 
-#sized {
+#cf-sized {
 	background-color: #f7f8f5; color: #000000;
 	border-radius: 0.2em; 
 	border: solid #d3d7cf;
 	border-width: 0.1em 0.15em 0.15em 0.1em;
 	padding: 0.25em;
 }
-#kbd, #keypad { position: relative; }
-#sized { width: 23em; height: 6.25em; }
-.keypad #sized { width: 11em; height: 6em; }
-.row .main, .row .nav, .row .keypad { display: block; position: absolute; }
-.main { left: 0em; width: 15em; }
-.nav { left: 15.5em; width: 3em; }
-#kbd .keypad { left: 19em; width: 4em; }
-.row#fkeys .main, .row#fkeys .nav, .row#fkeys .keypad { top: 0em; height: 1em; }
-.row .main, .row .nav, .row .keypad { top: 1.25em; height: 5em; }
+#cf-kbd, #cf-keypad { position: relative; }
+#cf-sized { width: 23em; height: 6.25em; }
+.cf-keypad #cf-sized { width: 11em; height: 6em; }
+.cf-row .cf-main, .cf-row .cf-nav, .cf-row .cf-keypad { display: block; position: absolute; }
+.cf-main { left: 0em; width: 15em; }
+.cf-nav { left: 15.5em; width: 3em; }
+#cf-kbd .cf-keypad { left: 19em; width: 4em; }
+.cf-row#cfs-fkeys .cf-main, .cf-row#cfs-fkeys .cf-nav, .cf-row#cfs-fkeys .cf-keypad { top: 0em; height: 1em; }
+.cf-row .cf-main, .cf-row .cf-nav, .cf-row .cf-keypad { top: 1.25em; height: 5em; }
 
-kbd { position: relative; }
-#kbd kbd, #keypad kbd { position: absolute; }
+#cf-kbd kbd, #cf-keypad kbd { position: absolute; }
 
-kbd {
+#cf-sources kbd {
 	display: inline-block; cursor: default; cursor: -moz-grab; cursor: -webkit-grab;
 	background-color: #f7f8f5; color: #000000;
-	border-color: #d3d7cf; border-style: solid; border-width: 0.5mm 0.7mm 0.7mm 0.5mm; border-radius: 1mm;
+	box-sizing: border-box; -moz-box-sizing: border-box;
+	border-color: #d3d7cf; border-style: solid;
+	border-radius: 0.33em; border-width: 0.15em 0.25em 0.25em 0.15em;
+	margin: 0.125em; padding: 0.125em; min-width: 3em; min-height: 3em;
 }
-#sources kbd:hover { border-color: #97c4f0; }
-#sized kbd {
+#cf-sources kbd:hover { border-color: #97c4f0 !important; }
+#cf-sized kbd {
+	width: 0.97em; height: 0.97em;
 	border-radius: 0.1em;
 	border-width: 0.05em 0.07em 0.07em 0.05em;
+	margin: 0em; padding: 0em; min-width: 0em; min-height: 0em;
 }
-#sized .label {
+#cf-sized .cf-label {
 	font-size: 0.3em; display: inline-block;
+	position: absolute; top: 0em; left: 0em; bottom: 0em; right: 0em; overflow: hidden;
 }
-kbd .label {
+kbd .cf-label {
 	font-family: Ubuntu, Arial, Helvetica, sans-serif;
 	margin: 0em 0.125em; vertical-align: top;
 }
-#kbd .label, #keypad .label {
-	position: absolute; top: 0em; left: 0em; bottom: 0em; right: 0em; overflow: hidden;
-}
 
-#kbd kbd, #keypad kbd { width: 0.85em; height: 0.85em; }
-.jis #s-bksp, .jis #s-lgui, .jis #s-rgui, .jis #s-apps,
-.ko #s-lgui, .ko #s-rgui, .ko #s-apps { width: 0.85em; }
-kbd#s-kplus, kbd#s-kenter { height: 1.85em; }
-.jis #s-lctrl, .jis #s-lalt, .jis #s-ralt, .jis #s-rctrl { width: 1.005em; }
-kbd#s-lgui, kbd#s-lalt, kbd#s-ralt, kbd#s-rgui, kbd#s-apps { width: 1.085em; }
-.iso #s-lsh, .abnt #s-lsh, .ko #s-lctrl, .ko #s-rctrl { width: 1.1em; }
-kbd#s-muhen, kbd#s-hen, kbd#s-kana { width: 1.165em; }
-kbd#s-enter { width: 1.1em; height: 1.85em; }
-kbd#s-tab, .ansi #s-bksl, .ko #s-bksl { width: 1.35em; }
-kbd#s-lctrl, kbd#s-rctrl { width: 1.38em; }
-kbd#s-caps, .jis #s-rsh, .abnt #s-rsh { width: 1.6em; }
-kbd#s-bksp, kbd#s-k0 { width: 1.85em; }
-.ansi #s-enter, .ko #s-enter { height: 0.85em; }
-.ansi #s-enter, .ko #s-enter, kbd#s-lsh, kbd#s-lsh { width: 2.1em; }
-.jis #s-space { width: 3.285em; }
-.ko #s-space { width: 4.88em; }
-kbd#s-rsh { width: 2.6em; }
-kbd#s-space { width: 5.615em; }
+.cf-jis #cfs-bksp, .cf-jis #cfs-lgui, .cf-jis #cfs-rgui, .cf-jis #cfs-apps,
+.cf-ko #cfs-lgui, .cf-ko #cfs-rgui, .cf-ko #cfs-apps { width: 0.97em; }
+kbd#cfs-kplus, kbd#cfs-kenter { height: 1.97em; }
+.cf-jis #cfs-lctrl, .cf-jis #cfs-lalt, .cf-jis #cfs-ralt, .cf-jis #cfs-rctrl { width: 1.125em; }
+kbd#cfs-lgui, kbd#cfs-lalt, kbd#cfs-ralt, kbd#cfs-rgui, kbd#cfs-apps { width: 1.205em; }
+.cf-iso #cfs-lsh, .cf-abnt #cfs-lsh, .cf-ko #cfs-lctrl, .cf-ko #cfs-rctrl { width: 1.22em; }
+kbd#cfs-muhen, kbd#cfs-hen, kbd#cfs-kana { width: 1.285em; }
+kbd#cfs-enter { width: 1.22em; height: 1.97em; }
+kbd#cfs-tab, .cf-ansi #cfs-bksl, .cf-ko #cfs-bksl { width: 1.47em; }
+kbd#cfs-lctrl, kbd#cfs-rctrl { width: 1.5em; }
+kbd#cfs-caps, .cf-jis #cfs-rsh, .cf-abnt #cfs-rsh { width: 1.72em; }
+kbd#cfs-bksp, kbd#cfs-k0 { width: 1.97em; }
+.cf-ansi #cfs-enter, .cf-ko #cfs-enter { height: 0.97em; }
+.cf-ansi #cfs-enter, .cf-ko #cfs-enter, kbd#cfs-lsh, kbd#cfs-lsh { width: 2.22em; }
+.cf-jis #cfs-space { width: 3.405em; }
+.cf-ko #cfs-space { width: 5em; }
+kbd#cfs-rsh { width: 2.72em; }
+kbd#cfs-space { width: 5.735em; }
 
-#fkeys kbd { top: 0em; }
-.main>div:first-child>kbd, .nav>div:first-child>kbd, .keypad>div:first-child>kbd { top: 0em; }
-.main>div:nth-child(2)>kbd, .nav>div:nth-child(2)>kbd, .keypad>div:nth-child(2)>kbd, .ansi #s-bksl, .iso #s-enter, .jis #s-enter, .abnt #s-enter { top: 1em; }
-.main>div:nth-child(3)>kbd, .keypad>div:nth-child(3)>kbd, .jis #s-bksl { top: 2em; }
-.main>div:nth-child(4)>kbd, .nav>div:nth-child(4)>kbd, .keypad>div:nth-child(4)>kbd { top: 3em; }
-.main>div:nth-child(5)>kbd, .nav>div:nth-child(5)>kbd, .keypad>div:nth-child(5)>kbd { top: 4em; }
+#cfs-fkeys kbd { top: 0em; }
+.cf-main>div:first-child>kbd, .cf-nav>div:first-child>kbd, .cf-keypad>div:first-child>kbd { top: 0em; }
+.cf-main>div:nth-child(2)>kbd, .cf-nav>div:nth-child(2)>kbd, .cf-keypad>div:nth-child(2)>kbd,
+.cf-ansi #cfs-bksl, .cf-iso #cfs-enter, .cf-jis #cfs-enter, .cf-abnt #cfs-enter { top: 1em; }
+.cf-main>div:nth-child(3)>kbd, .cf-keypad>div:nth-child(3)>kbd, .cf-jis #cfs-bksl { top: 2em; }
+.cf-main>div:nth-child(4)>kbd, .cf-nav>div:nth-child(4)>kbd, .cf-keypad>div:nth-child(4)>kbd { top: 3em; }
+.cf-main>div:nth-child(5)>kbd, .cf-nav>div:nth-child(5)>kbd, .cf-keypad>div:nth-child(5)>kbd { top: 4em; }
 
-#s-esc, #s-grave, #s-tab, #s-caps, #s-lsh, #s-lctrl { left: 0em; }
-#s-1 { left: 1em; }
-.jis #s-lgui { left: 1.155em; }
-.ko #s-lgui { left: 1.25em; }
-#s-euro2 { left: 1.25em; }
-#s-q { left: 1.5em; }
-#s-lgui { left: 1.53em; }
-#s-a { left: 1.75em; }
-#s-z { left: 2.25em; }
-#s-f1, #s-2 { left: 2em; }
-.jis #s-lalt { left: 2.155em; }
-.ko #s-lalt { left: 2.25em; }
-#s-w { left: 2.5em; }
-#s-s { left: 2.75em; }
-#s-lalt { left: 2.765em; }
-#s-f2, #s-3 { left: 3em; }
-#s-x { left: 3.25em; }
-#s-muhen { left: 3.31em; }
-#s-hanja { left: 3.485em; }
-#s-e { left: 3.5em; }
-#s-d { left: 3.75em; }
-#s-f3, #s-4 { left: 4em; }
-#s-space { left: 4em; }
-#s-c { left: 4.25em; }
-.ko #s-space { left: 4.485em; }
-#s-r { left: 4.5em; }
-.jis #s-space { left: 4.625em; }
-#s-f { left: 4.75em; }
-#s-f4, #s-5 { left: 5em; }
-#s-v { left: 5.25em; }
-#s-t { left: 5.5em; }
-#s-g { left: 5.75em; }
-#s-6 { left: 6em; }
-#s-b { left: 6.25em; }
-#s-f5, #s-y { left: 6.5em; } 
-#s-h { left: 6.75em; }
-#s-7 { left: 7em; }
-#s-n { left: 7.25em; }
-#s-f6, #s-u { left: 7.5em; } 
-#s-j { left: 7.75em; }
-#s-8 { left: 8em; } 
-#s-hen { left: 8.06em; }
-#s-m { left: 8.25em; }
-#s-f7, #s-i { left: 8.5em; } 
-#s-k { left: 8.75em; }
-#s-9 { left: 9em; } 
-#s-comma { left: 9.25em; }
-#s-kana { left: 9.375em; }
-#s-f8, #s-o { left: 9.5em; }
-#s-hangul { left: 9.515em; }
-#s-l { left: 9.75em; }
-#s-ralt { left: 9.765em; }
-#s-0 { left: 10em; }
-#s-dot { left: 10.25em; }
-#s-p { left: 10.5em; }
-.ko #s-ralt { left: 10.515em; }
-.jis #s-ralt { left: 10.69em; }
-#s-semi { left: 10.75em; }
-#s-f9, #s-minus, #s-rgui { left: 11em; } 
-#s-slash { left: 11.25em; }
-#s-bra { left: 11.5em; }
-#s-quote { left: 11.75em; }
-.ko #s-rgui { left: 11.75em; }
-.jis #s-rgui { left: 11.845em; }
-#s-f10, #s-equal { left: 12em; } 
-#s-apps { left: 12.235em; }
-#s-ro, #s-rsh { left: 12.25em; }
-#s-ket { left: 12.5em; } 
-.ansi #s-enter, .ko #s-enter, #s-euro1, .jis #s-bksl, .ko #s-apps { left: 12.75em; }
-.jis #s-apps { left: 12.845em; }
-#s-f11, #s-bksp, #s-yen { left: 13em; }
-.jis #s-rsh, .abnt #s-rsh { left: 13.25em; }
-#s-rctrl { left: 13.47em; }
-#s-bksl { left: 13.5em; }
-#s-enter, .ko #s-rctrl { left: 13.75em; }
-.jis #s-rctrl { left: 13.845em; }
-#s-f12, .jis #s-bksp { left: 14em; }
+#cfs-esc, #cfs-grave, #cfs-tab, #cfs-caps, #cfs-lsh, #cfs-lctrl { left: 0em; }
+#cfs-1 { left: 1em; }
+.cf-jis #cfs-lgui { left: 1.155em; }
+.cf-ko #cfs-lgui { left: 1.25em; }
+#cfs-euro2 { left: 1.25em; }
+#cfs-q { left: 1.5em; }
+#cfs-lgui { left: 1.53em; }
+#cfs-a { left: 1.75em; }
+#cfs-z { left: 2.25em; }
+#cfs-f1, #cfs-2 { left: 2em; }
+.cf-jis #cfs-lalt { left: 2.155em; }
+.cf-ko #cfs-lalt { left: 2.25em; }
+#cfs-w { left: 2.5em; }
+#cfs-s { left: 2.75em; }
+#cfs-lalt { left: 2.765em; }
+#cfs-f2, #cfs-3 { left: 3em; }
+#cfs-x { left: 3.25em; }
+#cfs-muhen { left: 3.31em; }
+#cfs-hanja { left: 3.485em; }
+#cfs-e { left: 3.5em; }
+#cfs-d { left: 3.75em; }
+#cfs-f3, #cfs-4 { left: 4em; }
+#cfs-space { left: 4em; }
+#cfs-c { left: 4.25em; }
+.cf-ko #cfs-space { left: 4.485em; }
+#cfs-r { left: 4.5em; }
+.cf-jis #cfs-space { left: 4.625em; }
+#cfs-f { left: 4.75em; }
+#cfs-f4, #cfs-5 { left: 5em; }
+#cfs-v { left: 5.25em; }
+#cfs-t { left: 5.5em; }
+#cfs-g { left: 5.75em; }
+#cfs-6 { left: 6em; }
+#cfs-b { left: 6.25em; }
+#cfs-f5, #cfs-y { left: 6.5em; } 
+#cfs-h { left: 6.75em; }
+#cfs-7 { left: 7em; }
+#cfs-n { left: 7.25em; }
+#cfs-f6, #cfs-u { left: 7.5em; } 
+#cfs-j { left: 7.75em; }
+#cfs-8 { left: 8em; } 
+#cfs-hen { left: 8.06em; }
+#cfs-m { left: 8.25em; }
+#cfs-f7, #cfs-i { left: 8.5em; } 
+#cfs-k { left: 8.75em; }
+#cfs-9 { left: 9em; } 
+#cfs-comma { left: 9.25em; }
+#cfs-kana { left: 9.375em; }
+#cfs-f8, #cfs-o { left: 9.5em; }
+#cfs-hangul { left: 9.515em; }
+#cfs-l { left: 9.75em; }
+#cfs-ralt { left: 9.765em; }
+#cfs-0 { left: 10em; }
+#cfs-dot { left: 10.25em; }
+#cfs-p { left: 10.5em; }
+.cf-ko #cfs-ralt { left: 10.515em; }
+.cf-jis #cfs-ralt { left: 10.69em; }
+#cfs-semi { left: 10.75em; }
+#cfs-f9, #cfs-minus, #cfs-rgui { left: 11em; } 
+#cfs-slash { left: 11.25em; }
+#cfs-bra { left: 11.5em; }
+#cfs-quote { left: 11.75em; }
+.cf-ko #cfs-rgui { left: 11.75em; }
+.cf-jis #cfs-rgui { left: 11.845em; }
+#cfs-f10, #cfs-equal { left: 12em; } 
+#cfs-apps { left: 12.235em; }
+#cfs-ro, #cfs-rsh { left: 12.25em; }
+#cfs-ket { left: 12.5em; } 
+.cf-ansi #cfs-enter, .cf-ko #cfs-enter, #cfs-euro1, .cf-jis #cfs-bksl, .cf-ko #cfs-apps { left: 12.75em; }
+.cf-jis #cfs-apps { left: 12.845em; }
+#cfs-f11, #cfs-bksp, #cfs-yen { left: 13em; }
+.cf-jis #cfs-rsh, .cf-abnt #cfs-rsh { left: 13.25em; }
+#cfs-rctrl { left: 13.47em; }
+#cfs-bksl { left: 13.5em; }
+#cfs-enter, .cf-ko #cfs-rctrl { left: 13.75em; }
+.cf-jis #cfs-rctrl { left: 13.845em; }
+#cfs-f12, .cf-jis #cfs-bksp { left: 14em; }
 
-#s-prtscr, #s-ins, #s-del, #s-left { left: 0em; }
-#s-scroll, #s-home, #s-end, #s-up, #s-down { left: 1em; }
-#s-pause, #s-pgup, #s-pgdn, #s-right { left: 2em; }
+#cfs-prtscr, #cfs-ins, #cfs-del, #cfs-left { left: 0em; }
+#cfs-scroll, #cfs-home, #cfs-end, #cfs-up, #cfs-down { left: 1em; }
+#cfs-pause, #cfs-pgup, #cfs-pgdn, #cfs-right { left: 2em; }
 
-#s-tnum, #s-num, #s-k7, #s-k4, #s-k1, #s-k0 { left: 0em; }
-#s-winpause, #s-kdivide, #s-k8, #s-k5, #s-k2 { left: 1em; }
-#s-break, #s-ktimes, #s-k9, #s-k6, #s-k3, #s-kdot { left: 2em; }
-#s-fn, #s-kminus, #s-kplus, #s-kcomma, #s-kenter { left: 3em; }
-.abnt #s-kplus { height: 0.85em; }
+#cfs-tnum, #cfs-num, #cfs-k7, #cfs-k4, #cfs-k1, #cfs-k0 { left: 0em; }
+#cfs-winpause, #cfs-kdivide, #cfs-k8, #cfs-k5, #cfs-k2 { left: 1em; }
+#cfs-break, #cfs-ktimes, #cfs-k9, #cfs-k6, #cfs-k3, #cfs-kdot { left: 2em; }
+#cfs-fn, #cfs-kminus, #cfs-kplus, #cfs-kcomma, #cfs-kenter { left: 3em; }
+.cf-abnt #cfs-kplus { height: 0.97em; }
 
-#keypad>div:first-child>kbd { top: 0em; }
-#keypad>div:nth-child(2)>kbd { top: 1em; }
-#keypad>div:nth-child(3)>kbd { top: 2em; }
-#keypad>div:nth-child(4)>kbd { top: 3em; }
-#keypad>div:nth-child(5)>kbd { top: 4em; }
-#keypad>div:nth-child(6)>kbd { top: 5em; }
+#cf-keypad>div:first-child>kbd { top: 0em; }
+#cf-keypad>div:nth-child(2)>kbd { top: 1em; }
+#cf-keypad>div:nth-child(3)>kbd { top: 2em; }
+#cf-keypad>div:nth-child(4)>kbd { top: 3em; }
+#cf-keypad>div:nth-child(5)>kbd { top: 4em; }
+#cf-keypad>div:nth-child(6)>kbd { top: 5em; }
 
-#keypad kbd:first-child { left: 0em; }
-#keypad kbd:nth-child(2) { left: 1em; }
-#keypad kbd:nth-child(3) { left: 2em; }
-#keypad kbd:nth-child(4) { left: 3em; }
-#keypad kbd:nth-child(5) { left: 4em; }
-#keypad kbd:nth-child(6) { left: 5em; }
-#keypad kbd:nth-child(7) { left: 6em; }
-#keypad kbd:nth-child(8) { left: 7em; }
-#keypad kbd:nth-child(9) { left: 8em; }
-#keypad kbd:nth-child(10) { left: 9em; }
-#keypad kbd:nth-child(11) { left: 10em; }
+#cf-keypad kbd:first-child { left: 0em; }
+#cf-keypad kbd:nth-child(2) { left: 1em; }
+#cf-keypad kbd:nth-child(3) { left: 2em; }
+#cf-keypad kbd:nth-child(4) { left: 3em; }
+#cf-keypad kbd:nth-child(5) { left: 4em; }
+#cf-keypad kbd:nth-child(6) { left: 5em; }
+#cf-keypad kbd:nth-child(7) { left: 6em; }
+#cf-keypad kbd:nth-child(8) { left: 7em; }
+#cf-keypad kbd:nth-child(9) { left: 8em; }
+#cf-keypad kbd:nth-child(10) { left: 9em; }
+#cf-keypad kbd:nth-child(11) { left: 10em; }
 
-#rare kbd { min-width: 8mm; width: auto; margin: 0.5mm; padding: 0.5mm; }
-#media kbd, #al kbd, #ac kbd {
-	min-width: 6mm; min-height: 6mm;
-	height: auto; width: auto;
-	margin: 0.5mm; padding: 0.5mm;
-}
-kbd.dark, #media kbd, #al kbd, #ac kbd {
+#cf-sources kbd.cf-dark, #cf-media kbd, #cf-al kbd, #cf-ac kbd {
 	background-color: #d3d7cf; color: #000000;
 	border-color: #babdb6;
 }
-kbd.red, #media kbd.red, #al kbd.red, #ac kbd.red {
+#cf-sources kbd.cf-red, #cf-media kbd.cf-red, #cf-al kbd.cf-red, #cf-ac kbd.cf-red {
 	background-color: #fff0d7; color: #000000;
 	border-color: #fcaf3e;
 }
-.warn #kbd kbd.incompatible, .warn #keypad kbd.incompatible, .warn #media kbd.incompatible,
-.warn #al kbd.incompatible, .warn #ac kbd.incompatible {
-	background-color: #ecf0eb; color: #babdb6;
-	border-color: #babdb6;
-	border-width: 0.125mm;
-	padding-right: 0.25mm; padding-bottom: 0.25mm;
+#cf-sources .cf-warn kbd.incompatible {
+	background-color: #ecf0eb !important; color: #babdb6 !important;
+	border-color: #babdb6 !important;
+	border-width: 0.03em !important; padding-right: 0.3em;
 }

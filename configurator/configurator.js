@@ -1,11 +1,11 @@
 window.onload=function(){
 
-document.getElementById('t-minus').dual = document.getElementById('t-minus105');
-document.getElementById('t-minus105').dual = document.getElementById('t-minus');
+document.getElementById('cft-minus').dual = document.getElementById('cft-minus105');
+document.getElementById('cft-minus105').dual = document.getElementById('cft-minus');
 
 var _ = null;
 
-xpath_foreach('//*[@id="t-keys"]//kbd', document, function (key)
+xpath_foreach('//*[@id="cft-keys"]//kbd', document, function (key)
 {
 	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
 	var button = document.createElement('button');
@@ -397,17 +397,17 @@ function set_usage(target, u, nosave)
 		target.dual.firstChild.textContent = usage_display_name(u);
 		target.dual.title = usage_description(u);
 	}
-	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('pc-fn');
-	if (current_layer == 3) target.classList[u == 0xDF ? 'add' : 'remove']('mac-fn');
+	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('cf-primary-fn');
+	if (current_layer == 3) target.classList[u == 0xDF ? 'add' : 'remove']('cf-secondary-fn');
 	if (!nosave)
 	{
 		save_layer(current_layer);
 		var media_key_count = count_media_keys();
-		document.getElementById('too-many-media-keys').classList[media_key_count > 23 ? 'remove' : 'add']('hidden');
-		document.getElementById('media-key-count').textContent = media_key_count;
+		document.getElementById('cf-too-many-media-keys').classList[media_key_count > 23 ? 'remove' : 'add']('cf-hidden');
+		document.getElementById('cf-media-key-count').textContent = media_key_count;
 	}
-	document.getElementById('download-link').className = 'hidden';
-	document.getElementById('share-help').className = 'hidden';
+	document.getElementById('cf-download-link').className = 'cf-hidden';
+	document.getElementById('cf-share-help').className = 'cf-hidden';
 }
 
 function dragenter(event)
@@ -461,19 +461,19 @@ function change(event)
 	set_usage(key, u);
 }
 
-function layout(event)
+function layout_change(event)
 {
-	document.getElementById('sources').className = event.target.value;
+	document.getElementById('cf-sources').className = 'cf-' + event.target.value;
 }
 
 function show_hide_warnings(event)
 {
-	document.getElementById('warning-wrapper').className = event.target.checked ? 'warn' : '';
+	document.getElementById('cf-warning-wrapper').classList[event.target.checked ? 'add':'remove']('cf-warn');
 }
 
-function model(event)
+function model_change(event)
 {
-	document.getElementById('targets').className = 'm' + event.target.value;
+	document.getElementById('cf-targets').className = event.target.value;
 }
 
 var key_names = [
@@ -527,19 +527,19 @@ var default_layout = [
 ];
 
 var layers = load_shared(window.location.hash) || default_layout.map(function(layer) { return layer.map(parse_name); });
-find_fns(0, 'pc');
-find_fns(3, 'mac');
+find_fns(0, 'primary');
+find_fns(3, 'secondary');
 
 function key_by_index(k)
 {
-	return document.getElementById('t-' + key_names[k]);
+	return document.getElementById('cft-' + key_names[k]);
 }
 
 function find_fns(n, name)
 {
 	for (var k = 0; k < 88; ++k)
 	{
-		key_by_index(k).classList[layers[n][k] == 0xDF ? 'add' : 'remove'](name + '-fn');
+		key_by_index(k).classList[layers[n][k] == 0xDF ? 'add' : 'remove']('cf-' + name + '-fn');
 	}
 }
 
@@ -567,7 +567,7 @@ function set_layer(event)
 	save_layer(current_layer);
 	current_layer = event.target.value;
 	load_layer(current_layer);
-	document.getElementById('teck').className = 'layer-' + current_layer;
+	document.getElementById('cf-teck').className = 'cf-layer-' + current_layer;
 }
 
 function hibyte(word)
@@ -698,8 +698,8 @@ function generate_share(event)
 	}
 	var hash = window.btoa(s);
 
-	document.getElementById('share-link').href = '#' + hash;
-	document.getElementById('share-help').className = '';
+	document.getElementById('cf-share-link').href = '#' + hash;
+	document.getElementById('cf-share-help').className = '';
 }
 
 function load_shared(s)
@@ -787,7 +787,7 @@ function generate_download(event)
 						 generate_media_keys(0x0D9D, media_keys),
 						 firmware_code],
 						{type: 'application/octet-stream'});
-	var a = document.getElementById("download-link");
+	var a = document.getElementById("cf-download-link");
 	a.href = window.URL.createObjectURL(blob);
 	a.download = 'TrulyErgonomic_v3yk.hex';
 	a.textContent = 'Download';
@@ -810,7 +810,7 @@ function xpath_foreach(xpath, context, action, actionContext)
 	return actionContext;
 }
 
-xpath_foreach('//*[@id="sources"]//kbd', document, function (key)
+xpath_foreach('//*[@id="cf-sources"]//kbd', document, function (key)
 {
 	key.draggable = true;
 	key.ondragstart = dragstart;
@@ -823,14 +823,14 @@ xpath_foreach('//*[@id="sources"]//kbd', document, function (key)
 	}
 	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
 	var label = document.createElement('span'); // Really wanted to use <label> but then drag-n-drop is flaky in Firefox
-	label.className = 'label';
+	label.className = 'cf-label';
 	label.textContent = usage_display_name(u);
 	// label.draggable = true;
 	// label.ondragstart = dragstart;
 	key.appendChild(label);
 });
 
-xpath_foreach('//*[@id="targets"]//button', document, function (i)
+xpath_foreach('//*[@id="cf-targets"]//button', document, function (i)
 {
 	i.ondragover = dragover;
 	i.ondragenter = dragenter;
@@ -844,9 +844,14 @@ function expand_collapse(event)
 	event.target/*a*/.parentNode/*header*/.parentNode/*section*/.classList.toggle('collapsed');
 }
 
-xpath_foreach('//section', document, function(section)
+xpath_foreach('//*[@id="cf-sources"]//section', document, function(section)
 {
-	section.className = 'collapsed';
+	section.classList.add('collapsible');
+});
+
+xpath_foreach('//section[contains(concat(" ", @class, " "), " collapsible ")]', document, function(section)
+{
+	section.classList.add('collapsed');
 	xpath_foreach('.//header', section, function(header)
 	{
 		var a = document.createElement('a');
@@ -859,27 +864,27 @@ xpath_foreach('//section', document, function(section)
 
 function body_resize(event)
 {
-	var sources_size = document.getElementById('sources').offsetWidth;
-	var targets_size = document.getElementById('targets').offsetWidth;
+	var sources_size = document.getElementById('cf-sources').offsetWidth;
+	var targets_size = document.getElementById('cf-targets').offsetWidth;
 	var size = min(window.innerHeight / 18, min(sources_size / 24.0, targets_size / 16.5));
-	document.getElementById('teck').style.fontSize = size + 'px';
-	document.getElementById('sized').style.fontSize = size + 'px';
+	document.getElementById('cf-teck').style.fontSize = size + 'px';
+	document.getElementById('cf-sized').style.fontSize = size + 'px';
 }
 document.body.onresize = body_resize;
 body_resize(null);
 
-document.getElementById('layout').onchange = layout;
-document.getElementById('warn').onclick = show_hide_warnings;
+document.getElementById('cf-layout').onchange = layout_change;
+document.getElementById('cf-warn').onclick = show_hide_warnings;
 
-xpath_foreach('//input[@name="layer"]', document, function(rb)
+xpath_foreach('//input[@name="cf-layer"]', document, function(rb)
 {
 	rb.onclick = set_layer;
 })
-document.getElementById('model').onchange = model;
+document.getElementById('cf-model').onchange = model_change;
 
 window.URL = window.URL || window.webkitURL;
 
-document.getElementById('download').onclick = generate_download;
-document.getElementById('share').onclick = generate_share;
+document.getElementById('cf-download').onclick = generate_download;
+document.getElementById('cf-share').onclick = generate_share;
 
 };
