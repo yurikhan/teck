@@ -204,6 +204,18 @@
 #cft-minus, #cft-bra, #cft-rsh, #cft-rctrl, #cft-ralt { left: 5em; }
 #cft-equal, #cft-ket, #cft-rblank { left: 6em; }
 
+#cfs-f:after, #cfs-j:after, #cft-f:after, #cft-j:after, #cfs-k5:after {
+	border-width: 0.03em; border-style: solid; border-color: inherit;
+	content: '';
+	display: block; position: absolute; 
+}
+#cfs-f:after, #cfs-j:after, #cft-f:after, #cft-j:after {
+	left: 0.3em; right: 0.3em; bottom: 0.05em; height: 0em;
+}
+#cfs-k5:after {
+	border-radius: 0.03em; left: 0.405em; right: 0.405em; top: 0.405em; bottom: 0.405em;
+}
+
 section.collapsible { margin-left: 1em; }
 section.collapsible header { margin-left: -1em; margin-top: 0.25em; }
 section.collapsible header a { font-weight: inherit; margin: 1mm 0mm;
