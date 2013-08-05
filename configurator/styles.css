@@ -39,6 +39,7 @@
 #cft-keys kbd:hover { background-color: #555753; background: linear-gradient(to right, rgba(136,138,133,0.3) 0%, rgba(136,138,133,0.6) 100%); }
 #cft-keys kbd button,
 #cft-keys kbd input {
+	cursor: text;
 	border: none; background: none; color: currentColor;
 	font-size: 0.3em; font-weight: 100;
 	display: block; vertical-align: top; overflow: hidden;
