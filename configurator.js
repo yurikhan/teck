@@ -1,9 +1,16 @@
 window.onload=function(){
 
-document.getElementById('t-minus').dual = document.getElementById('t-minus105');
-document.getElementById('t-minus105').dual = document.getElementById('t-minus');
+document.getElementById('cft-minus').dual = document.getElementById('cft-minus105');
+document.getElementById('cft-minus105').dual = document.getElementById('cft-minus');
 
 var _ = null;
+
+xpath_foreach('//*[@id="cft-keys"]//kbd', document, function (key)
+{
+	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
+	var button = document.createElement('button');
+	key.appendChild(button);
+});
 
 function warn(warning) {
 	function _warn(data)
@@ -28,56 +35,56 @@ var usages = [
 	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 	'U', 'V', 'W', 'X', 'Y', 'Z', ['1!', '1'], ['2@', '2'],
 	['3#', '3'], ['4$', '4'], ['5%', '5'], ['6^', '6'], ['7&', '7'], ['8*', '8'], ['9(', '9'], ['0)', '0'],
-	['⏎', 'Enter'], ['⎋', 'Esc'], ['⌫', 'Backspace', 'Bksp'], ['↹', 'Tab'], ['␣', 'Space'], ['-_', '-'], ['=+', '='], ['[{', '['],
-	[']}', ']'], ['\\|', '\\'], ['€#~', 'Euro1'], [';:', ';'], ['\'"', '\''], ['`~', '`'], [',<', ','], ['.>', '.'],
-	['/?', '/'], ['⇬', 'Caps Lock', 'Caps'], 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
-	'F7', 'F8', 'F9', 'F10', 'F11', 'F12', ['⎙', 'PrtScr', 'PrtSc'], ['⇳⃢', 'Scroll Lock', 'Scroll'],
-	['⎉', 'Pause'], ['⎀', 'Insert', 'Ins'], ['⇱', 'Home'], ['⎗', 'Page Up', 'PgUp'], ['⌦', 'Delete', 'Del'], ['⇲', 'End'], ['⎘', 'Page Down', 'PgDn'], ['→', 'Right'],
-	['←', 'Left'], ['↓', 'Down'], ['↑', 'Up'], ['⇭', 'Num Lock', 'Num'], ['÷', 'K/'], ['×', 'K*'], ['−', 'K-'], ['+', 'K+'],
-	['⎆', 'KEnter'], ['1⇲', 'K1'], ['2↓', 'K2'], ['3⎘', 'K3'], ['4←', 'K4'], ['5⎅', 'K5'], ['6→', 'K6'], ['7⇱', 'K7'],
-	['8↑', 'K8'], ['9⎗', 'K9'], ['0⎀', 'K0'], ['.⌦', 'K.'], ['€\\|', 'Euro2'], ['▤', 'Apps', 'App'], ['Ⓘ', 'Power'], ['=', 'K='],
+	'Enter', ['Esc', 'Escape'], ['Backspace', 'Bksp'], 'Tab', 'Space', ['-_', '-'], ['=+', '='], ['[{', '['],
+	[']}', ']'], ['\\|', '\\'], ['€#~', 'Europe1'], [';:', ';'], ['\'"', '\''], ['`~', '`'], [',<', ','], ['.>', '.'],
+	['/?', '/'], ['Caps Lock', 'Caps'], 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
+	'F7', 'F8', 'F9', 'F10', 'F11', 'F12', ['Print Screen', 'PrtScr', 'PrtSc'], ['Scroll Lock', 'Scroll'],
+	'Pause', ['Insert', 'Ins'], 'Home', ['Page Up', 'PgUp'], ['Delete', 'Del'], 'End', ['Page Down', 'PgDn'], ['→', 'Right'],
+	['←', 'Left'], ['↓', 'Down'], ['↑', 'Up'], ['Num Lock', 'Num'], ['÷', 'K/'], ['×', 'K*'], ['−', 'K-'], ['+', 'K+'],
+	'KEnter', 'K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7',
+	'K8', 'K9', 'K0', 'K.', ['€\\|', 'Europe2'], ['Apps', 'App'], 'Power', ['=', 'K='],
 	'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20',
 	'F21', 'F22', 'F23', 'F24', 'Exec', 'Help', 'Menu', 'Select',
 	'Stop', 'Again', 'Undo', 'Cut', 'Copy', 'Paste', 'Find', 'Mute',
-	'Vol+', 'Vol−', L(['⇬⃞', 'Locking Caps']), L(['⇭⃞', 'Locking Num']), L(['⇳⃞', 'Locking Scroll']), [',⌦', 'K,'], L(['=⃞', 'K= AS/400']), ['\\_', 'Ro', 'Intl1'],
-	['カ/ひ', 'Kana', 'Intl2'], ['¥|', 'Yen', 'Intl3'], ['変', 'Henkan', 'Intl4'], ['無変', 'Muhenkan', 'Intl5'], ['ｶﾝﾏ', 'JPComma', 'Intl6'], L(['DBCS', 'SBCS', 'Intl7']), L('Intl8'), L('Intl9'),
-	['한/영', 'Hangul', 'Lang1'], ['한자', 'Hanja', 'Lang2'], ['カタ', 'Katakana', 'Kata', 'Lang3'], ['ひら', 'Hiragana', 'Hira', 'Lang4'], ['半角', 'Hankaku/Zenkaku', 'Hankaku', 'Zenkaku', 'Lang5'], L('Lang6'), L('Lang7'), L('Lang8'),
-	L('Lang9'), L(['⌧', 'Erase']), L('Attn'), L('Cancel'), 'Clear', L('Prior'), L(['Ret', 'Return']), L(['Sep', 'Separator']),
+	'Vol+', 'Vol−', L('Locking Caps'), L('Locking Num'), L('Locking Scroll'), 'K,', L('K= AS/400'), ['\\_', 'Ro', 'Intl1'],
+	['カ/ひ', 'Katakana/Hiragana', 'カタカナ/ひらがな', 'Kana', 'かな', 'Intl2'], ['Yen', '¥|', '¥', 'Intl3'], ['変換', 'Henkan', 'Intl4'], ['無変換', 'Muhenkan', 'Intl5'], ['ｶﾝﾏ', 'JPComma', 'Intl6'], L(['DBCS', 'SBCS', 'Intl7']), L('Intl8'), L('Intl9'),
+	['한/영', 'Hangul', 'Lang1'], ['한자', 'Hanja', 'Lang2'], ['カタカナ', 'Katakana', 'Kata', 'Lang3'], ['ひらがな', 'Hiragana', 'Hira', 'Lang4'], ['半角/全角', 'Hankaku/​Zenkaku', 'Hankaku', 'Hankaku/Zenkaku', 'Zenkaku', 'Lang5'], L('Lang6'), L('Lang7'), L('Lang8'),
+	L('Lang9'), L('Alt Erase'), L('Attn'), L('Cancel'), 'Clear', L('Prior'), L(['Ret', 'Return']), L(['Sep', 'Separator']),
 	L('Out'), L('Oper'), L(['ClrAg', 'Clear/Again']), L(['CrSel', 'CrSel/Props', 'Props']), L('ExSel'), L('A5h'), L('A6h'), L('A7h'),
-	L('A8h'), L('A9h'), L('AAh'), L('ABh'), L('ACh'), ['⌘⎉', 'TECK Win+Pause', 'Win+Break'], ['⎊', 'TECK Ctrl+Break', 'Break'], L('AFh'),
-	L('00'), L('000'), L([',\'', 'Thousands Separator']), L(['⎖', 'Decimal Separator']), L(['$', 'Currency Unit']), L(['¢', 'Currency Sub-unit']), ['(', 'K('], [')', 'K)'],
-	L(['{', 'K{']), L(['}', 'K}']), L(['K↹', 'KTab']), L(['K⌫', 'KBackspace', 'KBksp']), L('KA'), L('KB'), L('KC'), L('KD'),
+	L('A8h'), L('A9h'), L('AAh'), L('ABh'), L('ACh'), ['Win+\u200bPause', 'Win+Pause', 'Win+Break'], ['Ctrl+\u200bBreak', 'Ctrl+Break', 'Break'], L('AFh'),
+	L('00'), L('000'), L([',\'', 'Thousands Separator']), L(['.,', 'Decimal Separator']), L(['$', 'Currency Unit']), L(['¢', 'Currency Sub-unit']), ['(', 'K('], [')', 'K)'],
+	L(['{', 'K{']), L(['}', 'K}']), L('KTab'), L(['KBksp', 'KBackspace']), L('KA'), L('KB'), L('KC'), L('KD'),
 	L('KE'), L('KF'), L('Xor'), L(['^', 'K^']), L(['%', 'K%']), L(['<', 'K<']), L(['>', 'K>']), L(['&', 'K&']),
-	L('&&'), L(['|', 'K|']), L('||'), L([':', 'K:']), L(['#', 'K#']), L(['K␣']), L(['@', 'K@']), L(['!', 'K!']),
+	L('&&'), L(['|', 'K|']), L('||'), L([':', 'K:']), L(['#', 'K#']), L(['KSpace']), L(['@', 'K@']), L(['!', 'K!']),
 	L(['MS', 'Memory Store']), L(['MR', 'Memory Recall']), L(['MC', 'Memory Clear']), L(['M+', 'Memory Add']), L(['M−', 'Memory Subtract', 'M-']), L(['M×', 'Memory Multiply', 'M*']), L(['M÷', 'Memory Divide', 'M/']), L(['+/−', '+/-']),
-	'KClear', L(['CE', 'Clear Entry']), L('Bin'), L('Oct'), L('Dec'), L('Hex'), ['T⇭', 'TECK Num Lock', 'TNum'], ['Fn', 'TECK Fn'],
-	['L⎈', 'LCtrl'], ['L⇧', 'LShift'], ['L⎇', 'LAlt', 'Alt', 'LOption', 'LOpt'], ['L⌘', 'LGUI', 'LWin', 'LSuper', 'LCommand', 'LCmd'], ['R⎈', 'RCtrl'], ['R⇧', 'RShift'], ['R⎇', 'RAlt', 'AltGr', 'ROption', 'ROpt'], ['R⌘', 'RGUI', 'RWin', 'RSuper', 'RCommand', 'RCmd'],
+	'KClear', L(['CE', 'Clear Entry']), L('Bin'), L('Oct'), L('Dec'), L('Hex'), ['TNum Lock', 'TECK Num Lock', 'TNum'], ['Fn', 'TECK Fn'],
+	'LCtrl', 'LShift', ['LAlt', 'Alt', 'LOption', 'LOpt'], ['LGUI', 'LWin', 'LSuper', 'LCommand', 'LCmd'], 'RCtrl', 'RShift', ['RAlt', 'AltGr', 'ROption', 'ROpt'], ['RGUI', 'RWin', 'RSuper', 'RCommand', 'RCmd'],
 	'E8h', 'E9h', 'EAh', 'EBh', 'ECh', 'EDh', 'EEh', 'EFh',
 	'F0h', 'F1h', 'F2h', 'F3h', 'F4h', 'F5h', 'F6h', 'F7h',
 	'F8h', 'F9h', 'FAh', 'FBh', 'FCh', 'FDh', 'FEh', 'FFh'
 ];
 
 var consumer_usages = {
-	0x0C0030: ['Ⓘ', 'PM Power'],
+	0x0C0030: 'PM Power',
 	0x0C0031: W('PM Reset'),
-	0x0C0032: ['☾', 'PM Sleep'],
-	0x0C00B0: ['▶', 'MC Play'],
-	0x0C00B1: ['||', 'MC Pause'],
-	0x0C00B2: ['●', 'MC Record'],
-	0x0C00B3: ['▶▶', 'MC Fast Forward'],
-	0x0C00B4: ['◀◀', 'MC Rewind'],
-	0x0C00B5: ['▶▶|', 'MC Scan Next Track'],
-	0x0C00B6: ['|◀◀', 'MC Scan Previous Track'],
-	0x0C00B7: ['■', 'MC Stop'],
-	0x0C00B8: ['⏏', 'MC Eject'],
+	0x0C0032: 'PM Sleep',
+	0x0C00B0: 'MC Play',
+	0x0C00B1: 'MC Pause',
+	0x0C00B2: 'MC Record',
+	0x0C00B3: 'MC Fast Forward',
+	0x0C00B4: 'MC Rewind',
+	0x0C00B5: 'MC Scan Next Track',
+	0x0C00B6: 'MC Scan Previous Track',
+	0x0C00B7: 'MC Stop',
+	0x0C00B8: 'MC Eject',
 	0x0C00B9: W('MC Random Play'),
 	0x0C00BB: L('MC Enter Disc'),
-	0x0C00BC: W(['↻', 'MC Repeat']),
-	0x0C00CC: L(['■/⏏', 'MC Stop/Eject']),
-	0x0C00CD: ['▶/||', 'MC Play/Pause'],
+	0x0C00BC: W('MC Repeat'),
+	0x0C00CC: L('MC Stop/Eject'),
+	0x0C00CD: 'MC Play/Pause',
 	0x0C00E2: 'MC Mute',
-	0x0C00E9: ['Vol−', 'MC Volume Increment'],
-	0x0C00EA: ['Vol+', 'MC Volume Decrement'],
+	0x0C00E9: ['MC Vol−', 'MC Volume Increment'],
+	0x0C00EA: ['MC Vol+', 'MC Volume Decrement'],
 	0x0C0181: L('AL Launch Button Configuration Tool'),
 	0x0C0182: 'AL Programmable Button Configuration',
 	0x0C0183: 'AL Consumer Control Configuration',
@@ -353,7 +360,11 @@ function parse_name(name)
 
 function dragstart(event)
 {
-	event.dataTransfer.setData('text/x-keycode', event.target.dataset.u);
+	var key = document.evaluate('./ancestor-or-self::kbd', event.target, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	event.dataTransfer.setData('text/x-keycode', key.dataset.u);
+	event.dataTransfer.setData('text/plain', key.dataset.u);
+	event.dataTransfer.effectAllowed = 'copy';
+	event.stopPropagation();
 }
 
 function count_media_keys()
@@ -378,25 +389,25 @@ function count_media_keys()
 function set_usage(target, u, nosave)
 {
 	target.dataset.u = u;
-	target.value = usage_display_name(u);
+	target.firstChild.textContent = usage_display_name(u);
 	target.title = usage_description(u);
 	if (target.dual)
 	{
 		target.dual.dataset.u = u;
-		target.dual.value = usage_display_name(u);
+		target.dual.firstChild.textContent = usage_display_name(u);
 		target.dual.title = usage_description(u);
 	}
-	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('pc-fn');
-	if (current_layer == 3) target.classList[u == 0xDF ? 'add' : 'remove']('mac-fn');
+	if (current_layer == 0) target.classList[u == 0xDF ? 'add' : 'remove']('cf-primary-fn');
+	if (current_layer == 3) target.classList[u == 0xDF ? 'add' : 'remove']('cf-secondary-fn');
 	if (!nosave)
 	{
 		save_layer(current_layer);
 		var media_key_count = count_media_keys();
-		document.getElementById('too-many-media-keys').classList[media_key_count > 23 ? 'remove' : 'add']('hidden');
-		document.getElementById('media-key-count').textContent = media_key_count;
+		document.getElementById('cf-too-many-media-keys').classList[media_key_count > 23 ? 'remove' : 'add']('cf-hidden');
+		document.getElementById('cf-media-key-count').textContent = media_key_count;
 	}
-	document.getElementById('download-link').className = 'hidden';
-	document.getElementById('share-help').className = 'hidden';
+	document.getElementById('cf-download-link').className = 'cf-hidden';
+	document.getElementById('cf-share-help').className = 'cf-hidden';
 }
 
 function dragenter(event)
@@ -422,29 +433,48 @@ function dragover(event)
 function drop(event)
 {
 	var u = event.dataTransfer.getData('text/x-keycode');
-	set_usage(event.target, u);
+	var target = document.evaluate('ancestor-or-self::kbd', event.target, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	set_usage(target, u);
 	event.preventDefault();
+}
+
+function target_click(event)
+{
+	var key = event.target.parentNode;
+	var input = document.createElement('input');
+	input.setAttribute('type', 'text');
+	input.value = event.target.textContent;
+	input.onchange = change;
+	input.onblur = change;
+	input.owner = event.target;
+	input.id = event.target.id;
+
+	key.replaceChild(input, event.target);
+	input.focus();
+	input.select();
 }
 
 function change(event)
 {
+	var key = event.target/*input*/.parentNode/*kbd*/;
+	key.replaceChild(event.target.owner, event.target);
 	var u = parse_name(event.target.value);
-	set_usage(event.target, u);
+	set_usage(key, u);
 }
 
-function layout(event)
+function layout_change(event)
 {
-	document.getElementById('sources').className = event.target.value;
+	document.getElementById('cf-sources').className = 'cf-' + event.target.value;
 }
 
 function show_hide_warnings(event)
 {
-	document.getElementById('warning-wrapper').className = event.target.checked ? 'warn' : '';
+	document.getElementById('cf-warning-wrapper').classList[event.target.checked ? 'add':'remove']('cf-warn');
 }
 
-function model(event)
+function model_change(event)
 {
-	document.getElementById('targets').className = 'm' + event.target.value;
+	document.getElementById('cf-targets').className = event.target.value;
 }
 
 var key_names = [
@@ -498,19 +528,19 @@ var default_layout = [
 ];
 
 var layers = load_shared(window.location.hash) || default_layout.map(function(layer) { return layer.map(parse_name); });
-find_fns(0, 'pc');
-find_fns(3, 'mac');
+find_fns(0, 'primary');
+find_fns(3, 'secondary');
 
 function key_by_index(k)
 {
-	return document.getElementById('t-' + key_names[k]);
+	return document.getElementById('cft-' + key_names[k]);
 }
 
 function find_fns(n, name)
 {
 	for (var k = 0; k < 88; ++k)
 	{
-		key_by_index(k).classList[layers[n][k] == 0xDF ? 'add' : 'remove'](name + '-fn');
+		key_by_index(k).classList[layers[n][k] == 0xDF ? 'add' : 'remove']('cf-' + name + '-fn');
 	}
 }
 
@@ -538,7 +568,7 @@ function set_layer(event)
 	save_layer(current_layer);
 	current_layer = event.target.value;
 	load_layer(current_layer);
-	document.getElementById('teck').className = 'layer-' + current_layer;
+	document.getElementById('cf-teck').className = 'cf-layer-' + current_layer;
 }
 
 function hibyte(word)
@@ -669,8 +699,8 @@ function generate_share(event)
 	}
 	var hash = window.btoa(s);
 
-	document.getElementById('share-link').href = '#' + hash;
-	document.getElementById('share-help').className = '';
+	document.getElementById('cf-share-link').href = '#' + hash;
+	document.getElementById('cf-share-help').className = '';
 }
 
 function load_shared(s)
@@ -1154,7 +1184,7 @@ function generate_download(event)
 						 generate_media_keys(0x0D9D, media_keys),
 						 firmware_code],
 						{type: 'application/octet-stream'});
-	var a = document.getElementById("download-link");
+	var a = document.getElementById("cf-download-link");
 	a.href = window.URL.createObjectURL(blob);
 	a.download = 'TrulyErgonomic_v3yk.hex';
 	a.textContent = 'Download';
@@ -1177,26 +1207,32 @@ function xpath_foreach(xpath, context, action, actionContext)
 	return actionContext;
 }
 
-xpath_foreach('//kbd', document, function (key)
+xpath_foreach('//*[@id="cf-sources"]//kbd', document, function (key)
 {
 	key.draggable = true;
 	key.ondragstart = dragstart;
 	var u = parseInt(key.dataset.u, 16);
 	key.dataset.u = u;
-	key.textContent = usage_display_name(u);
 	key.title = usage_description(u);
 	if (usage_warning(u))
 	{
 		key.className = key.className + ' incompatible';
 	}
+	xpath_foreach('./node()|text()', key, function (child) { key.removeChild(child); });
+	var label = document.createElement('span'); // Really wanted to use <label> but then drag-n-drop is flaky in Firefox
+	label.className = 'cf-label';
+	label.textContent = usage_display_name(u);
+	// label.draggable = true;
+	// label.ondragstart = dragstart;
+	key.appendChild(label);
 });
 
-xpath_foreach('//*[@id="targets"]//input[@data-u]', document, function (i)
+xpath_foreach('//*[@id="cf-targets"]//button', document, function (i)
 {
 	i.ondragover = dragover;
 	i.ondragenter = dragenter;
 	i.ondrop = drop;
-	i.onchange = change;
+	i.onclick = target_click;
 });
 
 function expand_collapse(event)
@@ -1205,9 +1241,14 @@ function expand_collapse(event)
 	event.target/*a*/.parentNode/*header*/.parentNode/*section*/.classList.toggle('collapsed');
 }
 
-xpath_foreach('//section', document, function(section)
+xpath_foreach('//*[@id="cf-sources"]//section', document, function(section)
 {
-	section.className = 'collapsed';
+	section.classList.add('collapsible');
+});
+
+xpath_foreach('//section[contains(concat(" ", @class, " "), " collapsible ")]', document, function(section)
+{
+	section.classList.add('collapsed');
 	xpath_foreach('.//header', section, function(header)
 	{
 		var a = document.createElement('a');
@@ -1218,18 +1259,29 @@ xpath_foreach('//section', document, function(section)
 	});
 });
 
-document.getElementById('layout').onchange = layout;
-document.getElementById('warn').onclick = show_hide_warnings;
+function body_resize(event)
+{
+	var sources_size = document.getElementById('cf-sources').offsetWidth;
+	var targets_size = document.getElementById('cf-targets').offsetWidth;
+	var size = min(window.innerHeight / 18, min(sources_size / 24.0, targets_size / 16.5));
+	document.getElementById('cf-teck').style.fontSize = size + 'px';
+	document.getElementById('cf-sized').style.fontSize = size + 'px';
+}
+document.body.onresize = body_resize;
+body_resize(null);
 
-xpath_foreach('//input[@name="layer"]', document, function(rb)
+document.getElementById('cf-layout').onchange = layout_change;
+document.getElementById('cf-warn').onclick = show_hide_warnings;
+
+xpath_foreach('//input[@name="cf-layer"]', document, function(rb)
 {
 	rb.onclick = set_layer;
 })
-document.getElementById('model').onchange = model;
+document.getElementById('cf-model').onchange = model_change;
 
 window.URL = window.URL || window.webkitURL;
 
-document.getElementById('download').onclick = generate_download;
-document.getElementById('share').onclick = generate_share;
+document.getElementById('cf-download').onclick = generate_download;
+document.getElementById('cf-share').onclick = generate_share;
 
 };
