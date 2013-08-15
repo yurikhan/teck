@@ -433,7 +433,8 @@ function dragover(event)
 function drop(event)
 {
 	var u = event.dataTransfer.getData('text/x-keycode');
-	set_usage(event.target, u);
+	var target = document.evaluate('ancestor-or-self::kbd', event.target, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	set_usage(target, u);
 	event.preventDefault();
 }
 
