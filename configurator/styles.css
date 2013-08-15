@@ -9,7 +9,7 @@
 #cf-root textarea { width: 100%; height: 18em; background-color: #2e3436; color: #73d216; font-family: monospace; }
 #cf-root samp { font-family: inherit; font-weight: 400; }
 .cf-hidden { display: none; }
-.cf-warning { background-color: #f78787; color: #000000; border-radius: 5mm; }
+.cf-warning { background-color: #f78787; color: #000000; padding: 0.25em; border-radius: 0.5em; }
 
 #cf-targets>div { display: inline-block; vertical-align: top; }
 #cf-targets>#cf-teck {
