@@ -219,14 +219,13 @@
 ;;
 ;; Code
 ;; ====
-
+;;
 CSEG AT 0000h
   0000 021B31           LJMP START
 
 ;;; free 10 bytes
 
 CSEG AT 000Bh
-TIMER0:
   000B 021A14           LJMP DO_TIMER0
 
 get_status:                                     ;void get_status() {
@@ -303,7 +302,6 @@ set_ISPCR:                                      ;void set_ISPCR(byte __register(
   0067 22               RET                     ;}
 
 CSEG AT 006Bh
-KEYPAD:
   006B 02164C           LJMP DO_KEYPAD
 
 init_all:                                       ;void init_all() {
@@ -313,7 +311,6 @@ init_all:                                       ;void init_all() {
   0077 021805           LJMP init_hw            ;   init_hw();
                                                 ;}
 CSEG AT 007Bh
-USB_INTR:
   007B 021A57           LJMP DO_USB
 
 process_key:                                    ;void process_key() {
@@ -2006,83 +2003,175 @@ L0193:
   0D43 22               RET                     ;}
 
                                                 ;struct ReportDescriptor i0_report_descriptor = {
-  0D44 0501             DB 005h, 001h           ;   Usage Page(1); // Generic Desktop
-  0D46 0906             DB 009h, 006h           ;   Usage(6);
-  0D48 A101             DB 0A1h, 001h           ;   Collection(Application);
-  0D4A 0507             DB 005h, 007h           ;       Usage Page(7); // Keyboard/Keypad
+  0D44 05               DB 005h
+  0D45 01               DB 001h                 ;   Usage Page(1); // Generic Desktop
+  0D46 09               DB 009h
+  0D47 06               DB 006h                 ;   Usage(6);
+  0D48 A1               DB 0A1h
+  0D49 01               DB 001h                 ;   Collection(Application);
+  0D4A 05               DB 005h
+  0D4B 07               DB 007h                 ;       Usage Page(7); // Keyboard/Keypad
 
-  0D4C 19E0             DB 019h, 0E0h           ;       Usage Minimum(0xE0); // LCtrl
-  0D4E 29E7             DB 029h, 0E7h           ;       Usage Maximum(0xE7); // RGUI
-  0D50 1500             DB 015h, 000h           ;       Logical Minimum(0);
-  0D52 2501             DB 025h, 001h           ;       Logical Maximum(1);
-  0D54 7501             DB 075h, 001h           ;       Report Size(1);
-  0D56 9508             DB 095h, 008h           ;       Report Count(8);
-  0D58 8102             DB 081h, 002h           ;       Input(Data|Variable|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
+  0D4C 19               DB 019h
+  0D4D E0               DB 0E0h                 ;       Usage Minimum(0xE0); // LCtrl
+  0D4E 29               DB 029h
+  0D4F E7               DB 0E7h                 ;       Usage Maximum(0xE7); // RGUI
+  0D50 15               DB 015h
+  0D51 00               DB 000h                 ;       Logical Minimum(0);
+  0D52 25               DB 025h
+  0D53 01               DB 001h                 ;       Logical Maximum(1);
+  0D54 75               DB 075h
+  0D55 01               DB 001h                 ;       Report Size(1);
+  0D56 95               DB 095h
+  0D57 08               DB 008h                 ;       Report Count(8);
+  0D58 81               DB 081h
+  0D59 02               DB 002h                 ;       Input(Data|Variable|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
 
-  0D5A 9501             DB 095h, 001h           ;       Report Count(1);
-  0D5C 7508             DB 075h, 008h           ;       Report Size(8);
-  0D5E 8101             DB 081h, 001h           ;       Input(Constant|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
+  0D5A 95               DB 095h
+  0D5B 01               DB 001h                 ;       Report Count(1);
+  0D5C 75               DB 075h
+  0D5D 08               DB 008h                 ;       Report Size(8);
+  0D5E 81               DB 081h
+  0D5F 01               DB 001h                 ;       Input(Constant|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
 
-  0D60 9503             DB 095h, 003h           ;       Report Count(3);
-  0D62 7501             DB 075h, 001h           ;       Report Size(1);
-  0D64 0508             DB 005h, 008h           ;       Usage Page(8); // LED
-  0D66 1901             DB 019h, 001h           ;       Usage Minimum(1);
-  0D68 2903             DB 029h, 003h           ;       Usage Maximum(3);
-  0D6A 9102             DB 091h, 002h           ;       Output(Data|Variable|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
+  0D60 95               DB 095h
+  0D61 03               DB 003h                 ;       Report Count(3);
+  0D62 75               DB 075h
+  0D63 01               DB 001h                 ;       Report Size(1);
+  0D64 05               DB 005h
+  0D65 08               DB 008h                 ;       Usage Page(8); // LED
+  0D66 19               DB 019h
+  0D67 01               DB 001h                 ;       Usage Minimum(1);
+  0D68 29               DB 029h
+  0D69 03               DB 003h                 ;       Usage Maximum(3);
+  0D6A 91               DB 091h
+  0D6B 02               DB 002h                 ;       Output(Data|Variable|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
 
-  0D6C 9505             DB 095h, 005h           ;       Report Count(5);
-  0D6E 7501             DB 075h, 001h           ;       Report Size(1);
-  0D70 9101             DB 091h, 001h           ;       Output(Constant|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
+  0D6C 95               DB 095h
+  0D6D 05               DB 005h                 ;       Report Count(5);
+  0D6E 75               DB 075h
+  0D6F 01               DB 001h                 ;       Report Size(1);
+  0D70 91               DB 091h
+  0D71 01               DB 001h                 ;       Output(Constant|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
 
-  0D72 9506             DB 095h, 006h           ;       Report Count(6);
-  0D74 7508             DB 075h, 008h           ;       Report Size(8);
-  0D76 1500             DB 015h, 000h           ;       Logical Minimum(0);
-  0D78 26FF00           DB 026h, 0FFh, 000h     ;       Logical Maximum(0xFF);
-  0D7B 0507             DB 005h, 007h           ;       Usage Page(7); // Keyboard/Keypad
-  0D7D 1900             DB 019h, 000h           ;       Usage Minimum(0);
-  0D7F 2AFF00           DB 02Ah, 0FFh, 000h     ;       Usage Maximum(0xFF);
-  0D82 8100             DB 081h, 000h           ;       Input(Data|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile)
+  0D72 95               DB 095h
+  0D73 06               DB 006h                 ;       Report Count(6);
+  0D74 75               DB 075h
+  0D75 08               DB 008h                 ;       Report Size(8);
+  0D76 15               DB 015h
+  0D77 00               DB 000h                 ;       Logical Minimum(0);
+  0D78 26               DB 026h
+  0D79 FF               DB 0FFh
+  0D7A 00               DB 000h                 ;       Logical Maximum(0xFF);
+  0D7B 05               DB 005h
+  0D7C 07               DB 007h                 ;       Usage Page(7); // Keyboard/Keypad
+  0D7D 19               DB 019h
+  0D7E 00               DB 000h                 ;       Usage Minimum(0);
+  0D7F 2A               DB 02Ah
+  0D80 FF               DB 0FFh
+  0D81 00               DB 000h                 ;       Usage Maximum(0xFF);
+  0D82 81               DB 081h
+  0D83 00               DB 000h                 ;       Input(Data|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile)
 
-  0D84 0900             DB 009h, 000h           ;       Usage(0);
-  0D86 9540             DB 095h, 040h           ;       Report Count(64);
-  0D88 7508             DB 075h, 008h           ;       Report Size(8);
-  0D8A B100             DB 0B1h, 000h           ;       Feature(Data|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
+  0D84 09               DB 009h
+  0D85 00               DB 000h                 ;       Usage(0);
+  0D86 95               DB 095h
+  0D87 40               DB 040h                 ;       Report Count(64);
+  0D88 75               DB 075h
+  0D89 08               DB 008h                 ;       Report Size(8);
+  0D8A B1               DB 0B1h
+  0D8B 00               DB 000h                 ;       Feature(Data|Array|Absolute|No Wrap|Linear|Preferred State|No Null|Non Volatile);
   0D8C C0               DB 0C0h                 ;   End Collection;
                                                 ;};
 
                                                 ;struct ReportDescriptor i1_report_descriptor = {
-  0D8D 050C             DB 005h, 00Ch           ;   Usage Page(0x0C); // Consumer
-  0D8F 0901             DB 009h, 001h           ;   Usage(1);
-  0D91 A101             DB 0A1h, 001h           ;   Collection(Application);
-  0D93 8501             DB 085h, 001h           ;       Report ID(1);
-  0D95 1501             DB 015h, 001h           ;       Logical Minimum(1);
-  0D97 2517             DB 025h, 017h           ;       Logical Maximum(0x17);
-  0D99 7508             DB 075h, 008h           ;       Report Size(8);
-  0D9B 9501             DB 095h, 001h           ;       Report Count(1);
-  0D9D 0A2702           DB 00Ah, 027h, 002h     ;       Usage(0x0227);  // 1 => AC Refresh
-  0DA0 0A2302           DB 00Ah, 023h, 002h     ;       Usage(0x0223);  // 2 => AC Home
-  0DA3 0A8A01           DB 00Ah, 08Ah, 001h     ;       Usage(0x018A);  // 3 => AL Email Reader
-  0DA6 0A2102           DB 00Ah, 021h, 002h     ;       Usage(0x0221);  // 4 => AC Search
-  0DA9 0A9401           DB 00Ah, 094h, 001h     ;       Usage(0x0194);  // 5 => AL Local Machine Browser
-  0DAC 0A9201           DB 00Ah, 092h, 001h     ;       Usage(0x0192);  // 6 => AL Calculator
-  0DAF 0A8301           DB 00Ah, 083h, 001h     ;       Usage(0x0183);  // 7 => AL Consumer Control Configuration
-  0DB2 0AB600           DB 00Ah, 0B6h, 000h     ;       Usage(0x00B6);  // 8 => Scan Previous Track
-  0DB5 0ACD00           DB 00Ah, 0CDh, 000h     ;       Usage(0x00CD);  // 9 => Play/Pause
-  0DB8 0AB500           DB 00Ah, 0B5h, 000h     ;       Usage(0x00B5);  // 0x0A => Scan Next Track
-  0DBB 0AE200           DB 00Ah, 0E2h, 000h     ;       Usage(0x00E2);  // 0x0B => Mute
-  0DBE 0AEA00           DB 00Ah, 0EAh, 000h     ;       Usage(0x00EA);  // 0x0C => Volume Decrement
-  0DC1 0AE900           DB 00Ah, 0E9h, 000h     ;       Usage(0x00E9);  // 0x0D => Volume Increment
-  0DC4 0AB800           DB 00Ah, 0B8h, 000h     ;       Usage(0x00B8);  // 0x0E => Eject
-  0DC7 0AB700           DB 00Ah, 0B7h, 000h     ;       Usage(0x00B7);  // 0x0F => Stop
-  0DCA 0A9601           DB 00Ah, 096h, 001h     ;       Usage(0x0196);  // 0x10 => AL Internet Browser
-  0DCD 0A9901           DB 00Ah, 099h, 001h     ;       Usage(0x0199);  // 0x11 => AL Network Chat
-  0DD0 0AA701           DB 00Ah, 0A7h, 001h     ;       Usage(0x01A7);  // 0x12 => AL Documents
-  0DD3 0A9E01           DB 00Ah, 09Eh, 001h     ;       Usage(0x019E);  // 0x13 => AL Terminal Lock/Screensaver
-  0DD6 0A2402           DB 00Ah, 024h, 002h     ;       Usage(0x0224);  // 0x14 => AC Back
-  0DD9 0A2502           DB 00Ah, 025h, 002h     ;       Usage(0x0225);  // 0x15 => AC Forward
-  0DDC 0A2A02           DB 00Ah, 02Ah, 002h     ;       Usage(0x022A);  // 0x16 => AC Bookmarks
-  0DDF 0A9101           DB 00Ah, 091h, 001h     ;       Usage(0x0191);  // 0x17 => AL Checkbook/Finance
-  0DE2 8160             DB 081h, 060h           ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null State);
+  0D8D 05               DB 005h
+  0D8E 0C               DB 00Ch                 ;   Usage Page(0x0C); // Consumer
+  0D8F 09               DB 009h
+  0D90 01               DB 001h                 ;   Usage(1);
+  0D91 A1               DB 0A1h
+  0D92 01               DB 001h                 ;   Collection(Application);
+  0D93 85               DB 085h
+  0D94 01               DB 001h                 ;       Report ID(1);
+  0D95 15               DB 015h
+  0D96 01               DB 001h                 ;       Logical Minimum(1);
+  0D97 25               DB 025h
+  0D98 17               DB 017h                 ;       Logical Maximum(0x17);
+  0D99 75               DB 075h
+  0D9A 08               DB 008h                 ;       Report Size(8);
+  0D9B 95               DB 095h
+  0D9C 01               DB 001h                 ;       Report Count(1);
+  0D9D 0A               DB 00Ah
+  0D9E 27               DB 027h
+  0D9F 02               DB 002h                 ;       Usage(0x0227);  // 1 => AC Refresh
+  0DA0 0A               DB 00Ah
+  0DA1 23               DB 023h
+  0DA2 02               DB 002h                 ;       Usage(0x0223);  // 2 => AC Home
+  0DA3 0A               DB 00Ah
+  0DA4 8A               DB 08Ah
+  0DA5 01               DB 001h                 ;       Usage(0x018A);  // 3 => AL Email Reader
+  0DA6 0A               DB 00Ah
+  0DA7 21               DB 021h
+  0DA8 02               DB 002h                 ;       Usage(0x0221);  // 4 => AC Search
+  0DA9 0A               DB 00Ah
+  0DAA 94               DB 094h
+  0DAB 01               DB 001h                 ;       Usage(0x0194);  // 5 => AL Local Machine Browser
+  0DAC 0A               DB 00Ah
+  0DAD 92               DB 092h
+  0DAE 01               DB 001h                 ;       Usage(0x0192);  // 6 => AL Calculator
+  0DAF 0A               DB 00Ah
+  0DB0 83               DB 083h
+  0DB1 01               DB 001h                 ;       Usage(0x0183);  // 7 => AL Consumer Control Configuration
+  0DB2 0A               DB 00Ah
+  0DB3 B6               DB 0B6h
+  0DB4 00               DB 000h                 ;       Usage(0x00B6);  // 8 => Scan Previous Track
+  0DB5 0A               DB 00Ah
+  0DB6 CD               DB 0CDh
+  0DB7 00               DB 000h                 ;       Usage(0x00CD);  // 9 => Play/Pause
+  0DB8 0A               DB 00Ah
+  0DB9 B5               DB 0B5h
+  0DBA 00               DB 000h                 ;       Usage(0x00B5);  // 0x0A => Scan Next Track
+  0DBB 0A               DB 00Ah
+  0DBC E2               DB 0E2h
+  0DBD 00               DB 000h                 ;       Usage(0x00E2);  // 0x0B => Mute
+  0DBE 0A               DB 00Ah
+  0DBF EA               DB 0EAh
+  0DC0 00               DB 000h                 ;       Usage(0x00EA);  // 0x0C => Volume Decrement
+  0DC1 0A               DB 00Ah
+  0DC2 E9               DB 0E9h
+  0DC3 00               DB 000h                 ;       Usage(0x00E9);  // 0x0D => Volume Increment
+  0DC4 0A               DB 00Ah
+  0DC5 B8               DB 0B8h
+  0DC6 00               DB 000h                 ;       Usage(0x00B8);  // 0x0E => Eject
+  0DC7 0A               DB 00Ah
+  0DC8 B7               DB 0B7h
+  0DC9 00               DB 000h                 ;       Usage(0x00B7);  // 0x0F => Stop
+  0DCA 0A               DB 00Ah
+  0DCB 96               DB 096h
+  0DCC 01               DB 001h                 ;       Usage(0x0196);  // 0x10 => AL Internet Browser
+  0DCD 0A               DB 00Ah
+  0DCE 99               DB 099h
+  0DCF 01               DB 001h                 ;       Usage(0x0199);  // 0x11 => AL Network Chat
+  0DD0 0A               DB 00Ah
+  0DD1 A7               DB 0A7h
+  0DD2 01               DB 001h                 ;       Usage(0x01A7);  // 0x12 => AL Documents
+  0DD3 0A               DB 00Ah
+  0DD4 9E               DB 09Eh
+  0DD5 01               DB 001h                 ;       Usage(0x019E);  // 0x13 => AL Terminal Lock/Screensaver
+  0DD6 0A               DB 00Ah
+  0DD7 24               DB 024h
+  0DD8 02               DB 002h                 ;       Usage(0x0224);  // 0x14 => AC Back
+  0DD9 0A               DB 00Ah
+  0DDA 25               DB 025h
+  0DDB 02               DB 002h                 ;       Usage(0x0225);  // 0x15 => AC Forward
+  0DDC 0A               DB 00Ah
+  0DDD 2A               DB 02Ah
+  0DDE 02               DB 002h                 ;       Usage(0x022A);  // 0x16 => AC Bookmarks
+  0DDF 0A               DB 00Ah
+  0DE0 91               DB 091h
+  0DE1 01               DB 001h                 ;       Usage(0x0191);  // 0x17 => AL Checkbook/Finance
+  0DE2 81               DB 081h
+  0DE3 60               DB 060h                 ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null State);
   0DE4 C0               DB 0C0h                 ;   End Collection;
                                                 ;};
 
@@ -3258,76 +3347,133 @@ L0286:                                          ;   }
   1371 26               DB 026h                 ;   byte bLength = 38;
   1372 03               DB 003h                 ;   byte bDescriptorType = STRING;
                                                 ;   u16char_t string[] = {
-  1373 5400             DB 054h, 000h           ;       'T',
-  1375 7200             DB 072h, 000h           ;       'r',
-  1377 7500             DB 075h, 000h           ;       'u',
-  1379 6C00             DB 06Ch, 000h           ;       'l',
-  137B 7900             DB 079h, 000h           ;       'y',
-  137D 4500             DB 045h, 000h           ;       'E',
-  137F 7200             DB 072h, 000h           ;       'r',
-  1381 6700             DB 067h, 000h           ;       'g',
-  1383 6F00             DB 06Fh, 000h           ;       'o',
-  1385 6E00             DB 06Eh, 000h           ;       'n',
-  1387 6F00             DB 06Fh, 000h           ;       'o',
-  1389 6D00             DB 06Dh, 000h           ;       'm',
-  138B 6900             DB 069h, 000h           ;       'i',
-  138D 6300             DB 063h, 000h           ;       'c',
-  138F 2E00             DB 02Eh, 000h           ;       '.',
-  1391 6300             DB 063h, 000h           ;       'c',
-  1393 6F00             DB 06Fh, 000h           ;       'o',
-  1395 6D00             DB 06Dh, 000h           ;       'm'
+  1373 54               DB 054h
+  1374 00               DB 000h                 ;       'T',
+  1375 72               DB 072h
+  1376 00               DB 000h                 ;       'r',
+  1377 75               DB 075h
+  1378 00               DB 000h                 ;       'u',
+  1379 6C               DB 06Ch
+  137A 00               DB 000h                 ;       'l',
+  137B 79               DB 079h
+  137C 00               DB 000h                 ;       'y',
+  137D 45               DB 045h
+  137E 00               DB 000h                 ;       'E',
+  137F 72               DB 072h
+  1380 00               DB 000h                 ;       'r',
+  1381 67               DB 067h
+  1382 00               DB 000h                 ;       'g',
+  1383 6F               DB 06Fh
+  1384 00               DB 000h                 ;       'o',
+  1385 6E               DB 06Eh
+  1386 00               DB 000h                 ;       'n',
+  1387 6F               DB 06Fh
+  1388 00               DB 000h                 ;       'o',
+  1389 6D               DB 06Dh
+  138A 00               DB 000h                 ;       'm',
+  138B 69               DB 069h
+  138C 00               DB 000h                 ;       'i',
+  138D 63               DB 063h
+  138E 00               DB 000h                 ;       'c',
+  138F 2E               DB 02Eh
+  1390 00               DB 000h                 ;       '.',
+  1391 63               DB 063h
+  1392 00               DB 000h                 ;       'c',
+  1393 6F               DB 06Fh
+  1394 00               DB 000h                 ;       'o',
+  1395 6D               DB 06Dh
+  1396 00               DB 000h                 ;       'm'
                                                 ;}  };
 
                                                 ;struct StringDescriptor product_name = {
   1397 44               DB 044h                 ;   byte bLength = 68;
   1398 03               DB 003h                 ;   byte bDescriptorType = STRING;
                                                 ;   u16char_t string[] = {
-  1399 5400             DB 054h, 000h           ;       'T',
-  139B 7200             DB 072h, 000h           ;       'r',
-  139D 7500             DB 075h, 000h           ;       'u',
-  139F 6C00             DB 06Ch, 000h           ;       'l',
-  13A1 7900             DB 079h, 000h           ;       'y',
-  13A3 2000             DB 020h, 000h           ;       ' ',
-  13A5 4500             DB 045h, 000h           ;       'E',
-  13A7 7200             DB 072h, 000h           ;       'r',
-  13A9 6700             DB 067h, 000h           ;       'g',
-  13AB 6F00             DB 06Fh, 000h           ;       'o',
-  13AD 6E00             DB 06Eh, 000h           ;       'n',
-  13AF 6F00             DB 06Fh, 000h           ;       'o',
-  13B1 6D00             DB 06Dh, 000h           ;       'm',
-  13B3 6900             DB 069h, 000h           ;       'i',
-  13B5 6300             DB 063h, 000h           ;       'c',
-  13B7 2000             DB 020h, 000h           ;       ' ',
-  13B9 4300             DB 043h, 000h           ;       'C',
-  13BB 6F00             DB 06Fh, 000h           ;       'o',
-  13BD 6D00             DB 06Dh, 000h           ;       'm',
-  13BF 7000             DB 070h, 000h           ;       'p',
-  13C1 7500             DB 075h, 000h           ;       'u',
-  13C3 7400             DB 074h, 000h           ;       't',
-  13C5 6500             DB 065h, 000h           ;       'e',
-  13C7 7200             DB 072h, 000h           ;       'r',
-  13C9 2000             DB 020h, 000h           ;       ' ',
-  13CB 4B00             DB 04Bh, 000h           ;       'K',
-  13CD 6500             DB 065h, 000h           ;       'e',
-  13CF 7900             DB 079h, 000h           ;       'y',
-  13D1 6200             DB 062h, 000h           ;       'b',
-  13D3 6F00             DB 06Fh, 000h           ;       'o',
-  13D5 6100             DB 061h, 000h           ;       'a',
-  13D7 7200             DB 072h, 000h           ;       'r',
-  13D9 6400             DB 064h, 000h           ;       'd'
+  1399 54               DB 054h
+  139A 00               DB 000h                 ;       'T',
+  139B 72               DB 072h
+  139C 00               DB 000h                 ;       'r',
+  139D 75               DB 075h
+  139E 00               DB 000h                 ;       'u',
+  139F 6C               DB 06Ch
+  13A0 00               DB 000h                 ;       'l',
+  13A1 79               DB 079h
+  13A2 00               DB 000h                 ;       'y',
+  13A3 20               DB 020h
+  13A4 00               DB 000h                 ;       ' ',
+  13A5 45               DB 045h
+  13A6 00               DB 000h                 ;       'E',
+  13A7 72               DB 072h
+  13A8 00               DB 000h                 ;       'r',
+  13A9 67               DB 067h
+  13AA 00               DB 000h                 ;       'g',
+  13AB 6F               DB 06Fh
+  13AC 00               DB 000h                 ;       'o',
+  13AD 6E               DB 06Eh
+  13AE 00               DB 000h                 ;       'n',
+  13AF 6F               DB 06Fh
+  13B0 00               DB 000h                 ;       'o',
+  13B1 6D               DB 06Dh
+  13B2 00               DB 000h                 ;       'm',
+  13B3 69               DB 069h
+  13B4 00               DB 000h                 ;       'i',
+  13B5 63               DB 063h
+  13B6 00               DB 000h                 ;       'c',
+  13B7 20               DB 020h
+  13B8 00               DB 000h                 ;       ' ',
+  13B9 43               DB 043h
+  13BA 00               DB 000h                 ;       'C',
+  13BB 6F               DB 06Fh
+  13BC 00               DB 000h                 ;       'o',
+  13BD 6D               DB 06Dh
+  13BE 00               DB 000h                 ;       'm',
+  13BF 70               DB 070h
+  13C0 00               DB 000h                 ;       'p',
+  13C1 75               DB 075h
+  13C2 00               DB 000h                 ;       'u',
+  13C3 74               DB 074h
+  13C4 00               DB 000h                 ;       't',
+  13C5 65               DB 065h
+  13C6 00               DB 000h                 ;       'e',
+  13C7 72               DB 072h
+  13C8 00               DB 000h                 ;       'r',
+  13C9 20               DB 020h
+  13CA 00               DB 000h                 ;       ' ',
+  13CB 4B               DB 04Bh
+  13CC 00               DB 000h                 ;       'K',
+  13CD 65               DB 065h
+  13CE 00               DB 000h                 ;       'e',
+  13CF 79               DB 079h
+  13D0 00               DB 000h                 ;       'y',
+  13D1 62               DB 062h
+  13D2 00               DB 000h                 ;       'b',
+  13D3 6F               DB 06Fh
+  13D4 00               DB 000h                 ;       'o',
+  13D5 61               DB 061h
+  13D6 00               DB 000h                 ;       'a',
+  13D7 72               DB 072h
+  13D8 00               DB 000h                 ;       'r',
+  13D9 64               DB 064h
+  13DA 00               DB 000h                 ;       'd'
                                                 ;}  };
 
                                                 ;struct StringDescriptor serial_number = {
   13DB 0E               DB 00Eh                 ;   byte bLength = 14;
   13DC 03               DB 003h                 ;   byte bDescriptorType = STRING;
                                                 ;   u16char_t string[] = {
-  13DD 3600             DB 036h, 000h           ;       '6',
-  13DF 3200             DB 032h, 000h           ;       '2',
-  13E1 3100             DB 031h, 000h           ;       '1',
-  13E3 3000             DB 030h, 000h           ;       '0',
-  13E5 3300             DB 033h, 000h           ;       '3',
-  13E7 3100             DB 031h, 000h           ;       '1'
-                                                ;}  };
+  13DD 36               DB 036h
+  13DE 00               DB 000h                 ;       '6',
+  13DF 32               DB 032h
+  13E0 00               DB 000h                 ;       '2',
+  13E1 31               DB 031h
+  13E2 00               DB 000h                 ;       '1',
+  13E3 30               DB 030h
+  13E4 00               DB 000h                 ;       '0',
+  13E5 33               DB 033h
+  13E6 00               DB 000h                 ;       '3',
+  13E7 31               DB 031h
+  13E8 00               DB 000h                 ;       '1'
+                                                ;}    };
 store_key:                                      ;void store_key() {
   13E9 783C             MOV R0, #3Ch
   13EB E6               MOV A, @R0
@@ -4092,25 +4238,63 @@ L0216:
 
                                                 ;// Output into ports P1, P2, ANDed into P3 from read_column()
                                                 ;static const byte matrix_mask[][3] = {
-  187C FEFFFF           DB 0FEh,0FFh,0FFh
-  187F FDFFFF           DB 0FDh,0FFh,0FFh
-  1882 FBFFFF           DB 0FBh,0FFh,0FFh
-  1885 F7FFFF           DB 0F7h,0FFh,0FFh
-  1888 EFFFFF           DB 0EFh,0FFh,0FFh
-  188B DFFFFF           DB 0DFh,0FFh,0FFh
-  188E BFFFFF           DB 0BFh,0FFh,0FFh
-  1891 7FFFFF           DB 07Fh,0FFh,0FFh
-  1894 FFFEFF           DB 0FFh,0FEh,0FFh
-  1897 FFFDFF           DB 0FFh,0FDh,0FFh
-  189A FFFBFF           DB 0FFh,0FBh,0FFh
-  189D FFF7FF           DB 0FFh,0F7h,0FFh
-  18A0 FFEFFF           DB 0FFh,0EFh,0FFh
-  18A3 FFDFFF           DB 0FFh,0DFh,0FFh
-  18A6 FFBFFF           DB 0FFh,0BFh,0FFh
-  18A9 FF7FFF           DB 0FFh,07Fh,0FFh
-  18AC FFFFF7           DB 0FFh,0FFh,0F7h
-  18AF FFFFEF           DB 0FFh,0FFh,0EFh
-  18B2 0000E7           DB 000h,000h,0E7h       ;}
+  187C FE               DB 0FEh
+  187D FF               DB 0FFh
+  187E FF               DB 0FFh
+  187F FD               DB 0FDh
+  1880 FF               DB 0FFh
+  1881 FF               DB 0FFh
+  1882 FB               DB 0FBh
+  1883 FF               DB 0FFh
+  1884 FF               DB 0FFh
+  1885 F7               DB 0F7h
+  1886 FF               DB 0FFh
+  1887 FF               DB 0FFh
+  1888 EF               DB 0EFh
+  1889 FF               DB 0FFh
+  188A FF               DB 0FFh
+  188B DF               DB 0DFh
+  188C FF               DB 0FFh
+  188D FF               DB 0FFh
+  188E BF               DB 0BFh
+  188F FF               DB 0FFh
+  1890 FF               DB 0FFh
+  1891 7F               DB 07Fh
+  1892 FF               DB 0FFh
+  1893 FF               DB 0FFh
+  1894 FF               DB 0FFh
+  1895 FE               DB 0FEh
+  1896 FF               DB 0FFh
+  1897 FF               DB 0FFh
+  1898 FD               DB 0FDh
+  1899 FF               DB 0FFh
+  189A FF               DB 0FFh
+  189B FB               DB 0FBh
+  189C FF               DB 0FFh
+  189D FF               DB 0FFh
+  189E F7               DB 0F7h
+  189F FF               DB 0FFh
+  18A0 FF               DB 0FFh
+  18A1 EF               DB 0EFh
+  18A2 FF               DB 0FFh
+  18A3 FF               DB 0FFh
+  18A4 DF               DB 0DFh
+  18A5 FF               DB 0FFh
+  18A6 FF               DB 0FFh
+  18A7 BF               DB 0BFh
+  18A8 FF               DB 0FFh
+  18A9 FF               DB 0FFh
+  18AA 7F               DB 07Fh
+  18AB FF               DB 0FFh
+  18AC FF               DB 0FFh
+  18AD FF               DB 0FFh
+  18AE F7               DB 0F7h
+  18AF FF               DB 0FFh
+  18B0 FF               DB 0FFh
+  18B1 EF               DB 0EFh
+  18B2 00               DB 000h
+  18B3 00               DB 000h
+  18B4 E7               DB 0E7h                 ;}
 
 received_ep0:                                   ;void received_ep0() {
   18B5 7857             MOV R0, #57h
