@@ -104,7 +104,7 @@
 ;;        initialized and waited for 0 by delay()
 ;;   0001 byte wdtcr;
 ;;        Used in timer0(), usb_intr(), keypad()
-;;   0003 byte fn_down;
+;;   0003 byte fn_down; // 0x80 if down, 0 if up
 ;;        Zeroed in init_vars(), assigned/used in process_key()
 ;;   0004 byte numlock_timer;
 ;;   0005 byte numlock_state;
@@ -441,7 +441,67 @@ mac_fn_keycodes:                                ;static const byte mac_fn_keycod
   020F 00F100F200000000                         ;   0,    Media9, 0,      Media10, 0,    0,         0,      0,
   0217 00F300F400000000                         ;   0,    Media11,0,      Media12, 0,    0,         0,      0
                                                 ;}
-;;; 92 bytes free
+;;; 81 bytes code
+do_get_keycode:                                 ;byte __register(R7) do_get_keycode(byte __register(R7) keyindex, byte __register(A) layer)
+  021F 900226           MOV DPTR, #0226h
+  0222 5407             ANL A, #7h
+  0224 23               RL A
+  0225 73               JMP @A+DPTR
+  0226 8025             SJMP L9200
+  0228 801C             SJMP L9201
+  022A 800A             SJMP L9202
+  022C 8011             SJMP L9203
+  022E 8039             SJMP L9204
+  0230 8030             SJMP L9205
+  0232 801E             SJMP L9206
+  0234 8025             SJMP L9207              ;   switch (layer & 7)
+                                                ;   {
+L9202:                                          ;   case 2: // PC Fn
+  0236 9000FF           MOV DPTR, #00FFh
+  0239 EF               MOV A, R7
+  023A 93               MOVC A, @A+DPTR         ;       A = pc_fn_keycodes[keyindex];
+  023B 7031             JNZ L9209               ;       if (A) return A;
+  023D 800E             SJMP L9200              ;       goto case 0;
+L9203:                                          ;   case 3: // PC Fn Num
+  023F 9000FF           MOV DPTR, #00FFh
+  0242 EF               MOV A, R7
+  0243 93               MOVC A, @A+DPTR         ;       A = pc_fn_keycodes[keyindex];
+  0244 7028             JNZ L9209               ;       if (A) return A;
+L9201:                                          ;   case 1: // PC Num
+  0246 9008AE           MOV DPTR, #08AEh
+  0249 EF               MOV A, R7
+  024A 93               MOVC A, @A+DPTR         ;       A = pc_num_keycodes[keyindex];
+  024B 7021             JNZ L9209               ;       if (A) return A;
+L9200:                                          ;   case 0: // PC Main
+  024D 90072B           MOV DPTR, #072Bh        ;       A = pc_keycodes[keyindex];
+  0250 801A             SJMP L9208              ;       return A;
+L9206:                                          ;   case 6: // Mac Fn
+  0252 90018F           MOV DPTR, #018Fh
+  0255 EF               MOV A, R7
+  0256 93               MOVC A, @A+DPTR         ;       A = mac_fn_keycodes[keyindex];
+  0257 7015             JNZ L9209               ;       if (A) return A;
+  0259 800E             SJMP L9204              ;       goto case 4;
+L9207:                                          ;   case 7: // Mac Fn Num
+  025B 90018F           MOV DPTR, #018Fh
+  025E EF               MOV A, R7
+  025F 93               MOVC A, @A+DPTR         ;       A = mac_fn_keycodes[keyindex];
+  0260 700C             JNZ L9209               ;       if (A) return A;
+L9205:                                          ;   case 5: // Mac Num
+  0262 900A8E           MOV DPTR, #0A8Eh
+  0265 EF               MOV A, R7
+  0266 93               MOVC A, @A+DPTR         ;       A = mac_num_keycodes[keyindex];
+  0267 7005             JNZ L9209               ;       if (A) return A;
+L9204:                                          ;   case 4: // Mac Main
+  0269 9007BB           MOV DPTR, #07BBh
+L9208:
+  026C EF               MOV A, R7
+  026D 93               MOVC A, @A+DPTR         ;       A = mac_keycodes[keyindex];
+L9209:
+  026E FF               MOV R7, A
+  026F 22               RET                     ;       return A;
+                                                ;   }
+                                                ;}
+;;; 11 bytes free
 CSEG AT 027Bh
 L9800:
   027B 784D             MOV R0, #4Dh
@@ -1643,51 +1703,23 @@ mac_num_keycodes:                               ;static const byte mac_num_keyco
   0B0E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
   0B16 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
                                                 ;}
+
+;;; 19 bytes code
 get_keycode:                                    ;byte __register(R7) get_keycode(byte __register(R7) keyindex) { // R1 A DPTR R7
-  0B1E 7921             MOV R1, #21h
-  0B20 B75A2A           CJNE @R1, #5Ah, L9505   ;   if (kb_mode == KBMODE_NORMAL) {
-  0B23 7903             MOV R1, #3h
-  0B25 E3               MOVX A, @R1
-  0B26 6011             JZ L9503                ;       if (fn_down) {
-  0B28 EF               MOV A, R7
-  0B29 30E905           JNB 0E9h, L9501         ;           if (P4./DIP2) {
-  0B2C 90018F           MOV DPTR, #018Fh
-  0B2F 8003             SJMP L9502              ;               A = mac_fn_keycodes[keyindex];
-L9501:                                          ;           } else {
-  0B31 9000FF           MOV DPTR, #00FFh
-L9502:
-  0B34 93               MOVC A, @A+DPTR         ;               A = pc_fn_keycodes[keyindex];
-                                                ;           }
-  0B35 6002             JZ L9503                ;           if (A) {
-  0B37 FF               MOV R7, A               ;               return A;
-  0B38 22               RET                     ;       }   }
-L9503:
-  0B39 20B511           JB P3.5, L9505          ;       if (not P3./NUM) {
-  0B3C EF               MOV A, R7
-  0B3D 30E905           JNB 0E9h, L9506         ;           if (P4./DIP2) {
-  0B40 900A8E           MOV DPTR, #0A8Eh
-  0B43 8003             SJMP L9507              ;               A = mac_num_keycodes[keyindex];
-L9506:                                          ;           } else {
-  0B45 9008AE           MOV DPTR, #08AEh
-L9507:
-  0B48 93               MOVC A, @A+DPTR         ;               A = pc_num_keycodes[keyindex];
-                                                ;           }
-  0B49 6002             JZ L9505                ;           if (A) {
-  0B4B FF               MOV R7, A               ;               return A;
-  0B4C 22               RET                     ;   }   }   }
-L9505:
-  0B4D EF               MOV A, R7
-  0B4E 30E905           JNB 0E9h, L9504         ;   if (P4./DIP2) {
-  0B51 9007BB           MOV DPTR, #07BBh
-  0B54 8003             SJMP L9508              ;       A = mac_keycodes[keyindex];
-L9504:                                          ;   } else {
-  0B56 90072B           MOV DPTR, #072Bh
-L9508:
-  0B59 93               MOVC A, @A+DPTR         ;       A = pc_keycodes[keyindex];
-                                                ;   }
-  0B5A FF               MOV R7, A               ;   return R7;
-  0B5B 22               RET                     ;}
-;;; 13 bytes free
+  0B1E 7903             MOV R1, #3h
+  0B20 E3               MOVX A, @R1
+  0B21 6002             JZ L9503
+  0B23 7402             MOV A, #2h
+L9503:                                          ;   byte __register(A) layer = fn_down ? 2 : 0;
+  0B25 30E902           JNB 0E9h, L9501
+  0B28 4404             ORL A, #4h
+L9501:                                          ;   layer |= P4./DIP2 ? 4 : 0;
+  0B2A 20B501           JB P3.5, L9502
+  0B2D 04               INC A
+L9502:                                          ;   layer |= not P3./NUM ? 1 : 0;
+  0B2E 02021F           LJMP do_get_keycode     ;   return do_get_keycode(keyindex, layer);
+                                                ;}
+;;; 56 bytes free
 
 CSEG AT 0B69h
 find_macro:                                     ;bool __register(C) find_macro(byte* __register(R0) p) {
