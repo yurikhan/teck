@@ -13,6 +13,10 @@
 ;;   EA P4.2 DIP switch 1
 ;;
 ;; RAM:
+;;   00 register bank 0
+;;   08 register bank 1
+;;   10 register bank 2
+;;   18 register bank 3
 ;;   20 byte led_state;
 ;;      Used in do_receive(), zeroed in init_vars()
 ;;      Used in upd_leds() as [? ? ? ? ? Scroll Caps ?] bit mask
@@ -97,6 +101,11 @@
 ;;   58 / scans memory in find_macro(); corrupted in play_macro() for no reason
 ;;   59 \ union { MacroData* pMacro; MacroEvent* pMacroEvent; }
 ;;   5A / Assigned in find_macro() to found->pointer, used in play_macro()
+;;   5B \ hardware stack
+;;   7F / 37 bytes
+;;   :
+;;   E0 \ struct PressedKey { byte keyindex; byte layer; } pressed_keys[15];
+;;   FD /
 ;;
 ;; XRAM:
 ;;   0000 byte delay_count;
@@ -182,6 +191,7 @@
 ;;        local copy of size argument in isp_reprogram()
 ;;   0066 \ local copy of base address argument in receive(), transmit()
 ;;   0067 /
+;;   023F XRAMTOP
 ;;
 ;;
 ;; Const section:
@@ -1424,7 +1434,7 @@ L0160:                                          ;   for (byte __volatile(v53) i 
   0856 C3               CLR C
   0857 9408             SUBB A, #8h
   0859 4003             JC L0156
-  085B 020898           LJMP L0157
+  085B 020899           LJMP L0157
 
 L0156:
   085E 7924             MOV R1, #24h
@@ -1432,7 +1442,7 @@ L0156:
   0861 7856             MOV R0, #56h
   0863 56               ANL A, @R0
   0864 7003             JNZ L0158               ;       if (column_value & mask) {
-  0866 02088D           LJMP L0159
+  0866 02088E           LJMP L0159
 
 L0158:
   0869 7823             MOV R0, #23h
@@ -1446,29 +1456,29 @@ L0158:
   0874 783B             MOV R0, #3Bh
   0876 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3 + i;
   0877 FF               MOV R7, A
-  0878 120B1E           LCALL get_keycode       ;           R7 = get_keycode(key_index);
-  087B 08               INC R0
-  087C EF               MOV A, R7
-  087D F6               MOV @R0, A              ;           keycode = R7
-  087E C3               CLR C                   ;           // keycode is still in R7 and A
-  087F 9459             SUBB A, #59h
-  0881 4007             JC L0166
-  0883 940B             SUBB A, #0Bh
-  0885 5003             JNC L0166               ;           if (0x59 <= keycode <= 0x63) { // NumLock-dependent
-  0887 121B01           LCALL trigger_numlock   ;               trigger_numlock();
+  0878 120944           LCALL get_held_keycode  ;           R7 = get_held_keycode(key_index);
+  087B 783C             MOV R0, #3Ch
+  087D EF               MOV A, R7
+  087E F6               MOV @R0, A              ;           keycode = R7
+  087F C3               CLR C                   ;           // keycode is still in R7 and A
+  0880 9459             SUBB A, #59h
+  0882 4007             JC L0166
+  0884 940B             SUBB A, #0Bh
+  0886 5003             JNC L0166               ;           if (0x59 <= keycode <= 0x63) { // NumLock-dependent
+  0888 121B01           LCALL trigger_numlock   ;               trigger_numlock();
 L0166:                                          ;           } // if NumLock and kb_mode == 0x5A
-  088A 1213E9           LCALL store_key         ;           store_key();
+  088B 1213E9           LCALL store_key         ;           store_key();
 L0159:                                          ;       } // if
-  088D 7853             MOV R0, #53h
-  088F 06               INC @R0
-  0890 7856             MOV R0, #56h
-  0892 E6               MOV A, @R0
-  0893 25E0             ADD A, ACC
-  0895 F6               MOV @R0, A
-  0896 80BB             SJMP L0160              ;   } // for
+  088E 7853             MOV R0, #53h
+  0890 06               INC @R0
+  0891 7856             MOV R0, #56h
+  0893 E6               MOV A, @R0
+  0894 25E0             ADD A, ACC
+  0896 F6               MOV @R0, A
+  0897 80BA             SJMP L0160              ;   } // for
 L0157:
-  0898 22               RET                     ;}
-;;; 21 bytes free
+  0899 22               RET                     ;}
+;;; 20 bytes free
 
 pc_num_keycodes:                                ;static const byte pc_num_keycodes[18*8] = {
   08AE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
@@ -1490,7 +1500,37 @@ pc_num_keycodes:                                ;static const byte pc_num_keycod
   092E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
   0936 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
                                                 ;}
-;;; 34 bytes free
+
+;;; 6 bytes code, 24 bytes relocation unit
+get_changed_keycode:                            ;byte __register(R7) get_changed_keycode(byte __register(R7) keyindex) { // R1 A
+  093E E524             MOV A, 24h
+  0940 5556             ANL A, 56h              ;   if (column_value & mask) {
+  0942 700F             JNZ get_held_keycode__notfound
+                                                ;       return get_pressed_keycode(keyindex);
+                                                ;   } else {
+                                                ;       return get_held_keycode(keyindex)
+                                                ;   }
+                                                ;}
+
+;;; 18 bytes code
+get_held_keycode:                               ;byte __register(R7) get_held_keycode(byte __register(R7) keyindex) { // R1 A
+  0944 79E0             MOV R1, #0E0h           ;   for (PressedKey* __register(R1) p = &pressed_keys[0]; p != &pressed_keys[15]; ++p) {
+get_held_keycode__loop:
+  0946 E7               MOV A, @R1
+  0947 09               INC R1
+  0948 6F               XRL A, R7
+  0949 7004             JNZ get_held_keycode__next ;    if (p->keyindex == keyindex) {
+  094B E7               MOV A, @R1
+  094C 02021F           LJMP do_get_keycode     ;           return do_get_keycode(keyindex, p->layer);
+get_held_keycode__next:                         ;       }
+  094F 09               INC R1
+  0950 B9FEF3           CJNE R1, #0FEh, get_held_keycode__loop
+                                                ;   }
+get_held_keycode__notfound:
+  0953 020B2F           LJMP get_pressed_keycode;   return get_pressed_keycode(keyindex); // not found
+                                                ;}
+
+;;; 10 bytes free
 
 CSEG AT 0960h
 do_usb_2:                                       ;void do_usb_2() {
@@ -1704,10 +1744,10 @@ mac_num_keycodes:                               ;static const byte mac_num_keyco
   0B16 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
                                                 ;}
 
-;;; 19 bytes code
-get_keycode:                                    ;byte __register(R7) get_keycode(byte __register(R7) keyindex) { // R1 A DPTR R7
-  0B1E 7903             MOV R1, #3h
-  0B20 E3               MOVX A, @R1
+;;; 17 bytes code
+get_layer:                                      ;byte __register(A) get_layer() { // R0
+  0B1E 7803             MOV R0, #3h
+  0B20 E2               MOVX A, @R0
   0B21 6002             JZ L9503
   0B23 7402             MOV A, #2h
 L9503:                                          ;   byte __register(A) layer = fn_down ? 2 : 0;
@@ -1717,9 +1757,73 @@ L9501:                                          ;   layer |= P4./DIP2 ? 4 : 0;
   0B2A 20B501           JB P3.5, L9502
   0B2D 04               INC A
 L9502:                                          ;   layer |= not P3./NUM ? 1 : 0;
-  0B2E 02021F           LJMP do_get_keycode     ;   return do_get_keycode(keyindex, layer);
+  0B2E 22               RET                     ;   return layer;
                                                 ;}
-;;; 56 bytes free
+
+;;; 6 bytes code
+get_pressed_keycode:                            ;byte __register(R7) get_pressed_keycode(byte __register(R7) keyindex) { // R0 R1 A DPTR R7
+  0B2F 120B1E           LCALL get_layer
+  0B32 02021F           LJMP do_get_keycode     ;   return do_get_keycode(keyindex, get_layer());
+                                                ;}
+
+;;; 19 bytes code
+;;; Mark key as pressed in the current layer.
+store_pressed_key:                              ;void store_pressed_key(byte __register(R0) keyindex) { // R0 R1 A
+  0B35 79E0             MOV R1, #0E0h           ;   for (PressedKey* __register(R1) p = &pressed_keys[0]; p != &pressed_keys[15]; ++p) {
+store_pressed_key__loop:
+  0B37 E7               MOV A, @R1
+  0B38 7008             JNZ store_pressed_key__next;    if (p->keyindex == 0) {
+  0B3A E8               MOV A, R0
+  0B3B F7               MOV @R1, A              ;           p->keyindex = keyindex;
+  0B3C 09               INC R1
+  0B3D 120B1E           LCALL get_layer
+  0B40 F7               MOV @R1, A              ;           p->layer = get_layer();
+  0B41 22               RET                     ;           return;
+store_pressed_key__next:                        ;       }
+  0B42 09               INC R1
+  0B43 09               INC R1
+  0B44 B9FEF0           CJNE R1, #0FEh, store_pressed_key__loop
+                                                ;   }
+  0B47 22               RET                     ;}
+
+;;; 14 bytes code
+;;; Mark key as released.
+clear_pressed_key:                              ;void clear_pressed_key(byte __register(R0) keyindex) { // R1 A
+  0B48 79E0             MOV R1, #0E0h           ;   for (PressedKey* __register(R1) p = &pressed_keys[0]; p != &pressed_keys[15]; ++p) {
+clear_pressed_key__loop:
+  0B4A E8               MOV A, R0
+  0B4B 67               XRL A, @R1
+  0B4C 7002             JNZ clear_pressed_key__next
+                                                ;       if (p->keyindex == keyindex) {
+  0B4E F7               MOV @R1, A              ;           p->keyindex = 0;
+  0B4F 22               RET                     ;           return;
+clear_pressed_key__next:                        ;       }
+  0B50 09               INC R1
+  0B51 09               INC R1
+  0B52 B9FEF5           CJNE R1, #0FEh, clear_pressed_key__loop
+                                                ;   }
+  0B55 22               RET                     ;}
+
+;;; 16 bytes code
+;;; in: byte __volatile(v23) column_index, __volatile(v24) column_value, __volatile(v53) i, __volatile(v56) mask;
+;;; inout: struct PressedKey { byte keyindex; byte layer; } __volatile(vE0) pressed_keys[15];
+;;; uses registers: A R0 R1
+update_pressed_keys:                            ;void update_pressed_keys() {
+  0B56 E523             MOV A, 23h
+  0B58 23               RL A
+  0B59 23               RL A
+  0B5A 23               RL A
+  0B5B 4553             ORL A, 53h
+  0B5D F8               MOV R0, A               ;   byte __register(R0) keyindex = column_index << 3 | i;
+  0B5E E524             MOV A, 24h
+  0B60 5556             ANL A, 56h              ;   if (column_value & mask) {
+  0B62 70D1             JNZ store_pressed_key   ;       store_pressed_key(keyindex);
+                                                ;   } else {
+  0B64 80E2             SJMP clear_pressed_key  ;       clear_pressed_key(keyindex);
+                                                ;   }
+                                                ;}
+
+;;; 3 bytes free
 
 CSEG AT 0B69h
 find_macro:                                     ;bool __register(C) find_macro(byte* __register(R0) p) {
@@ -1954,32 +2058,33 @@ L0194:
   0C91 783B             MOV R0, #3Bh
   0C93 F6               MOV @R0, A              ;           byte __volatile(v3B) key_index = column_index << 3 + i;
   0C94 FF               MOV R7, A
-  0C95 120B1E           LCALL get_keycode       ;           R7 = get_keycode(key_index);
-  0C98 08               INC R0
-  0C99 EF               MOV A, R7
-  0C9A F6               MOV @R0, A              ;           keycode = R7;
-  0C9B B4DF0D           CJNE A, #0DFh, L9700    ;           if (keycode == 0xDF) { // Fn
-  0C9E E524             MOV A, 24h
-  0CA0 5556             ANL A, 56h
-  0CA2 7803             MOV R0, #3h
-  0CA4 6002             JZ L9701                ;               if (column_value & mask) { // pressed
-  0CA6 7480             MOV A, #80h             ;                   fn_down = true;
+  0C95 12093E           LCALL get_changed_keycode ;         R7 = get_changed_keycode(key_index);
+  0C98 120B56           LCALL update_pressed_keys ;         update_pressed_keys();
+  0C9B 783C             MOV R0, #3Ch
+  0C9D EF               MOV A, R7
+  0C9E F6               MOV @R0, A              ;           keycode = R7;
+  0C9F B4DF0D           CJNE A, #0DFh, L9700    ;           if (keycode == 0xDF) { // Fn
+  0CA2 E524             MOV A, 24h
+  0CA4 5556             ANL A, 56h
+  0CA6 7803             MOV R0, #3h
+  0CA8 6002             JZ L9701                ;               if (column_value & mask) { // pressed
+  0CAA 7480             MOV A, #80h             ;                   fn_down = true;
                                                 ;               } else {
                                                 ;                   fn_down = false;
 L9701:
-  0CA8 F2               MOVX @R0, A
+  0CAC F2               MOVX @R0, A
                                                 ;               }
-  0CA9 8068             SJMP L0195              ;               continue;
+  0CAD 800B             SJMP L0195              ;               continue;
                                                 ;           }
 L9700:
-  0CAB B4DE19           CJNE A, #0DEh, L9702    ;           if (keycode == 0xDE) { // IntNum
-  0CAE E524             MOV A, 24h
-  0CB0 5556             ANL A, 56h
-  0CB2 6002             JZ L9703                ;               if (column_value & mask) {
-  0CB4 B2B5             CPL P3.5                ;                   P3./NUM = not P3./NUM;
+  0CAF B4DE15           CJNE A, #0DEh, L9702    ;           if (keycode == 0xDE) { // IntNum
+  0CB2 E524             MOV A, 24h
+  0CB4 5556             ANL A, 56h
+  0CB6 6002             JZ L9703                ;               if (column_value & mask) {
+  0CB8 B2B5             CPL P3.5                ;                   P3./NUM = not P3./NUM;
 L9703:                                          ;               }
-  0CB6 807F             SJMP L0195              ;               continue;
-;;; 15 bytes free
+  0CBA 807B             SJMP L0195              ;               continue;
+;;; 11 bytes free
 CSEG AT 0CC7h
 L9702:                                          ;           }
   0CC7 783C             MOV R0, #3Ch
@@ -1987,38 +2092,28 @@ L9702:                                          ;           }
   0CCA FE               MOV R6, A
   0CCB C3               CLR C
   0CCC 94E8             SUBB A, #0E8h
-  0CCE 4045             JC L0208                ;           if (keycode >= 0xE8 // MediaFirst
+  0CCE 4063             JC L0209                ;           if (keycode >= 0xE8 // MediaFirst
   0CD0 EE               MOV A, R6
   0CD1 D3               SETB C
   0CD2 94FE             SUBB A, #0FEh
-  0CD4 503F             JNC L0208               ;               and keycode <= 0xFE) // MediaLast
+  0CD4 505D             JNC L0209               ;               and keycode <= 0xFE) // MediaLast
                                                 ;           {
-  0CD6 7847             MOV R0, #47h
-  0CD8 E6               MOV A, @R0
-  0CD9 7035             JNZ L0201               ;               if (media_keycode) { stop_fn(); continue; }
-  0CDB 18               DEC R0
-  0CDC 7601             MOV @R0, #1h            ;               media_report_ready = 1;
-  0CDE 783C             MOV R0, #3Ch
-  0CE0 E6               MOV A, @R0
-  0CE1 7847             MOV R0, #47h
-  0CE3 F6               MOV @R0, A              ;               media_keycode = keycode; // [E8..FE]
-;;; 34 bytes free
-  0CE4 8020             SJMP L9804
-CSEG AT 0D06h
-L9804:
-  0D06 120A76           LCALL process_fn        ;               process_fn();
-  0D09 7807             MOV R0, #7h
-  0D0B 74CC             MOV A, #0CCh
-  0D0D F2               MOVX @R0, A             ;               media_key_down = 0xCC;
-  0D0E 8027             SJMP L0195              ;               continue;
+  0CD6 E524             MOV A, 24h
+  0CD8 5556             ANL A, 56h
+  0CDA 600C             JZ decode_fn__media_up  ;               if (column_value & mask) { // down
+  0CDC 7846             MOV R0, #46h
+  0CDE 7601             MOV @R0, #1h            ;                   media_report_ready = 1;
+  0CE0 08               INC R0
+  0CE1 A63C             MOV @R0, 3Ch            ;                   media_keycode = keycode;
+  0CE3 120A76           LCALL process_fn        ;                   process_fn();
+  0CE6 804F             SJMP L0195              ;                   continue;
+decode_fn__media_up:                            ;               } else { // up
+  0CE8 120A6F           LCALL stop_fn           ;                   stop_fn();
+  0CEB 804A             SJMP L0195              ;                   continue;
+                                                ;               }
+                                                ;           }
+;;; 70 bytes free
 
-L0201:
-  0D10 120A6F           LCALL stop_fn
-  0D13 8022             SJMP L0195
-
-L0208:                                          ;           }
-  0D15 801C             SJMP L0209
-;;; 28 bytes free
 CSEG AT 0D33h
 L0209:
   0D33 783E             MOV R0, #3Eh
@@ -4821,9 +4916,9 @@ usb_transmit:                                   ;usb_transmit(byte __register(A)
   1B30 22               RET                     ;}
 
 START:
-  1B31 787F             MOV R0, #7Fh
+  1B31 78FF             MOV R0, #0FFh
   1B33 E4               CLR A
-L0002:                                          ;for (byte* __register(R0) ptr = 0x7F; ptr --> 0 ;){
+L0002:                                          ;for (byte* __register(R0) ptr = 0xFF; ptr --> 0 ;){
   1B34 F6               MOV @R0, A              ;   *ptr = 0;
   1B35 D8FD             DJNZ R0, L0002          ;}
   1B37 75815A           MOV SP, #5Ah
