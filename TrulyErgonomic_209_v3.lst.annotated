@@ -104,6 +104,10 @@
 ;;   5B \ hardware stack
 ;;   7F / 37 bytes
 ;;   :
+;;   BC \ byte clockA[18];
+;;   CD /
+;;   CE \ byte clockB[18];
+;;   DF /
 ;;   E0 \ struct PressedKey { byte keyindex; byte layer; } pressed_keys[15];
 ;;   FD /
 ;;
@@ -1478,7 +1482,22 @@ L0159:                                          ;       } // if
   0897 80BA             SJMP L0160              ;   } // for
 L0157:
   0899 22               RET                     ;}
-;;; 20 bytes free
+
+;;; 17 bytes code
+;;; By varying the loop limits at 089B and 08A7, we can change how often the keyboard is polled.
+scan_delay:                                     ;void scan_delay() {
+  089A 7E00             MOV R6, #0h
+  089C EE               MOV A, R6
+  089D 6007             JZ scan_delay__skip     ;   for (byte __register(R6) i = 0; i != 0; --i) {
+scan_delay__loop:
+  089F 7FFA             MOV R7, #0FAh
+  08A1 121AA5           LCALL micro_delay       ;       micro_delay(250);
+  08A4 DEF9             DJNZ R6, scan_delay__loop
+scan_delay__skip:                               ;   }
+  08A6 7F46             MOV R7, #46h
+  08A8 021AA5           LJMP micro_delay        ;   micro_delay(70);
+                                                ;}
+;;; 3 bytes free
 
 pc_num_keycodes:                                ;static const byte pc_num_keycodes[18*8] = {
   08AE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
@@ -3855,35 +3874,42 @@ scan_column:                                    ;void scan_column() {
   157E B41202           CJNE A, #12h, L0149     ;   if (column_index == sizeof(key_matrix))
   1581 E4               CLR A
   1582 F6               MOV @R0, A              ;       column_index = 0; // scan 18 columns over and over?
-L0149:                                          ;   do {    // debouncing loop?
+L0149:
   1583 7823             MOV R0, #23h
   1585 E6               MOV A, @R0
   1586 FF               MOV R7, A
-  1587 12169B           LCALL read_column
-  158A 7824             MOV R0, #24h
-  158C EF               MOV A, R7
-  158D F6               MOV @R0, A              ;       column_value = read_column(column_index);
-  158E 18               DEC R0
-  158F E6               MOV A, @R0
-  1590 2426             ADD A, #26h
-  1592 F8               MOV R0, A
-  1593 E6               MOV A, @R0
-  1594 6F               XRL A, R7
-  1595 6016             JZ L0150                ;       if (key_matrix[column_index] == column_value) break;
-  1597 7F64             MOV R7, #64h
-  1599 121AA5           LCALL micro_delay       ;       micro_delay(100);
-  159C 7823             MOV R0, #23h
-  159E E6               MOV A, @R0
-  159F FF               MOV R7, A
-  15A0 12169B           LCALL read_column
-  15A3 7856             MOV R0, #56h
-  15A5 EF               MOV A, R7
-  15A6 F6               MOV @R0, A              ;       v56 = read_column(column_index);
-  15A7 7824             MOV R0, #24h
-  15A9 E6               MOV A, @R0
-  15AA 6F               XRL A, R7
-  15AB 70D6             JNZ L0149               ;   } while (column_value != v56);
-L0150:                                          ;
+  1587 12169B           LCALL read_column       ;   byte __register(R7) raw_value = read_column(column_index);
+
+  158A E523             MOV A, 23h             ;        R6 = column_index
+  158C FE               MOV R6, A
+  158D 2426             ADD A, #26h
+  158F F8               MOV R0, A               ;       R0 = &key_matrix[column_index]
+  1590 E6               MOV A, @R0
+  1591 FD               MOV R5, A               ;       R5 = key_matrix[column_index]
+  1592 6F               XRL A, R7
+  1593 FF               MOV R7, A               ;   byte __register(R7) delta = raw_value ^ key_matrix[column_index];
+  1594 EE               MOV A, R6
+  1595 24BC             ADD A, #0BCh
+  1597 F8               MOV R0, A               ;       R0 = &clockA[column_index]
+  1598 2412             ADD A, #12h
+  159A F9               MOV R1, A               ;       R1 = &clockB[column_index]
+  159B E6               MOV A, @R0
+  159C 67               XRL A, @R1              ;   clockA[column_index] ^= clockB[column_index];
+  159D 5F               ANL A, R7
+  159E F6               MOV @R0, A              ;   clockA[column_index] &= delta;
+  159F E7               MOV A, @R1
+  15A0 F4               CPL A                   ;   clockB[column_index] = ~clockB[column_index];
+  15A1 5F               ANL A, R7
+  15A2 F7               MOV @R1, A              ;   clockB[column_index] &= delta;
+  15A3 EF               MOV A, R7
+  15A4 F4               CPL A
+  15A5 46               ORL A, @R0
+  15A6 47               ORL A, @R1
+  15A7 F4               CPL A                   ;   byte __register(A) changes = ~(~delta | clockA[column_index] | clockB[column_index]);
+  15A8 6D               XRL A, R5
+  15A9 7824             MOV R0, #24h
+  15AB F6               MOV @R0, A              ;   column_value = key_matrix[column_index] ^ changes;
+  15AC 00               NOP
   15AD E4               CLR A
   15AE 783D             MOV R0, #3Dh
   15B0 F6               MOV @R0, A              ;   phantom = false;
@@ -3917,7 +3943,7 @@ L0151:                                          ;   }
   15D9 F6               MOV @R0, A              ;       key_matrix[column_index] = column_value;
   15DA 12084B           LCALL decode_numlock    ;       decode_numlock();
 L0153:                                          ;   }
-  15DD 121A9E           LCALL micro_delay_500   ;   micro_delay_500();
+  15DD 12089A           LCALL scan_delay        ;   scan_delay();
   15E0 7823             MOV R0, #23h
   15E2 06               INC @R0                 ;   ++column_index;
   15E3 22               RET                     ;}
@@ -4930,5 +4956,6 @@ leds_off:                                       ;void leds_off() {
   1B41 D2B7             SETB P3.7               ;   P3./SCROLL = true;
   1B43 D2E8             SETB 0E8h               ;   P4.0 = true;
   1B45 22               RET                     ;}
-;;; 7 bytes free
+
+;;; 2 bytes free
 END
