@@ -632,11 +632,16 @@ Firmware is to be used only for products manufactured by Truly Ergonomic Ltd. An
 			<label><input type="radio" name="cf-layer" value="4" />Num</label>
 			<label><input type="radio" name="cf-layer" value="5" />Fn</label>
 		</div>
-		<select id="cf-model">
-			<option value="cf-209" selected="selected">209/109</option>
-			<option value="cf-207">207</option>
-			<option value="cf-105">104/105</option>
-		</select>
+		<div id="cf-options">
+			<label>Model:
+				<select id="cf-model">
+					<option value="cf-209" selected="selected">209/109</option>
+					<option value="cf-207">207</option>
+					<option value="cf-105">104/105</option>
+				</select>
+			</label>
+			<label>Poll interval: <input id="cf-poll" value="70" /></label>
+		</div>
 	</div>
 	<div id="cft-keys">
 	<div id="cft-fkeys"

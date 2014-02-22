@@ -774,6 +774,13 @@ function generate_media_keys(base, media_keys)
 	return format_bytes(bytes, base);
 }
 
+function generate_poll_interval(high, low)
+{
+	var poll_interval = parseInt(document.getElementById('cf-poll').value, 10);
+	return (format_bytes([poll_interval / 250 | 0], high) +
+			format_bytes([poll_interval % 250], low));
+}
+
 function generate_download(event)
 {
 	event.preventDefault();
@@ -786,6 +793,7 @@ function generate_download(event)
 						 generate_layer(2, 0x00FF, media_keys),
 						 generate_layer(5, 0x018F, media_keys),
 						 generate_media_keys(0x0D9D, media_keys),
+						 generate_poll_interval(0x089B, 0x08A7),
 						 firmware_code],
 						{type: 'application/octet-stream'});
 	var a = document.getElementById("cf-download-link");
