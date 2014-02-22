@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TrulyErgonomic Configurator — v3yk firmware</title>
+<link rel="stylesheet" type="text/css" href="styles.css" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+<script type="text/javascript" src="configurator.js"></script>
+</head>
+<body>
+<div id="cf-root">
+<address>based on the <a href="https://github.com/yurivkhan/teck/">configurator by Yuri Khan</a><br />
+Firmware is to be used only for products manufactured by Truly Ergonomic Ltd. Any other use is prohibited.
+</address>
+
+<select id="cf-layout">
+	<optgroup label="Keyboard">
+		<option value="ansi" selected="selected">US 104 key (ANSI)</option>
+		<option value="iso">Europe 105 key (ISO)</option>
+		<option value="ko">Korean 106 key (Dubeolsik)</option>
+		<option value="abnt">Brazilian 107 key (ABNT-2)</option>
+		<option value="jis">Japanese 109 key (JIS)</option>
+	</optgroup> 
+	<option value="keypad">Keypad</option>
+	<option value="terminal">Terminal keys</option>
+	<option value="lang">Language keys</option>
+	<option value="media">Media and Power</option>
+	<option value="al">Application Launch</option>
+	<option value="ac">Application Control</option>
+	<option value="exotic">Exotic needs</option>
+</select>
+
+<label><input type="checkbox" id="cf-warn"/>Dim Linux-incompatible keys</label>
+
+<div id="cf-sources" class="cf-ansi"><div id="cf-warning-wrapper">
+	<div id="cf-sized">
+	<div id="cf-kbd">
+	<div id="cfs-fkeys" class="cf-row">
+		<div class="cf-main"
+			><kbd id="cfs-esc" class="cf-dark" data-u="29">Esc</kbd
+			><kbd id="cfs-f1" data-u="3A">F1</kbd
+			><kbd id="cfs-f2" data-u="3B">F2</kbd
+			><kbd id="cfs-f3" data-u="3C">F3</kbd
+			><kbd id="cfs-f4" data-u="3D">F4</kbd
+			><kbd id="cfs-f5" class="cf-dark" data-u="3E">F5</kbd
+			><kbd id="cfs-f6" class="cf-dark" data-u="3F">F6</kbd
+			><kbd id="cfs-f7" class="cf-dark" data-u="40">F7</kbd
+			><kbd id="cfs-f8" class="cf-dark" data-u="41">F8</kbd
+			><kbd id="cfs-f9" data-u="42">F9</kbd
+			><kbd id="cfs-f10" data-u="43">F10</kbd
+			><kbd id="cfs-f11" data-u="44">F11</kbd
+			><kbd id="cfs-f12" data-u="45">F12</kbd
+		></div>
+		<div class="cf-nav"
+			><kbd id="cfs-prtscr" class="cf-dark" data-u="46">⎙</kbd
+			><kbd id="cfs-scroll" class="cf-dark" data-u="47">⇳</kbd
+			><kbd id="cfs-pause" class="cf-dark" data-u="48">⎊</kbd
+		></div>
+		<div class="cf-keypad"
+			><kbd id="cfs-tnum" class="cf-dark" data-u="DE">T⇭</kbd
+			><kbd id="cfs-winpause" class="cf-dark" data-u="AD"></kbd
+			><kbd id="cfs-break" class="cf-dark" data-u="AE"></kbd
+			><kbd id="cfs-fn" class="cf-dark" data-u="DF">Fn</kbd
+		></div>
+	</div>
+	<div class="cf-row">
+		<div class="cf-main">
+			<div><kbd id="cfs-grave" data-u="35">`~</kbd
+				><kbd id="cfs-1" data-u="1E">1!</kbd
+				><kbd id="cfs-2" data-u="1F">2@</kbd
+				><kbd id="cfs-3" data-u="20">3#</kbd
+				><kbd id="cfs-4" data-u="21">4$</kbd
+				><kbd id="cfs-5" data-u="22">5%</kbd
+				><kbd id="cfs-6" data-u="23">6^</kbd
+				><kbd id="cfs-7" data-u="24">7&amp;</kbd
+				><kbd id="cfs-8" data-u="25">8*</kbd
+				><kbd id="cfs-9" data-u="26">9(</kbd
+				><kbd id="cfs-0" data-u="27">0)</kbd
+				><kbd id="cfs-minus" data-u="2D">-_</kbd
+				><kbd id="cfs-equal" data-u="2E">=+</kbd
+				><kbd id="cfs-yen" data-u="89">¥</kbd
+				><kbd id="cfs-bksp" class="cf-dark" data-u="2A">⌫</kbd
+			></div>
+			<div><kbd id="cfs-tab" class="cf-dark" data-u="2B">Tab ↹</kbd
+				><kbd id="cfs-q" data-u="14">Q</kbd
+				><kbd id="cfs-w" data-u="1A">W</kbd
+				><kbd id="cfs-e" data-u="08">E</kbd
+				><kbd id="cfs-r" data-u="15">R</kbd
+				><kbd id="cfs-t" data-u="17">T</kbd
+				><kbd id="cfs-y" data-u="1C">Y</kbd
+				><kbd id="cfs-u" data-u="18">U</kbd
+				><kbd id="cfs-i" data-u="0C">I</kbd
+				><kbd id="cfs-o" data-u="12">O</kbd
+				><kbd id="cfs-p" data-u="13">P</kbd
+				><kbd id="cfs-bra" data-u="2F">[{</kbd
+				><kbd id="cfs-ket" data-u="30">]}</kbd
+				><kbd id="cfs-bksl" data-u="31">\|</kbd
+			></div>
+			<div><kbd id="cfs-caps" class="cf-dark" data-u="39">⇪ Caps</kbd
+				><kbd id="cfs-a" data-u="04">A</kbd
+				><kbd id="cfs-s" data-u="16">S</kbd
+				><kbd id="cfs-d" data-u="07">D</kbd
+				><kbd id="cfs-f" data-u="09">F</kbd
+				><kbd id="cfs-g" data-u="0A">G</kbd
+				><kbd id="cfs-h" data-u="0B">H</kbd
+				><kbd id="cfs-j" data-u="0D">J</kbd
+				><kbd id="cfs-k" data-u="0E">K</kbd
+				><kbd id="cfs-l" data-u="0F">L</kbd
+				><kbd id="cfs-semi" data-u="33">;:</kbd
+				><kbd id="cfs-quote" data-u="34">'&quot;</kbd
+				><kbd id="cfs-euro1" data-u="32">€#~</kbd
+				><kbd id="cfs-enter" class="cf-dark" data-u="28">⏎</kbd
+			></div>
+			<div><kbd id="cfs-lsh" class="cf-dark" data-u="E1">L⇧</kbd
+				><kbd id="cfs-euro2" data-u="64">€\|</kbd
+				><kbd id="cfs-z" data-u="1D">Z</kbd
+				><kbd id="cfs-x" data-u="1B">X</kbd
+				><kbd id="cfs-c" data-u="06">C</kbd
+				><kbd id="cfs-v" data-u="19">V</kbd
+				><kbd id="cfs-b" data-u="05">B</kbd
+				><kbd id="cfs-n" data-u="11">N</kbd
+				><kbd id="cfs-m" data-u="10">M</kbd
+				><kbd id="cfs-comma" data-u="36">,&lt;</kbd
+				><kbd id="cfs-dot" data-u="37">.&gt;</kbd
+				><kbd id="cfs-slash" data-u="38">/?</kbd
+				><kbd id="cfs-ro" data-u="87">ろ</kbd
+				><kbd id="cfs-rsh" class="cf-dark" data-u="E5">R⇧</kbd
+			></div>
+			<div
+				><kbd id="cfs-lctrl" class="cf-dark" data-u="E0">L⎈</kbd
+				><kbd id="cfs-lgui" class="cf-dark" data-u="E3">L⌘</kbd
+				><kbd id="cfs-lalt" class="cf-dark" data-u="E2">L⎇</kbd
+				><kbd id="cfs-muhen" class="cf-dark" data-u="8B">無変</kbd
+				><kbd id="cfs-hanja" class="cf-dark" data-u="91">Hanja</kbd
+				><kbd id="cfs-space" data-u="2C">Space</kbd
+				><kbd id="cfs-hangul" class="cf-dark" data-u="90">Hangul</kbd
+				><kbd id="cfs-hen" class="cf-dark" data-u="8A">変</kbd
+				><kbd id="cfs-kana" class="cf-dark" data-u="88">カ/ひ</kbd
+				><kbd id="cfs-ralt" class="cf-dark" data-u="E6">R⎇</kbd
+				><kbd id="cfs-rgui" class="cf-dark" data-u="E7">R⌘</kbd
+				><kbd id="cfs-apps" class="cf-dark" data-u="65">▤</kbd
+				><kbd id="cfs-rctrl" class="cf-dark" data-u="E4">R⎈</kbd
+			></div>
+		</div>
+		<div class="cf-nav">
+			<div><kbd id="cfs-ins" class="cf-dark" data-u="49">Ins</kbd
+				><kbd id="cfs-home" class="cf-dark" data-u="4A">⇱</kbd
+				><kbd id="cfs-pgup" class="cf-dark" data-u="4B">⇞</kbd
+			></div>
+			<div><kbd id="cfs-del" class="cf-dark" data-u="4C">Del</kbd
+				><kbd id="cfs-end" class="cf-dark" data-u="4D">⇲</kbd
+				><kbd id="cfs-pgdn" class="cf-dark" data-u="4E">⇟</kbd
+			></div>
+			<div></div>
+			<div><kbd id="cfs-up" class="cf-dark" data-u="52">↑</kbd
+			></div>
+			<div><kbd id="cfs-left" class="cf-dark" data-u="50">←</kbd
+				><kbd id="cfs-down" class="cf-dark" data-u="51">↓</kbd
+				><kbd id="cfs-right" class="cf-dark" data-u="4F">→</kbd
+			></div>
+		</div>
+		<div class="cf-keypad">
+			<div><kbd id="cfs-num" class="cf-dark" data-u="53">⇭</kbd
+				><kbd id="cfs-kdivide" class="cf-dark" data-u="54">K/</kbd
+				><kbd id="cfs-ktimes" class="cf-dark" data-u="55">K*</kbd
+				><kbd id="cfs-kminus" class="cf-dark" data-u="56">K-</kbd
+			></div>
+			<div><kbd id="cfs-k7" data-u="5F">K7</kbd
+				><kbd id="cfs-k8" data-u="60">K8</kbd
+				><kbd id="cfs-k9" data-u="61">K9</kbd
+				><kbd id="cfs-kplus" class="cf-dark" data-u="57">K+</kbd
+			></div>
+			<div><kbd id="cfs-k4" data-u="5C">K4</kbd
+				><kbd id="cfs-k5" data-u="5D">K5</kbd
+				><kbd id="cfs-k6" data-u="5E">K6</kbd
+				><kbd id="cfs-kcomma" class="cf-dark" data-u="85">K,</kbd
+			></div>
+			<div><kbd id="cfs-k1" data-u="59">K1</kbd
+				><kbd id="cfs-k2" data-u="5A">K2</kbd
+				><kbd id="cfs-k3" data-u="5B">K3</kbd
+				><kbd id="cfs-kenter" class="cf-dark" data-u="58">K⏎</kbd
+			></div>
+			<div><kbd id="cfs-k0" data-u="62">K0</kbd
+				><kbd id="cfs-kdot" data-u="63">K.</kbd
+			></div>
+		</div>
+	</div></div>
+	<div id="cf-keypad">
+		<div><kbd class="cf-dark" data-u="DD">Hex</kbd
+			><kbd class="cf-dark" data-u="DC">Dec</kbd
+			><kbd class="cf-dark" data-u="DB">Oct</kbd
+			><kbd class="cf-dark" data-u="DA">Bin</kbd
+			><kbd data-u="85">,</kbd
+			><kbd data-u="B4">$<sup>2</sup></kbd
+			><kbd data-u="B5">¢<sup>2</sup></kbd
+			><kbd class="cf-dark" data-u="BA">↹</kbd
+			><kbd class="cf-red" data-u="BB">⌫</kbd
+			><kbd class="cf-red" data-u="D9">CE</kbd
+			><kbd class="cf-red" data-u="D8">C</kbd
+		></div>
+		<div><kbd data-u="B8">{</kbd
+			><kbd data-u="B9">}</kbd
+			><kbd data-u="CB">:</kbd
+			><kbd class="cf-dark" data-u="D2">MC</kbd
+			><kbd data-u="B3">.,<sup>3</sup></kbd
+			><kbd data-u="5F">7</kbd
+			><kbd data-u="60">8</kbd
+			><kbd data-u="61">9</kbd
+			><kbd data-u="54">÷</kbd
+			><kbd data-u="C4">%</kbd
+			><kbd data-u="C2">Xor</kbd
+		></div>
+		<div><kbd data-u="B6">(</kbd
+			><kbd data-u="B7">)</kbd
+			><kbd data-u="CC">#</kbd
+			><kbd class="cf-dark" data-u="D1">MR</kbd
+			><kbd data-u="B2">,'<sup>3</sup></kbd
+			><kbd data-u="5C">4</kbd
+			><kbd data-u="5D">5</kbd
+			><kbd data-u="5E">6</kbd
+			><kbd data-u="55">×</kbd
+			><kbd data-u="C9">|</kbd
+			><kbd data-u="C7">&amp;</kbd
+		></div>
+		<div><kbd data-u="C5">&lt;</kbd
+			><kbd data-u="C6">&gt;</kbd
+			><kbd data-u="CE">@</kbd
+			><kbd class="cf-dark" data-u="D0">MS</kbd
+			><kbd data-u="B1">000</kbd
+			><kbd data-u="59">1</kbd
+			><kbd data-u="5A">2</kbd
+			><kbd data-u="5B">3</kbd
+			><kbd data-u="56">−</kbd
+			><kbd data-u="CA">||</kbd
+			><kbd data-u="C8">&amp;&amp;</kbd
+		></div>
+		<div><kbd data-u="C3">^</kbd
+			><kbd data-u="CF">!</kbd
+			><kbd class="cf-dark" data-u="D5">M×</kbd
+			><kbd class="cf-dark" data-u="D3">M+</kbd
+			><kbd data-u="B0">00</kbd
+			><kbd data-u="62">0</kbd
+			><kbd data-u="D7">+/−</kbd
+			><kbd data-u="63">.</kbd
+			><kbd data-u="57">+</kbd
+			><kbd data-u="67">=</kbd
+			><kbd data-u="86">=<sup>1</sup></kbd
+		></div>
+		<div><kbd class="cf-dark" data-u="53">⇭</kbd
+			><kbd class="cf-dark" data-u="58">⏎</kbd
+			><kbd class="cf-dark" data-u="D6">M÷</kbd
+			><kbd class="cf-dark" data-u="D4">M−</kbd
+			><kbd data-u="CD">␣</kbd
+			><kbd data-u="BC">A</kbd
+			><kbd data-u="BD">B</kbd
+			><kbd data-u="BE">C</kbd
+			><kbd data-u="BF">D</kbd
+			><kbd data-u="C0">E</kbd
+			><kbd data-u="C1">F</kbd
+		></div>
+	</div>
+	</div>
+	<div id="cf-terminal">
+		<p>This page presents keys rarely found on contemporary keyboards. They existed on mainframe terminals and Sun workstations.</p>
+		<p><strong>Note:</strong> Several modern keyboards have editing and multimedia keys with analogous names.
+		Those usually emit codes listed on the <samp>Media Control</samp> and <samp>Application Control</samp> pages.</p>
+		<kbd class="cf-red" data-u="66">Ⓘ</kbd
+		><kbd class="cf-dark" data-u="68">F13</kbd
+		><kbd class="cf-dark" data-u="69">F14</kbd
+		><kbd class="cf-dark" data-u="6A">F15</kbd
+		><kbd class="cf-dark" data-u="6B">F16</kbd
+		><kbd class="cf-dark" data-u="6C">F17</kbd
+		><kbd class="cf-dark" data-u="6D">F18</kbd
+		><kbd class="cf-dark" data-u="6E">F19</kbd
+		><kbd class="cf-dark" data-u="6F">F20</kbd
+		><kbd class="cf-dark" data-u="70">F21</kbd
+		><kbd class="cf-dark" data-u="71">F22</kbd
+		><kbd class="cf-dark" data-u="72">F23</kbd
+		><kbd class="cf-dark" data-u="73">F24</kbd
+		><kbd class="cf-dark" data-u="74">Exec</kbd
+		><kbd class="cf-dark" data-u="75">Help</kbd
+		><kbd class="cf-dark" data-u="76">Menu</kbd
+		><kbd class="cf-dark" data-u="77">Sel</kbd
+		><kbd class="cf-dark" data-u="78">Stop</kbd
+		><kbd class="cf-dark" data-u="79">Again</kbd
+		><kbd class="cf-dark" data-u="7A">Undo</kbd
+		><kbd class="cf-dark" data-u="7B">Cut</kbd
+		><kbd class="cf-dark" data-u="7C">Copy</kbd
+		><kbd class="cf-dark" data-u="7D">Paste</kbd
+		><kbd class="cf-dark" data-u="7E">Find</kbd
+		><kbd class="cf-dark" data-u="7F">Mute</kbd
+		><kbd class="cf-dark" data-u="80">Vol+</kbd
+		><kbd class="cf-dark" data-u="81">Vol−</kbd
+		><kbd class="cf-dark" data-u="99">⌧</kbd
+		><kbd class="cf-dark" data-u="9A">Attn</kbd
+		><kbd class="cf-dark" data-u="9B">Cancel</kbd
+		><kbd class="cf-dark" data-u="9C">Clear</kbd
+		><kbd class="cf-dark" data-u="9D">Prior</kbd
+		><kbd class="cf-dark" data-u="9E">Ret</kbd
+		><kbd class="cf-dark" data-u="9F">Sep</kbd
+		><kbd class="cf-dark" data-u="A0">Out</kbd
+		><kbd class="cf-dark" data-u="A1">Oper</kbd
+		><kbd class="cf-dark" data-u="A2">ClrAg</kbd
+		><kbd class="cf-dark" data-u="A3">CrSel</kbd
+		><kbd class="cf-dark" data-u="A4">ExSel</kbd
+	></div>
+	<div id="cf-lang">
+		<p>These are keys found on international keyboards, to facilitate non-Latin character entry.</p>
+		<kbd data-u="87">ろ</kbd
+		><kbd class="cf-dark" data-u="88">カ/ひ</kbd
+		><kbd data-u="89">¥</kbd
+		><kbd class="cf-dark" data-u="8A">変</kbd
+		><kbd class="cf-dark" data-u="8B">無変</kbd
+		><kbd data-u="8C">jp,</kbd
+		><kbd class="cf-dark" data-u="8D">DBCS</kbd
+		><kbd class="cf-dark" data-u="8E">Intl8</kbd
+		><kbd class="cf-dark" data-u="8F">Intl9</kbd
+		><kbd class="cf-dark" data-u="90">한/영</kbd
+		><kbd class="cf-dark" data-u="91">한자</kbd
+		><kbd class="cf-dark" data-u="92">カタ</kbd
+		><kbd class="cf-dark" data-u="93">ひら</kbd
+		><kbd class="cf-dark" data-u="94">半角</kbd
+		><kbd class="cf-dark" data-u="95">Lang6</kbd
+		><kbd class="cf-dark" data-u="96">Lang7</kbd
+		><kbd class="cf-dark" data-u="97">Lang8</kbd
+		><kbd class="cf-dark" data-u="98">Lang9</kbd
+		></section>
+	</div>
+	<div id="cf-media-note">
+		<p>You can have up to 23 different media, application launch or application control keys.</p>
+	</div>
+	<div id="cf-media">
+		<section><header>Power management</header>
+			<kbd class="cf-red" data-u="0C0030">Power</kbd
+			><kbd class="cf-red" data-u="0C0031">Reset</kbd
+			><kbd class="cf-red" data-u="0C0032">Sleep</kbd
+			></section>
+		<section><header>Media control</header>
+			<kbd data-u="0C00B0">Play</kbd
+			><kbd data-u="0C00B1">Pause</kbd
+			><kbd data-u="0C00B2">Record</kbd
+			><kbd data-u="0C00B3">Fast Forward</kbd
+			><kbd data-u="0C00B4">Rewind</kbd
+			><kbd data-u="0C00B5">Scan Next Track</kbd
+			><kbd data-u="0C00B6">Scan Previous Track</kbd
+			><kbd data-u="0C00B7">Stop</kbd
+			><kbd data-u="0C00B8">Eject</kbd
+			><kbd data-u="0C00B9">Random Play</kbd
+			><kbd data-u="0C00BB">Enter Disc</kbd
+			><kbd data-u="0C00BC">Repeat</kbd
+			><kbd data-u="0C00CC">Stop/Eject</kbd
+			><kbd data-u="0C00CD">Play/Pause</kbd
+		></section>
+		<section><header>Volume control</header>
+			<kbd data-u="0C00E2">Mute</kbd
+			><kbd data-u="0C00E9">Volume Increment</kbd
+			><kbd data-u="0C00EA">Volume Decrement</kbd
+		></section>
+	</div>
+	<div id="cf-al">
+		<section><header>Configuration</header>
+			<kbd data-u="0C0181">AL Launch Button Configuration Tool</kbd
+			><kbd data-u="0C0182">AL Programmable Button Configuration</kbd
+			><kbd data-u="0C0183">AL Consumer Control Configuration</kbd
+			><kbd data-u="0C019F">AL Control Panel</kbd
+		></section>
+		<section><header>Accessories</header>
+			<kbd data-u="0C0185">AL Text Editor</kbd
+			><kbd data-u="0C0192">AL Calculator</kbd
+			><kbd data-u="0C01A0">AL Command Line Processor/Run</kbd
+			><kbd data-u="0C01AE">AL Keyboard Layout</kbd
+			><kbd data-u="0C01B4">AL File Browser</kbd
+			><kbd data-u="0C01BA">AL Digital Wallet</kbd
+		></section>
+		<section><header>Productivity applications</header>
+			<kbd data-u="0C0184">AL Word Processor</kbd
+			><kbd data-u="0C0186">AL Spreadsheet</kbd
+			><kbd data-u="0C0187">AL Graphics Editor</kbd
+			><kbd data-u="0C0188">AL Presentation App</kbd
+			><kbd data-u="0C0189">AL Database App</kbd
+			><kbd data-u="0C018E">AL Calendar/Schedule</kbd
+			><kbd data-u="0C018F">AL Task/Project Manager</kbd
+			><kbd data-u="0C0190">AL Log/Journal/Timecard</kbd
+			><kbd data-u="0C0191">AL Checkbook/Finance</kbd
+			><kbd data-u="0C01A8">AL Thesaurus</kbd
+			><kbd data-u="0C01A9">AL Dictionary</kbd
+			><kbd data-u="0C01AB">AL Spell Check</kbd
+			><kbd data-u="0C01AC">AL Grammar Check</kbd
+		></section>
+		<section><header>Internet/Connectivity</header>
+			<kbd data-u="0C0196">AL Internet Browser</kbd
+			><kbd data-u="0C018A">AL Email Reader</kbd
+			><kbd data-u="0C018B">AL Newsreader</kbd
+			><kbd data-u="0C018C">AL Voicemail</kbd
+			><kbd data-u="0C018D">AL Contacts/Address Book</kbd
+			><kbd data-u="0C0197">AL Remote Networking/ISP Connect</kbd
+			><kbd data-u="0C0198">AL Network Conference</kbd
+			><kbd data-u="0C0199">AL Network Chat</kbd
+			><kbd data-u="0C019A">AL Telephony/Dialer</kbd
+			><kbd data-u="0C01BC">AL Instant Messaging</kbd
+		></section>
+		<section><header>Multimedia</header>
+			<kbd data-u="0C0193">AL A/V Capture/Playback</kbd
+			><kbd data-u="0C01B6">AL Image Browser</kbd
+			><kbd data-u="0C01B7">AL Audio Browser</kbd
+			><kbd data-u="0C01B8">AL Movie Browser</kbd
+			><kbd data-u="0C01C6">AL Audio Player</kbd	  
+		></section>
+		<section><header>Shell folders</header>
+			<kbd data-u="0C0194">AL Local Machine Browser</kbd
+			><kbd data-u="0C0195">AL LAN/WAN Browser</kbd
+			><kbd data-u="0C01A7">AL Documents</kbd
+			><kbd data-u="0C01AA">AL Desktop</kbd
+		></section>
+		<section><header>User account</header>
+			<kbd data-u="0C019B">AL Logon</kbd
+			><kbd data-u="0C019C">AL Logoff</kbd
+			><kbd data-u="0C019D">AL Logon/Logoff</kbd
+			><kbd data-u="0C019E">AL Terminal Lock/Screensaver</kbd
+			><kbd data-u="0C01B1">AL Screen Saver</kbd
+		></section>
+		<section><header>Task control</header>
+			<kbd data-u="0C01A1">AL Process/Task Manager</kbd
+			><kbd data-u="0C01A2">AL Select Task/Application</kbd
+			><kbd data-u="0C01A3">AL Next Task/Application</kbd
+			><kbd data-u="0C01A4">AL Previous Task/Application</kbd
+			><kbd data-u="0C01A5">AL Preemptive Halt Task/Application</kbd
+		></section>
+		<section><header>Help and support</header>
+			<kbd data-u="0C01A6">AL Integrated Help Center</kbd
+			><kbd data-u="0C01BD">AL OEM Features/Tips/Tutorial Browser</kbd
+			><kbd data-u="0C01BE">AL OEM Help</kbd
+			><kbd data-u="0C01BF">AL Online Community</kbd
+			><kbd data-u="0C01C0">AL Entertainment Content Browser</kbd
+			><kbd data-u="0C01C1">AL Online Shopping Browser</kbd
+			><kbd data-u="0C01C2">AL SmartCard Information/Help</kbd
+			><kbd data-u="0C01C3">AL Market Monitor/Finance Browser</kbd
+			><kbd data-u="0C01C4">AL Customized Corporate News Browser</kbd
+			><kbd data-u="0C01C5">AL Online Activity Browser</kbd
+		></section>
+		<section><header>System</header>
+			<kbd data-u="0C01AD">AL Wireless Status</kbd
+			><kbd data-u="0C01AF">AL Virus Protection</kbd
+			><kbd data-u="0C01B0">AL Encryption</kbd
+			><kbd data-u="0C01B2">AL Alarms</kbd
+			><kbd data-u="0C01B3">AL Clock</kbd
+			><kbd data-u="0C01B5">AL Power Status</kbd
+			><kbd data-u="0C01B9">AL Digital Rights Manager</kbd
+		></section>
+	</div>
+	<div id="cf-ac">
+		<section><header>File</header>
+			<kbd data-u="0C0201">AC New</kbd
+			><kbd data-u="0C0202">AC Open</kbd
+			><kbd data-u="0C0207">AC Save</kbd
+			><kbd data-u="0C0297">AC Save and Close</kbd
+			><kbd data-u="0C0298">AC Rename</kbd
+			><kbd data-u="0C0267">AC Print Preview</kbd
+			><kbd data-u="0C0208">AC Print</kbd
+			><kbd data-u="0C0209">AC Properties</kbd
+			><kbd data-u="0C0204">AC Exit</kbd
+		></section>
+		<section><header>Edit</header>
+			<kbd data-u="0C023D">AC Edit</kbd
+			><kbd data-u="0C021A">AC Undo</kbd
+			><kbd data-u="0C0279">AC Redo/Repeat</kbd
+			><kbd data-u="0C021B">AC Copy</kbd
+			><kbd data-u="0C021C">AC Cut</kbd
+			><kbd data-u="0C021D">AC Paste</kbd
+			><kbd data-u="0C0268">AC Paste Special</kbd
+			><kbd data-u="0C0272">AC Select Word</kbd
+			><kbd data-u="0C0273">AC Select Sentence</kbd
+			><kbd data-u="0C0274">AC Select Paragraph</kbd
+			><kbd data-u="0C0275">AC Select Column</kbd
+			><kbd data-u="0C0276">AC Select Row</kbd
+			><kbd data-u="0C0277">AC Select Table</kbd
+			><kbd data-u="0C0278">AC Select Object</kbd
+			><kbd data-u="0C021E">AC Select All</kbd
+			><kbd data-u="0C021F">AC Find</kbd
+			><kbd data-u="0C0220">AC Find and Replace</kbd
+			><kbd data-u="0C0269">AC Insert Mode</kbd
+			><kbd data-u="0C026A">AC Delete</kbd
+			><kbd data-u="0C026F">AC Attach Comment</kbd
+			><kbd data-u="0C0270">AC Delete Comment</kbd
+			><kbd data-u="0C0271">AC View Comment</kbd
+		></section>
+		<section><header>View</header>
+			<kbd data-u="0C022D">AC Zoom In</kbd
+			><kbd data-u="0C022E">AC Zoom Out</kbd
+			><kbd data-u="0C0230">AC Full Screen View</kbd
+			><kbd data-u="0C0231">AC Normal View</kbd
+			><kbd data-u="0C0232">AC View Toggle</kbd
+			><kbd data-u="0C0233">AC Scroll Up</kbd
+			><kbd data-u="0C0234">AC Scroll Down</kbd
+			><kbd data-u="0C0236">AC Pan Left</kbd
+			><kbd data-u="0C0237">AC Pan Right</kbd
+			><kbd data-u="0C0263">AC Expand</kbd
+			><kbd data-u="0C0264">AC Expand All</kbd
+			><kbd data-u="0C0265">AC Collapse</kbd
+			><kbd data-u="0C0266">AC Collapse All</kbd
+		></section>
+		<section><header>Insert</header>
+			<kbd data-u="0C0291">AC Insert Row</kbd
+			><kbd data-u="0C0292">AC Insert Column</kbd
+			><kbd data-u="0C0293">AC Insert File</kbd
+			><kbd data-u="0C0294">AC Insert Picture</kbd
+			><kbd data-u="0C0295">AC Insert Object</kbd
+			><kbd data-u="0C0296">AC Insert Symbol</kbd
+		></section>
+		<section><header>Format</header>
+			<kbd data-u="0C023C">AC Format</kbd
+			><kbd data-u="0C023E">AC Bold</kbd
+			><kbd data-u="0C023F">AC Italics</kbd
+			><kbd data-u="0C0240">AC Underline</kbd
+			><kbd data-u="0C0241">AC Strikethrough</kbd
+			><kbd data-u="0C0242">AC Subscript</kbd
+			><kbd data-u="0C0243">AC Superscript</kbd
+			><kbd data-u="0C0244">AC All Caps</kbd
+			><kbd data-u="0C0245">AC Rotate</kbd
+			><kbd data-u="0C0246">AC Resize</kbd
+			><kbd data-u="0C0247">AC Flip Horizontal</kbd
+			><kbd data-u="0C0248">AC Flip Vertical</kbd
+			><kbd data-u="0C0249">AC Mirror Horizontal</kbd
+			><kbd data-u="0C024A">AC Mirror Vertical</kbd
+			><kbd data-u="0C024B">AC Font Select</kbd
+			><kbd data-u="0C024C">AC Font Color</kbd
+			><kbd data-u="0C024D">AC Font Size</kbd
+			><kbd data-u="0C024E">AC Justify Left</kbd
+			><kbd data-u="0C024F">AC Justify Center H</kbd
+			><kbd data-u="0C0250">AC Justify Right</kbd
+			><kbd data-u="0C0251">AC Justify Block H</kbd
+			><kbd data-u="0C0252">AC Justify Top</kbd
+			><kbd data-u="0C0253">AC Justify Center V</kbd
+			><kbd data-u="0C0254">AC Justify Bottom</kbd
+			><kbd data-u="0C0255">AC Justify Block V</kbd
+			><kbd data-u="0C0256">AC Indent Decrease</kbd
+			><kbd data-u="0C0257">AC Indent Increase</kbd
+			><kbd data-u="0C0258">AC Numbered List</kbd
+			><kbd data-u="0C0259">AC Restart Numbering</kbd
+			><kbd data-u="0C025A">AC Bulleted List</kbd
+			><kbd data-u="0C025B">AC Promote</kbd
+			><kbd data-u="0C025C">AC Demote</kbd
+			><kbd data-u="0C026B">AC Lock</kbd
+			><kbd data-u="0C026C">AC Unlock</kbd
+			><kbd data-u="0C026D">AC Protect</kbd
+			><kbd data-u="0C026E">AC Unprotect</kbd
+			><kbd data-u="0C0290">AC Set Borders</kbd
+			><kbd data-u="0C0299">AC Merge</kbd
+			><kbd data-u="0C029A">AC Split</kbd
+			><kbd data-u="0C029B">AC Distribute Horizontally</kbd
+			><kbd data-u="0C029C">AC Distribute Vertically</kbd
+		></section>
+		<section><header>Data</header>
+			<kbd data-u="0C027A">AC Sort</kbd
+			><kbd data-u="0C027B">AC Sort Ascending</kbd
+			><kbd data-u="0C027C">AC Sort Descending</kbd
+			><kbd data-u="0C027D">AC Filter</kbd
+		></section>
+		<section><header>Browser</header>
+			<kbd data-u="0C0221">AC Search</kbd
+			><kbd data-u="0C0222">AC Go To</kbd
+			><kbd data-u="0C0223">AC Home</kbd
+			><kbd data-u="0C0224">AC Back</kbd
+			><kbd data-u="0C0225">AC Forward</kbd
+			><kbd data-u="0C0226">AC Stop</kbd
+			><kbd data-u="0C0227">AC Refresh</kbd
+			><kbd data-u="0C0228">AC Previous Link</kbd
+			><kbd data-u="0C0229">AC Next Link</kbd
+			><kbd data-u="0C022A">AC Bookmarks</kbd
+			><kbd data-u="0C022B">AC History</kbd
+			><kbd data-u="0C022C">AC Subscriptions</kbd
+		></section>
+		<section><header>Mail</header>
+			<kbd data-u="0C0286">AC Synchronize</kbd
+			><kbd data-u="0C0287">AC Send/Receive</kbd
+			><kbd data-u="0C0288">AC Send To</kbd
+			><kbd data-u="0C0289">AC Reply</kbd
+			><kbd data-u="0C028A">AC Reply All</kbd
+			><kbd data-u="0C028B">AC Forward Msg</kbd
+			><kbd data-u="0C028C">AC Send</kbd
+			><kbd data-u="0C028D">AC Attach File</kbd
+			><kbd data-u="0C028E">AC Upload</kbd
+			><kbd data-u="0C028F">AC Download (Save Target As)</kbd
+		></section>
+		<section><header>Window</header>
+			<kbd data-u="0C0206">AC Minimize</kbd
+			><kbd data-u="0C0205">AC Maximize</kbd
+			><kbd data-u="0C0203">AC Close</kbd
+			><kbd data-u="0C0239">AC New Window</kbd
+			><kbd data-u="0C023A">AC Tile Horizontally</kbd
+			><kbd data-u="0C023B">AC Tile Vertically</kbd
+		></section>
+		<section><header>Actions</header>
+			<kbd data-u="0C025D">AC Yes</kbd
+			><kbd data-u="0C025E">AC No</kbd
+			><kbd data-u="0C025F">AC Cancel</kbd
+			><kbd data-u="0C0260">AC Catalog</kbd
+			><kbd data-u="0C0261">AC Buy/Checkout</kbd
+			><kbd data-u="0C0262">AC Add to Cart</kbd
+		></section>
+		<section><header>Clock</header>
+			<kbd data-u="0C027E">AC Set Clock</kbd
+			><kbd data-u="0C027F">AC View Clock</kbd
+			><kbd data-u="0C0280">AC Select Time Zone</kbd
+			><kbd data-u="0C0281">AC Edit Time Zones</kbd
+			><kbd data-u="0C0282">AC Set Alarm</kbd
+			><kbd data-u="0C0283">AC Clear Alarm</kbd
+			><kbd data-u="0C0284">AC Snooze Alarm</kbd
+			><kbd data-u="0C0285">AC Reset Alarm</kbd
+		></section>
+	</div>
+	<div id="cf-exotic">
+		<p>The sections <samp>Media and Power</samp>, <samp>Application Launch</samp> and <samp>Application Control</samp> show the most useful options for keys.</p>
+		<p>However, you can assign an arbitrary HID usage code from usage pages 07 or 0C, as defined by the
+			<a href="http://www.usb.org/developers/docs/hidpage/#Usage_Tables"><cite>HID Usage Tables</cite></a>. To do so, click on a key and enter:</p>
+		<ul>
+			<li>for usage page 07 (Keyboard/Keypad), the low byte of the usage code followed by the letter <code>h</code>, e.&thinsp;g. <code>A5h</code> (Reserved);</li>
+			<li>for page 0C (Consumer), the full 20-bit usage code followed by the letter <code>h</code>, e.&thinsp;g. <code>0C0107h</code> (Fire Alarm).</li>
+		</ul>
+		<p>It is not guaranteed that your OS will detect such codes.</p>
+	</div>
+</div></div>
+<div id="cf-targets" class="cf-209"><div id="cf-teck">
+	<div id="cf-layer-selector">
+		<div id="cf-primary">Primary:
+			<label><input type="radio" name="cf-layer" value="0" checked="checked" />Main</label>
+			<label><input type="radio" name="cf-layer" value="1" />Num</label>
+			<label><input type="radio" name="cf-layer" value="2" />Fn</label>
+		</div>
+		<div id="cf-secondary">Secondary:
+			<label><input type="radio" name="cf-layer" value="3" />Main</label>
+			<label><input type="radio" name="cf-layer" value="4" />Num</label>
+			<label><input type="radio" name="cf-layer" value="5" />Fn</label>
+		</div>
+		<div id="cf-options">
+			<label>Model:
+				<select id="cf-model">
+					<option value="cf-209" selected="selected">209/109</option>
+					<option value="cf-207">207</option>
+					<option value="cf-105">104/105</option>
+				</select>
+			</label>
+			<label>Poll interval: <input id="cf-poll" value="70" /></label>
+		</div>
+	</div>
+	<div id="cft-keys">
+	<div id="cft-fkeys"
+		><kbd id="cft-esc">Esc</kbd
+		><kbd id="cft-f1">F1</kbd
+		><kbd id="cft-f2">F2</kbd
+		><kbd id="cft-f3">F3</kbd
+		><kbd id="cft-f4">F4</kbd
+		><kbd id="cft-f5">F5</kbd
+		><kbd id="cft-f6">F6</kbd
+		><kbd id="cft-f7">F7</kbd
+		><kbd id="cft-f8">F8</kbd
+		><kbd id="cft-f9">F9</kbd
+		><kbd id="cft-f10">F10</kbd
+		><kbd id="cft-f11">F11</kbd
+		><kbd id="cft-f12">F12</kbd
+		><kbd id="cft-del">Delete</kbd
+		><kbd id="cft-caps">Caps</kbd
+		><kbd id="cft-fn">Fn</kbd
+		><kbd id="cft-num">TNum Lock</kbd
+	></div>
+	<div id="cft-main">
+	<div id="cft-leftside">
+		<div
+			><kbd id="cft-minus105">-_</kbd
+			><kbd id="cft-euro2">Euro2</kbd
+			><kbd id="cft-grave">`~</kbd
+			><kbd id="cft-1">1!</kbd
+			><kbd id="cft-2">2@</kbd
+			><kbd id="cft-3">3#</kbd
+			><kbd id="cft-4">4$</kbd
+			><kbd id="cft-5">5%</kbd
+		></div>
+		<div
+			><kbd id="cft-bksl">\|</kbd
+			><kbd id="cft-slash">/?</kbd
+			><kbd id="cft-q">Q</kbd
+			><kbd id="cft-w">W</kbd
+			><kbd id="cft-e">E</kbd
+			><kbd id="cft-r">R</kbd
+			><kbd id="cft-t">T</kbd
+		></div>
+		<div
+			><kbd id="cft-lsh">LShift</kbd
+			><kbd id="cft-a">A</kbd
+			><kbd id="cft-s">S</kbd
+			><kbd id="cft-d">D</kbd
+			><kbd id="cft-f">F</kbd
+			><kbd id="cft-g">G</kbd
+		></div>
+		<div
+			><kbd id="cft-lctrl">LCtrl</kbd
+			><kbd id="cft-z">Z</kbd
+			><kbd id="cft-x">X</kbd
+			><kbd id="cft-c">C</kbd
+			><kbd id="cft-v">V</kbd
+			><kbd id="cft-b">B</kbd
+		></div>
+		<div
+			><kbd id="cft-lblank">LBlank</kbd
+			><kbd id="cft-lalt">LAlt</kbd
+			><kbd id="cft-home">Home</kbd
+			><kbd id="cft-pgup">Page Up</kbd
+			><kbd id="cft-pgdn">Page Down</kbd
+			><kbd id="cft-end">End</kbd
+			><kbd id="cft-apps">Apps</kbd
+		></div>
+	</div>
+	<div id="cft-centercolumn"
+		><kbd id="cft-gui">LGUI</kbd
+		><kbd id="cft-hen">Henkan</kbd
+		><kbd id="cft-tab">Tab</kbd
+		><kbd id="cft-bksp">Bksp</kbd
+		><kbd id="cft-enter">Enter</kbd
+	></div>
+	<div id="cft-rightside">
+		<div
+			><kbd id="cft-6">6^</kbd
+			><kbd id="cft-7">7&amp;</kbd
+			><kbd id="cft-8">8*</kbd
+			><kbd id="cft-9">9(</kbd
+			><kbd id="cft-0">0)</kbd
+			><kbd id="cft-minus">-_</kbd
+			><kbd id="cft-equal">=+</kbd
+		></div>
+		<div
+			><kbd id="cft-y">Y</kbd
+			><kbd id="cft-u">U</kbd
+			><kbd id="cft-i">I</kbd
+			><kbd id="cft-o">O</kbd
+			><kbd id="cft-p">P</kbd
+			><kbd id="cft-bra">[{</kbd
+			><kbd id="cft-ket">]}</kbd
+		></div>
+		<div
+			><kbd id="cft-h">H</kbd
+			><kbd id="cft-j">J</kbd
+			><kbd id="cft-k">K</kbd
+			><kbd id="cft-l">L</kbd
+			><kbd id="cft-semi">;:</kbd
+			><kbd id="cft-rsh">RShift</kbd
+		></div>
+		<div
+			><kbd id="cft-n">N</kbd
+			><kbd id="cft-m">M</kbd
+			><kbd id="cft-comma">,&lt;</kbd
+			><kbd id="cft-dot">.&gt;</kbd
+			><kbd id="cft-quote">'"</kbd
+			><kbd id="cft-rctrl">RCtrl</kbd
+		></div>
+		<div
+			><kbd id="cft-space">Space</kbd
+			><kbd id="cft-left">Left</kbd
+			><kbd id="cft-up">Up</kbd
+			><kbd id="cft-down">Down</kbd
+			><kbd id="cft-right">Right</kbd
+			><kbd id="cft-ralt">RAlt</kbd
+			><kbd id="cft-rblank">RBlank</kbd
+		></div>
+	</div>
+	</div>
+	</div>
+</div>
+<div id="cf-notes">
+	<p>Drag any key from the layout above into any key position of the lower layout, or click any of the keys of the lower layout and type a key name.</p>
+	<p>The choice of primary/secondary layout is controlled by the DIP switch #2 at the bottom of the keyboard; by default, primary is for PC (Windows/Linux) and secondary for MacOS X.</p>
+</div></div>
+<form>
+	<div id="cf-too-many-media-keys" class="cf-hidden cf-warning">You can have at most 23 different media, application launch or application control keys. You now have <span id="cf-media-key-count"></span>.</div>
+	<button id="cf-download">Save</button>
+	<a href="#" id="cf-download-link" class="cf-hidden">Download</a>
+	<button id="cf-share">Share</button>
+	<p id="cf-share-help" class="cf-hidden">Your custom layout is saved in <a href="#" id="cf-share-link">this link</a>. You can bookmark it for future modifications, or share it with the community.</p>
+</form>
+</div>
+</body>
+</html>
