@@ -1,0 +1,18 @@
+# Backup files
+*~
+
+# Compilation artifacts
+*.asm
+*.lst
+*.rst
+*.rel
+*.sym
+
+# Linking artifacts
+*.lk
+*.map
+*.mem
+*.ihx
+
+# Disassembly artifacts
+*.listing.orig
