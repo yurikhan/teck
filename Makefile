@@ -1,5 +1,5 @@
 CC = sdcc
-CFLAGS =
+CFLAGS = --xram-size 576 --no-xinit-opt
 
 all: main.listing.orig
 
