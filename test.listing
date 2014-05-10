@@ -2,32 +2,32 @@ CSEG AT 0000h
   0000 020006       LJMP __sdcc_gsinit_startup
 
 __sdcc_program_startup:
-  0003 02001C       LJMP _main
+  0003 020020       LJMP _main
 
-__sdcc_gsinit_startup:                              ;__sdcc_gsinit_startup::
-  0006 758107       MOV SP, #7h                     ;    mov     sp,#__start__stack - 1
-  0009 120020       LCALL __sdcc_external_startup   ;    lcall   __sdcc_external_startup
-  000C E582         MOV A, DPL                      ;    mov     a,dpl
-  000E 6003         JZ __mcs51_genRAMCLEAR          ;    jz      __sdcc_init_data
-  0010 020003       LJMP __sdcc_program_startup     ;    ljmp    __sdcc_program_startup
-                                                    ;__sdcc_init_data:
-__mcs51_genRAMCLEAR:                                ;__mcs51_genRAMCLEAR::
-  0013 E4           CLR A                           ;    clr     a
-  0014 78FF         MOV R0, #0FFh                   ;    mov     r0,#(l_IRAM-1)  ; mov r0,a will do for most devices
-L0006:                                              ;00004$:
-  0016 F6           MOV @R0, A                      ;    mov     @r0,a
-  0017 D8FD         DJNZ R0, L0006                  ;    djnz    r0,00004$
+__sdcc_gsinit_startup:
+  0006 758107       MOV SP, #7h
+  0009 120023       LCALL __sdcc_external_startup
+  000C E582         MOV A, DPL
+  000E 6003         JZ __mcs51_genRAMCLEAR
+  0010 020003       LJMP __sdcc_program_startup
+
+__mcs51_genRAMCLEAR:
+  0013 E4           CLR A
+  0014 78FF         MOV R0, #0FFh
+L0007:
+  0016 F6           MOV @R0, A
+  0017 D8FD         DJNZ R0, L0007
   0019 020003       LJMP __sdcc_program_startup
 
-_main:                                              ;int main()
-                                                    ;{
-  001C 900000       MOV DPTR, #0000h
-  001F 22           RET                             ;    return 0;
-                                                    ;}
+_reboot_to_isp:
+  001C 75E768       MOV 0E7h, #68h
+  001F 22           RET
 
-__sdcc_external_startup:                            ;unsigned char _sdcc_external_startup (void) __nonbanked
-                                                    ;{
-  0020 758200       MOV DPL, #0h
-  0023 22           RET                             ;    return 0;
-                                                    ;}
+_main:
+  0020 02001C       LJMP _reboot_to_isp
+
+__sdcc_external_startup:
+  0023 758200       MOV DPL, #0h
+  0026 22           RET
+
 END
