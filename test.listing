@@ -1,0 +1,90 @@
+CSEG AT 0000h
+  0000 020006       LJMP __sdcc_gsinit_startup
+
+__sdcc_program_startup:
+  0003 020062       LJMP _main
+
+;;; #line 43 "mcs51/crtstart.asm"
+__sdcc_gsinit_startup:                              ;__sdcc_gsinit_startup::
+  0006 758107       MOV SP, #7h                     ;    mov     sp,#__start__stack - 1
+  0009 120066       LCALL __sdcc_external_startup   ;    lcall   __sdcc_external_startup
+  000C E582         MOV A, DPL                      ;    mov     a,dpl
+  000E 6003         JZ __sdcc_init_data             ;    jz      __sdcc_init_data
+  0010 020003       LJMP __sdcc_program_startup     ;    ljmp    __sdcc_program_startup
+__sdcc_init_data:
+
+;;; #line 76 "mcs51/crtxinit.asm"
+__mcs51_genXINIT:                                   ;__mcs51_genXINIT::
+  0013 7900         MOV R1, #0h                     ;    mov     r1,#l_XINIT
+  0015 E9           MOV A, R1                       ;    mov     a,r1
+  0016 4400         ORL A, #0h                      ;    orl     a,#(l_XINIT >> 8)
+  0018 601B         JZ __mcs51_genRAMCLEAR          ;    jz      00003$
+  001A 7A00         MOV R2, #0h                     ;    mov     r2,#((l_XINIT+255) >> 8)
+  001C 90006A       MOV DPTR, #006Ah                ;    mov     dptr,#s_XINIT
+  001F 7800         MOV R0, #0h                     ;    mov     r0,#s_XISEG
+  0021 75A000       MOV P2, #0h                     ;    mov     __XPAGE,#(s_XISEG >> 8)
+L0008:                                              ;00001$:
+  0024 E4           CLR A                           ;    clr     a
+  0025 93           MOVC A, @A+DPTR                 ;    movc    a,@a+dptr
+  0026 F2           MOVX @R0, A                     ;    movx    @r0,a
+  0027 A3           INC DPTR                        ;    inc     dptr
+  0028 08           INC R0                          ;    inc     r0
+  0029 B80002       CJNE R0, #0h, L0007             ;    cjne    r0,#0,00002$
+  002C 05A0         INC P2                          ;    inc     __XPAGE
+L0007:                                              ;00002$:
+  002E D9F4         DJNZ R1, L0008                  ;    djnz    r1,00001$
+  0030 DAF2         DJNZ R2, L0008                  ;    djnz    r2,00001$
+  0032 75A0FF       MOV P2, #0FFh                   ;    mov     __XPAGE,#0xFF
+                                                    ;00003$:
+;;; #line 41 "mcs51/crtclear.asm"
+__mcs51_genRAMCLEAR:                                ;__mcs51_genRAMCLEAR::
+  0035 E4           CLR A                           ;    clr     a
+  0036 78FF         MOV R0, #0FFh                   ;    mov     r0,#(l_IRAM-1)  ; mov r0,a will do for most devices
+L0009:                                              ;00004$:
+  0038 F6           MOV @R0, A                      ;    mov     @r0,a
+  0039 D8FD         DJNZ R0, L0009                  ;    djnz    r0,00004$
+
+;;; #line 41 "mcs51/crtxclear.asm"
+__mcs51_genXRAMCLEAR:                               ;__mcs51_genXRAMCLEAR::
+  003B 7800         MOV R0, #0h                     ;    mov     r0,#l_PSEG
+  003D E8           MOV A, R0                       ;    mov     a,r0
+  003E 4400         ORL A, #0h                      ;    orl     a,#(l_PSEG >> 8)
+  0040 600A         JZ L0010                        ;    jz      00006$
+  0042 7900         MOV R1, #0h                     ;    mov     r1,#s_PSEG
+  0044 75A000       MOV P2, #0h                     ;    mov     __XPAGE,#(s_PSEG >> 8)
+  0047 E4           CLR A                           ;    clr      a
+L0011:                                              ;00005$:
+  0048 F3           MOVX @R1, A                     ;    movx    @r1,a
+  0049 09           INC R1                          ;    inc     r1
+  004A D8FC         DJNZ R0, L0011                  ;    djnz    r0,00005$
+L0010:                                              ;00006$:
+  004C 7800         MOV R0, #0h                     ;    mov     r0,#l_XSEG
+  004E E8           MOV A, R0                       ;    mov     a,r0
+  004F 4400         ORL A, #0h                      ;    orl     a,#(l_XSEG >> 8)
+  0051 600C         JZ L0012                        ;    jz      00008$
+  0053 7900         MOV R1, #0h                     ;    mov     r1,#((l_XSEG + 255) >> 8)
+  0055 900000       MOV DPTR, #0000h                ;    mov     dptr,#s_XSEG
+  0058 E4           CLR A                           ;    clr     a
+L0013:                                              ;00007$:
+  0059 F0           MOVX @DPTR, A                   ;    movx    @dptr,a
+  005A A3           INC DPTR                        ;    inc     dptr
+  005B D8FC         DJNZ R0, L0013                  ;    djnz    r0,00007$
+  005D D9FA         DJNZ R1, L0013                  ;    djnz    r1,00007$
+L0012:                                              ;00008$:
+  005F 020003       LJMP __sdcc_program_startup
+
+;;; #line 1 "test.c"
+_main:                                              ;int main()
+                                                    ;{
+  0062 900000       MOV DPTR, #0000h
+  0065 22           RET                             ;    return 0;
+                                                    ;}
+
+;;; #line 45 "_startup.c"
+__sdcc_external_startup:                            ;unsigned char _sdcc_external_startup (void) __nonbanked
+                                                    ;{
+  0066 758200       MOV DPL, #0h
+  0069 22           RET                             ;    return 0;
+                                                    ;}
+
+END
