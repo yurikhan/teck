@@ -1,11 +1,11 @@
 *~
-test.asm
+*.asm
 test.ihx
 test.listing.orig
 test.lk
-test.lst
+*.lst
 test.map
 test.mem
-test.rel
-test.rst
-test.sym
+*.rel
+*.rst
+*.sym
