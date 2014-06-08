@@ -32,7 +32,9 @@
 
 MG84_BIT_SFR(0xC0, XICON, IL3, EX3, IE3, IT3, IL2, EX2, IE2, IT2); // External Interrupt Control
 MG84_SFR_(0xAD, AUXIE, EUSB, ETWSI, EKB, _, _, _, _, ESPI); // Auxiliary Interrupt Enable
+enum { EKBI = EKB };
 MG84_SFR_(0xAE, AUXIP, PUSB, PTWSI, PKB, _, _, _, _, PSPI); // Auxiliary Interrupt Priority
+enum { PKBI = PKB };
 
 MG84_BIT_SFR(0xE8, P4, _, _, _, _, P4_3, P4_2, P4_1, P4_0); // Port 4
 MG84_SFR_(0x93, P0M0, P0M0_7, P0M0_6, P0M0_5, P0M0_4, P0M0_3, P0M0_2, P0M0_1, P0M0_0); // Port 0 Mode Register 0
@@ -47,6 +49,7 @@ MG84_SFR_(0xB3, P4M0, P4M0_7, P4M0_6, P4M0_5, P4M0_4, P4M0_3, P4M0_2, P4M0_1, P4
 MG84_SFR_(0xB4, P4M1, _, _, _, _, P4M1_3, P4M1_2, P4M1_1, P4M1_0); // Port 4 Mode Register 1
 
 MG84_SFR_(0xD6, KBCON, _, _, _, _, _, _, PTNS, KPI); // Keypad Control
+enum { PATN_SEL = PTNS };
 MG84_SFR (0xD5, KBPATN); // Keypad Pattern
 MG84_SFR (0xD7, KBMASK); // Keypad Mask
 
