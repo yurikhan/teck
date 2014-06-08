@@ -3,6 +3,7 @@
 #include "mg84fl54bd.h"
 #include "timer.h"
 #include "keypad.h"
+#include "usb.h"
 
 __sbit __at(0xEA) nDIP1;
 __sbit __at(0xE9) nDIP2;
@@ -21,10 +22,11 @@ int main(void)
 		reboot_to_isp();
 	}
 
+	CKCON = (12 - 1) << 3; // Set clock to 12MHz
 	EA = true;
 	timer_init();
 	keypad_init();
-
+	usb_init();
 	while (true)
 	{
 		nLED2 = false;

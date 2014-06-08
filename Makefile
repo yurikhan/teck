@@ -15,7 +15,7 @@ clean:
 		$(EXE) $(EXE:.ihx=.lk) $(EXE:.ihx=.map) $(EXE:.ihx=.mem) $(LISTING)
 
 %.listing.orig: %.ihx
-	dis51 -l 0 0x0B 0x6B <$< >$@
+	dis51 -l 0 0x0B 0x6B 0x7B <$< >$@
 
 %.rel: %.c
 	$(CC) $(CFLAGS) $<
