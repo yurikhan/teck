@@ -2,6 +2,7 @@
 #include <8051.h>
 #include "mg84fl54bd.h"
 #include "timer.h"
+#include "keypad.h"
 
 __sbit __at(0xEA) nDIP1;
 __sbit __at(0xE9) nDIP2;
@@ -22,6 +23,7 @@ int main(void)
 
 	EA = true;
 	timer_init();
+	keypad_init();
 
 	while (true)
 	{
