@@ -107,6 +107,36 @@ void usb_receive(uint8_t __near * buffer, uint8_t size) __using(3)
 	}
 }
 
+const uint8_t* usb_transmit_ptr;
+uint8_t usb_transmit_size;
+enum { MAX_DATA_PACKET_SIZE = 64 };
+
+void usb_transmit_chunk(void) __using(3)
+{
+	uint8_t chunk_size = usb_transmit_size, remaining;
+	if (chunk_size > MAX_DATA_PACKET_SIZE)
+		chunk_size = MAX_DATA_PACKET_SIZE;
+
+	for (remaining = chunk_size; remaining --> 0 ;)
+	{
+		TXDAT = *usb_transmit_ptr++;
+	}
+	TXCNT = chunk_size;
+	usb_transmit_size -= chunk_size;
+	if (chunk_size < MAX_DATA_PACKET_SIZE)
+	{
+		usb_transmit_ptr = 0;
+	}
+	TXCON |= TXFFRC;
+}
+
+void usb_transmit(const uint8_t* buffer, uint8_t size) __using(3)
+{
+	usb_transmit_ptr = buffer;
+	usb_transmit_size = size;
+	usb_transmit_chunk();
+}
+
 void usb_init(void)
 {
 	new_address = 0;
@@ -130,6 +160,14 @@ void usb_init(void)
 // USB request handling
 
 UsbRequestSetup request;
+
+void usb_transmit_descriptor(const void* buffer, uint8_t size) __using(3)
+{
+	if (size > utohs(request.wLength))
+		size = utohs(request.wLength);
+	EPINDEX = 0;
+	usb_transmit(buffer, size);
+}
 
 bool usb_get_device_descriptor(void) __using(3)
 {
@@ -208,6 +246,16 @@ void usb_isr(void) __interrupt(15) __using(3)
 				EPCON |= TXSTL | RXSTL; // Signal error
 			}
 		}
+		return;
+	}
+	if (uiflg & UTXD0) // Chunk transmit done
+	{
+		UIFLG = UTXD0; // Acknowledge it
+		EPINDEX = 0;
+		if (!usb_transmit_ptr) // Anything else?
+			usb_transmit_done();
+		else
+			usb_transmit_chunk(); // Yes, set up next chunk
 		return;
 	}
 }
