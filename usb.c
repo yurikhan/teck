@@ -1,8 +1,66 @@
 #include "usb.h"
 
+#include <stdint.h>
 #include <8051.h>
 #include "mg84fl54bd.h"
 #include "timer.h"
+
+typedef uint8_t string_id;
+typedef uint16_t bcd;
+
+// USB to host byte order
+#define utohs(x) (x) // Both USB and SDCC use little-endian order
+// Host to USB byte order
+#define htous(x) (x)
+
+// Data types and constants from:
+// [USB] Universal Serial Bus Specification, Revision 2.0, Chapter 9
+
+// [USB] Table 9-2
+typedef enum UsbRequestType {
+	host_to_device = 0x00,
+	device_to_host = 0x80,
+
+	rtype_mask = 0x60,
+	rtype_standard = 0x00,
+	rtype_class = 0x20,
+	rtype_vendor = 0x40,
+
+	recipient_mask = 0x1F,
+	recipient_device = 0x00,
+	recipient_interface = 0x01,
+	recipient_endpoint = 0x02,
+	recipient_other = 0x03
+} UsbRequestType;
+
+// [USB] Table 9-4
+typedef enum UsbRequest
+{
+	request_GET_STATUS = 0,
+	request_CLEAR_FEATURE = 1,
+	request_SET_FEATURE = 3,
+	request_SET_ADDRESS = 5,
+	request_GET_DESCRIPTOR = 6,
+	request_SET_DESCRIPTOR = 7,
+	request_GET_CONFIGURATION = 8,
+	request_SET_CONFIGURATION = 9,
+	request_GET_INTERFACE = 10,
+	request_SET_INTERFACE = 11,
+	request_SYNCH_FRAME = 12
+} UsbRequest;
+
+// [USB] Table 9-2
+typedef struct UsbRequestSetup
+{
+	UsbRequestType bmRequestType;
+	UsbRequest bRequest;
+	uint16_t wValue;
+	uint16_t wIndex;
+	uint16_t wLength;
+} UsbRequestSetup;
+
+
+// USB device state management
 
 typedef enum UsbState {
 	state_powered,
@@ -18,6 +76,9 @@ void set_state(UsbState new_state) __using(3)
 	P3_5 = !(new_state & 1);
 	P3_6 = !(new_state & 2);
 }
+
+
+// Low-level functions
 
 void usb_reset(void) __using(3)
 {
@@ -60,6 +121,11 @@ void usb_init(void)
 	// Connect to USB host
 	UPCON = CONEN;
 }
+
+
+// USB request handling
+
+UsbRequestSetup request;
 
 void usb_isr(void) __interrupt(15) __using(3)
 {
