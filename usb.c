@@ -60,6 +60,53 @@ typedef struct UsbRequestSetup
 	uint16_t wLength;
 } UsbRequestSetup;
 
+// [USB] Table 9-5
+typedef enum UsbDescriptorType
+{
+	dtype_DEVICE = 1,
+	dtype_CONFIGURATION = 2,
+	dtype_STRING = 3,
+	dtype_INTERFACE = 4,
+	dtype_ENDPOINT = 5,
+	dtype_DEVICE_QUALIFIER = 6,
+	dtype_OTHER_SPEED_CONFIGURATION = 7,
+	dtype_INTERFACE_POWER = 8,
+} UsbDescriptorType;
+
+typedef enum UsbDeviceClass
+{
+	dclass_PER_INTERFACE = 0, // [USB] Table 9-8
+} UsbDeviceClass;
+
+typedef enum UsbDeviceSubClass
+{
+	dsubclass_PER_INTERFACE = 0, // [USB] Table 9-8
+} UsbDeviceSubClass;
+
+typedef enum UsbDeviceProtocol
+{
+	dproto_PER_INTERFACE = 0, // [USB] Table 9-8
+} UsbDeviceProtocol;
+
+// [USB] Table 9-8
+typedef struct UsbDeviceDescriptor
+{
+	uint8_t bLength;
+	UsbDescriptorType bDescriptorType;
+	bcd bcdUSB;
+	UsbDeviceClass bDeviceClass;
+	UsbDeviceSubClass bDeviceSubClass;
+	UsbDeviceProtocol bDeviceProtocol;
+	uint8_t bMaxPacketSize0;
+	uint16_t idVendor;
+	uint16_t idProduct;
+	bcd bcdDevice;
+	string_id iManufacturer;
+	string_id iProduct;
+	string_id iSerialNumber;
+	uint8_t bNumConfigurations;
+} UsbDeviceDescriptor;
+
 
 // USB device state management
 
@@ -162,6 +209,33 @@ void usb_init(void)
 	// Connect to USB host
 	UPCON = CONEN;
 }
+
+
+// Descriptors
+
+enum
+{
+	VID_MEGAWIN = htous(0x0E6A),
+	PID_TECK = htous(0x030D), // TODO: change this to 030C
+	DEVICE_VERSION = htous(0x350) // TODO: change to 0400
+};
+
+const UsbDeviceDescriptor __code device_descriptor = {
+	.bLength = sizeof(UsbDeviceDescriptor),
+	.bDescriptorType = dtype_DEVICE,
+	.bcdUSB = htous(0x0200),
+	.bDeviceClass = dclass_PER_INTERFACE,
+	.bDeviceSubClass = dsubclass_PER_INTERFACE,
+	.bDeviceProtocol = dproto_PER_INTERFACE,
+	.bMaxPacketSize0 = 64,
+	.idVendor = VID_MEGAWIN,
+	.idProduct = PID_TECK,
+	.bcdDevice = DEVICE_VERSION,
+	.iManufacturer = 0, // TODO:
+	.iProduct = 0, // TODO:
+	.iSerialNumber = 0,
+	.bNumConfigurations = 1
+};
 
 
 // USB request handling
