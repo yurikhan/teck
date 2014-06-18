@@ -19,6 +19,21 @@ void set_state(UsbState new_state) __using(3)
 	P3_6 = !(new_state & 2);
 }
 
+void usb_reset(void) __using(3)
+{
+	// Enable transmit and receive for endpoint 0
+	EPINDEX = 0;
+	EPCON = RXEPEN | TXEPEN;
+	TXCON = TXCLR;
+	RXCON = RXCLR;
+
+	// Enable USB interrupts for reset/suspend/resume and endpoint 0 transmit/receive
+	IEN = EFSR | EF;
+	UIE = URXIE0 | UTXIE0;
+
+	set_state(state_default);
+}
+
 void usb_init(void)
 {
 	set_state(state_powered);
@@ -42,7 +57,8 @@ void usb_isr(void) __interrupt(15) __using(3)
 	unsigned char upcon = UPCON;
 	if (upcon & URST)
 	{
-		UPCON |= URST;
-		set_state(state_default);
+		UPCON = upcon & ~(URST | URSM | USUS) | URST;
+		usb_reset();
+		return;
 	}
 }
