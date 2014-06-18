@@ -137,6 +137,13 @@ void usb_transmit(const uint8_t* buffer, uint8_t size) __using(3)
 	usb_transmit_chunk();
 }
 
+void usb_transmit_dynamic(uint8_t size) __using(3)
+{
+	usb_transmit_ptr = 0;
+	usb_transmit_size = 0;
+	TXCNT = size;
+}
+
 void usb_init(void)
 {
 	new_address = 0;
@@ -188,7 +195,7 @@ bool usb_standard_device_request(void) __using(3)
 		return usb_get_device_descriptor();
 	case request_SET_ADDRESS:
 		new_address = utohs(request.wValue);
-		TXCNT = 0;
+		usb_transmit_dynamic(0);
 		return true;
 	}
 	return false;
@@ -216,6 +223,16 @@ bool usb_request(void) __using(3)
 
 
 // USB interrupt handling
+
+void usb_transmit_done(void) __using(3)
+{
+	if (new_address)
+	{
+		UADDR = new_address;
+		new_address = 0;
+		set_state(state_address);
+	}
+}
 
 void usb_isr(void) __interrupt(15) __using(3)
 {
