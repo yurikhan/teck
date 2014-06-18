@@ -70,6 +70,7 @@ typedef enum UsbState {
 	state_configured
 } UsbState;
 UsbState usb_state = state_powered;
+uint8_t new_address = 0;
 
 void set_state(UsbState new_state) __using(3)
 {
@@ -93,6 +94,7 @@ void usb_reset(void) __using(3)
 	IEN = EFSR | EF;
 	UIE = URXIE0 | UTXIE0;
 
+	new_address = 0;
 	set_state(state_default);
 }
 
@@ -107,6 +109,7 @@ void usb_receive(uint8_t __near * buffer, uint8_t size) __using(3)
 
 void usb_init(void)
 {
+	new_address = 0;
 	set_state(state_powered);
 
 	// Set up clock
@@ -127,6 +130,20 @@ void usb_init(void)
 // USB request handling
 
 UsbRequestSetup request;
+
+bool usb_standard_device_request(void) __using(3)
+{
+	switch (request.bRequest)
+	{
+	case request_GET_DESCRIPTOR:
+		return usb_get_device_descriptor();
+	case request_SET_ADDRESS:
+		new_address = utohs(request.wValue);
+		TXCNT = 0;
+		return true;
+	}
+	return false;
+}
 
 bool usb_device_request(void) __using(3)
 {
