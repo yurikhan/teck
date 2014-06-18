@@ -128,6 +128,16 @@ void usb_init(void)
 
 UsbRequestSetup request;
 
+bool usb_device_request(void) __using(3)
+{
+	switch (request.bmRequestType & rtype_mask)
+	{
+	case rtype_standard:
+		return usb_standard_device_request();
+	}
+	return false;
+}
+
 bool usb_request(void) __using(3)
 {
 	switch (request.bmRequestType & recipient_mask)
