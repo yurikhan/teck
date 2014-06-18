@@ -1,5 +1,6 @@
 #include "usb.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <8051.h>
 #include "mg84fl54bd.h"
@@ -126,6 +127,19 @@ void usb_init(void)
 // USB request handling
 
 UsbRequestSetup request;
+
+bool usb_request(void) __using(3)
+{
+	switch (request.bmRequestType & recipient_mask)
+	{
+	case recipient_device:
+		return usb_device_request();
+	}
+	return false;
+}
+
+
+// USB interrupt handling
 
 void usb_isr(void) __interrupt(15) __using(3)
 {
