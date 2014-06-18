@@ -131,6 +131,17 @@ void usb_init(void)
 
 UsbRequestSetup request;
 
+bool usb_get_device_descriptor(void) __using(3)
+{
+	switch (utohs(request.wValue) >> 8) // Descriptor type
+	{
+	case dtype_DEVICE:
+		usb_transmit_descriptor(&device_descriptor, sizeof(device_descriptor));
+		return true;
+	}
+	return false;
+}
+
 bool usb_standard_device_request(void) __using(3)
 {
 	switch (request.bRequest)
