@@ -16,6 +16,7 @@ typedef uint16_t bcd;
 
 // Data types and constants from:
 // [USB] Universal Serial Bus Specification, Revision 2.0, Chapter 9
+// [HID] Device Class Definition for Human Interface Devices (HID), Version 1.11
 
 // [USB] Table 9-2
 typedef enum UsbRequestType {
@@ -106,6 +107,91 @@ typedef struct UsbDeviceDescriptor
 	string_id iSerialNumber;
 	uint8_t bNumConfigurations;
 } UsbDeviceDescriptor;
+
+// [USB] Table 9-10
+typedef enum UsbConfigurationAttributes
+{
+	cfa_reserved1 = 0x80,
+	cfa_self_powered = 0x40,
+	cfa_remote_wakeup = 0x20
+} UsbConfigurationAttributes;
+
+// [USB] Table 9-10
+typedef struct UsbConfigurationDescriptor
+{
+	uint8_t bLength;
+	UsbDescriptorType bDescriptorType;
+	uint16_t wTotalLength;
+	uint8_t bNumInterfaces;
+	uint8_t bConfigurationValue;
+	uint8_t iConfiguration;
+	UsbConfigurationAttributes bmAttributes;
+	uint8_t bMaxPower;
+} UsbConfigurationDescriptor;
+
+// [USB] Table 9-12
+typedef struct UsbInterfaceDescriptor
+{
+	uint8_t bLength;
+	UsbDescriptorType bDescriptorType;
+	uint8_t bInterfaceNumber;
+	uint8_t bAlternateSetting;
+	uint8_t bNumEndpoints;
+	UsbDeviceClass bInterfaceClass;
+	UsbDeviceSubClass bInterfaceSubClass;
+	UsbDeviceProtocol bInterfaceProtocol;
+	uint8_t iInterface;
+} UsbInterfaceDescriptor;
+
+// [USB] Table 9-13
+typedef enum UsbEndpointAttributes
+{
+	epattr_transfer_mask = 0x03,
+	epattr_transfer_control = 0x00,
+	epattr_transfer_isochronous = 0x01,
+	epattr_transfer_bulk = 0x02,
+	epattr_transfer_interrupt = 0x03,
+
+	epattr_sync_mask = 0xC0,
+	epattr_sync_none = 0x00,
+	epattr_sync_asynchronous = 0x40,
+	epattr_sync_adaptive = 0x80,
+	epattr_sync_synchronous = 0xC0,
+
+	epattr_usage_mask = 0x30,
+	epattr_usage_data = 0x00,
+	epattr_usage_feedback = 0x10,
+	epattr_usage_implicit_feedback = 0x20,
+} UsbEndpointAttributes;
+
+// [USB] Table 9-13
+typedef struct UsbEndpointDescriptor
+{
+	uint8_t bLength;
+	UsbDescriptorType bDescriptorType;
+	uint8_t bEndpointAddress;
+	UsbEndpointAttributes bmAttributes;
+	uint16_t wMaxPacketSize;
+	uint8_t bInterval;
+} UsbEndpointDescriptor;
+
+// [HID] 6.2.1
+typedef struct HidClassDescriptorHeader
+{
+	UsbDescriptorType bDescriptorType;
+	uint16_t wDescriptorLength;
+} HidClassDescriptorHeader;
+
+// [HID] 6.2.1
+typedef struct HidDescriptor
+{
+	uint8_t bLength;
+	UsbDescriptorType bDescriptorType;
+	bcd bcdHID;
+	uint8_t bCountryCode;
+	uint8_t bNumDescriptors;
+	HidClassDescriptorHeader descriptors[1];
+} HidDescriptor;
 
 
 // USB device state management
