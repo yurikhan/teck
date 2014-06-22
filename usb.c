@@ -203,6 +203,107 @@ typedef struct HidDescriptor
 	HidClassDescriptorHeader descriptors[1];
 } HidDescriptor;
 
+// [HID] 6.2.2.2
+typedef enum HidItemType
+{
+	item_main = 0x00,
+	item_global = 0x04,
+	item_local = 0x08
+} HidItemType;
+
+typedef enum HidItemTag
+{
+	// Main, [HID] 6.2.2.4
+	item_input = 0x80,
+	item_output = 0x90,
+	item_feature = 0xB0,
+	item_collection = 0xA0,
+	item_end_collection = 0xC0,
+	// Global, [HID] 6.2.2.7
+	item_usage_page = 0x04,
+	item_logical_minimum = 0x14,
+	item_logical_maximum = 0x24,
+	item_physical_minimum = 0x34,
+	item_physical_maximum = 0x44,
+	item_unit_exponent = 0x54,
+	item_unit = 0x64,
+	item_report_size = 0x74,
+	item_report_id = 0x84,
+	item_report_count = 0x94,
+	item_push = 0xA4,
+	item_pop = 0xB4,
+	// Local, [HID] 6.2.2.8
+	item_usage = 0x08,
+	item_usage_minimum = 0x18,
+	item_usage_maximum = 0x28,
+	item_designator_index = 0x38,
+	item_designator_minimum = 0x48,
+	item_designator_maximum = 0x58,
+	item_string_index = 0x78,
+	item_string_minimum = 0x88,
+	item_string_maximum = 0x98,
+	item_delimiter = 0xA8,
+} HidItemTag;
+
+// [HID] 6.2.2.5
+typedef enum HidItemFieldAttributes
+{
+	field_data = 0x00, field_constant = 0x01,
+	field_array = 0x00, field_variable = 0x02,
+	field_absolute = 0x00, field_relative = 0x04,
+	field_no_wrap = 0x00, field_wrap = 0x08,
+	field_linear = 0x00, field_non_linear = 0x10,
+	field_preferred_state = 0x00, field_no_preferred = 0x20,
+	field_no_null = 0x00, field_null_state = 0x40,
+	field_bit_field = 0x00, field_buffered_bytes = 0x100
+} HidItemDataAttributes;
+
+// [HID] 6.2.2.6
+typedef enum HidCollection
+{
+	coll_physical = 0x00,
+	coll_application = 0x01,
+	coll_logical = 0x02,
+	coll_report = 0x03,
+	coll_named_array = 0x04,
+	coll_usage_switch = 0x05,
+	coll_usage_modifier = 0x06
+} HidCollection;
+
+// [UT] 3
+typedef enum HidUsagePage
+{
+	up_generic_desktop = 0x01,
+	up_keyboard = 0x07,
+	up_leds = 0x08,
+	up_consumer = 0x0C
+} HidUsagePage;
+
+typedef enum HidUsage
+{
+	// Generic Desktop, [UT] 4
+	usage_keyboard = 0x06,
+
+	// Keyboard, [UT] 10
+	usage_keyboard_left_control = 0xE0,
+	usage_keyboard_right_gui = 0xE7,
+
+	// LEDs, [UT] 11
+	usage_num_lock = 0x01,
+	usage_kana = 0x05,
+} HidUsage;
+
+// [HID] 6.2.2
+typedef uint8_t HidReportDescriptor[];
+// [HID] 6.2.2.2
+#define HID_ITEM0(bTag) (bTag)
+#define HID_ITEM1(bTag, bData) ((bTag) | 1), (bData)
+#define HID_ITEM2(bTag, wData) ((bTag) | 2), \
+		((wData) & 0xFF), ((wData) >> 8)
+#define HID_ITEM4(bTag, lData) ((bTag) | 3), \
+		((lData) & 0xFF), (((lData) >> 8) & 0xFF), \
+		(((lData) >> 16) & 0xFF), ((lData) >> 24)
+
 
 // [USB] 9.6.3
 typedef struct UsbFullConfigurationDescriptor
@@ -388,6 +489,47 @@ const UsbFullConfigurationDescriptor __code full_configuration_descriptor = {
 		.wMaxPacketSize = htous(64),
 		.bInterval = 10
 	}
+};
+
+const HidReportDescriptor __code hid_report_descriptor = {
+	HID_ITEM1(item_usage_page, up_generic_desktop),
+	HID_ITEM1(item_usage, usage_keyboard),
+	HID_ITEM1(item_collection, coll_application),
+
+	HID_ITEM1(item_report_size, 1),
+	HID_ITEM1(item_report_count, 8),
+	HID_ITEM1(item_usage_page, up_keyboard),
+	HID_ITEM1(item_usage_minimum, usage_keyboard_left_control),
+	HID_ITEM1(item_usage_maximum, usage_keyboard_right_gui),
+	HID_ITEM1(item_logical_minimum, 0),
+	HID_ITEM1(item_logical_maximum, 1),
+	HID_ITEM1(item_input, field_data | field_variable | field_absolute),
+
+	HID_ITEM1(item_report_count, 1),
+	HID_ITEM1(item_report_size, 8),
+	HID_ITEM1(item_input, field_constant),
+
+	HID_ITEM1(item_report_count, 5),
+	HID_ITEM1(item_report_size, 1),
+	HID_ITEM1(item_usage_page, up_leds),
+	HID_ITEM1(item_usage_minimum, usage_num_lock),
+	HID_ITEM1(item_usage_maximum, usage_kana),
+	HID_ITEM1(item_output, field_data | field_variable | field_absolute),
+
+	HID_ITEM1(item_report_count, 1),
+	HID_ITEM1(item_report_size, 3),
+	HID_ITEM1(item_output, field_constant),
+
+	HID_ITEM1(item_report_count, 6),
+	HID_ITEM1(item_report_size, 8),
+	HID_ITEM1(item_logical_minimum, 0),
+	HID_ITEM1(item_logical_maximum, 255),
+	HID_ITEM1(item_usage_page, up_keyboard),
+	HID_ITEM1(item_usage_minimum, 0),
+	HID_ITEM1(item_usage_maximum, 255),
+	HID_ITEM1(item_input, field_data | field_array),
+
+	HID_ITEM0(item_end_collection)
 };
 
 
