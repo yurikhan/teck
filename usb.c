@@ -717,6 +717,39 @@ bool usb_interface_request(void) __using(3)
 	}
 }
 
+bool usb_get_endpoint_status(void) __using(3)
+{
+	switch (request.wIndex) // Endpoint index
+	{
+	case 0:
+		TXDAT = 0; // Not halted
+		TXDAT = 0;
+		usb_transmit_dynamic(2);
+		return true;
+	}
+	return false;
+}
+
+bool usb_standard_endpoint_request(void) __using(3)
+{
+	switch (request.bRequest)
+	{
+	case request_GET_STATUS:
+		return usb_get_endpoint_status();
+	}
+	return false;
+}
+
+bool usb_endpoint_request(void) __using(3)
+{
+	switch (request.bmRequestType & rtype_mask)
+	{
+	case rtype_standard:
+		return usb_standard_endpoint_request();
+	}
+	return false;
+}
+
 bool usb_request(void) __using(3)
 {
 	switch (request.bmRequestType & recipient_mask)
@@ -725,6 +758,8 @@ bool usb_request(void) __using(3)
 		return usb_device_request();
 	case recipient_interface:
 		return usb_interface_request();
+	case recipient_endpoint:
+		return usb_endpoint_request();
 	}
 	return false;
 }
