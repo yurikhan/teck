@@ -545,6 +545,18 @@ void usb_transmit_descriptor(const void* buffer, uint8_t size) __using(3)
 	usb_transmit(buffer, size);
 }
 
+bool usb_get_device_configuration_descriptor(void) __using(3)
+{
+	switch (utohs(request.wValue) & 0xFF) // Configuration index
+	{
+	case 0:
+		usb_transmit_descriptor(&full_configuration_descriptor,
+			sizeof(full_configuration_descriptor));
+		return true;
+	}
+	return false;
+}
+
 bool usb_get_device_descriptor(void) __using(3)
 {
 	switch (utohs(request.wValue) >> 8) // Descriptor type
@@ -552,6 +564,8 @@ bool usb_get_device_descriptor(void) __using(3)
 	case dtype_DEVICE:
 		usb_transmit_descriptor(&device_descriptor, sizeof(device_descriptor));
 		return true;
+	case dtype_CONFIGURATION:
+		return usb_get_device_configuration_descriptor();
 	}
 	return false;
 }
@@ -580,12 +594,76 @@ bool usb_device_request(void) __using(3)
 	return false;
 }
 
+bool usb_get_interface_hid_descriptor(void) __using(3)
+{
+	switch (utohs(request.wIndex)) // Interface number
+	{
+	case 1:
+		switch (utohs(request.wValue) & 0xFF) // HID descriptor index
+		{
+		case 0:
+			usb_transmit_descriptor(&full_configuration_descriptor.hid_descriptor,
+				sizeof(HidDescriptor));
+			return true;
+		}
+	}
+	return false;
+}
+
+bool usb_get_interface_report_descriptor(void) __using(3)
+{
+	switch (utohs(request.wIndex)) // Interface number
+	{
+	case 1:
+		switch (utohs(request.wValue) & 0xFF) // Report descriptor index
+		{
+		case 0:
+			usb_transmit_descriptor(&hid_report_descriptor,
+				sizeof(hid_report_descriptor));
+			return true;
+		}
+	}
+	return false;
+}
+
+bool usb_get_interface_descriptor(void) __using(3)
+{
+	switch (utohs(request.wValue) >> 8) // Descriptor type
+	{
+	case dtype_HID:
+		return usb_get_interface_hid_descriptor();
+	case dtype_HID_REPORT:
+		return usb_get_interface_report_descriptor();
+	}
+	return false;
+}
+
+bool usb_standard_interface_request(void) __using(3)
+{
+	switch (request.bRequest)
+	{
+	case request_GET_DESCRIPTOR:
+		return usb_get_interface_descriptor();
+	}
+}
+
+bool usb_interface_request(void) __using(3)
+{
+	switch (request.bmRequestType & rtype_mask)
+	{
+	case rtype_standard:
+		return usb_standard_interface_request();
+	}
+}
+
 bool usb_request(void) __using(3)
 {
 	switch (request.bmRequestType & recipient_mask)
 	{
 	case recipient_device:
 		return usb_device_request();
+	case recipient_interface:
+		return usb_interface_request();
 	}
 	return false;
 }
