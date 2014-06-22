@@ -326,7 +326,8 @@ typedef enum UsbState {
 	state_configured
 } UsbState;
 UsbState usb_state = state_powered;
-uint8_t new_address = 0;
+enum { NO_NEW_ADDRESS = 0xFF };
+uint8_t new_address = NO_NEW_ADDRESS;
 
 void set_state(UsbState new_state) __using(3)
 {
@@ -350,7 +351,7 @@ void usb_reset(void) __using(3)
 	IEN = EFSR | EF;
 	UIE = URXIE0 | UTXIE0;
 
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
 	set_state(state_default);
 }
 
@@ -402,7 +403,7 @@ void usb_transmit_dynamic(uint8_t size) __using(3)
 
 void usb_init(void)
 {
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
 	set_state(state_powered);
 
 	// Set up clock
@@ -673,11 +674,11 @@ bool usb_request(void) __using(3)
 
 void usb_transmit_done(void) __using(3)
 {
-	if (new_address)
+	if (new_address != NO_NEW_ADDRESS)
 	{
 		UADDR = new_address;
-		new_address = 0;
-		set_state(state_address);
+		set_state(new_address ? state_address : state_default);
+		new_address = NO_NEW_ADDRESS;
 	}
 }
 
