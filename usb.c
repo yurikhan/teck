@@ -316,6 +316,25 @@ typedef struct UsbFullConfigurationDescriptor
 } UsbFullConfigurationDescriptor;
 
 
+// [USB] Figure 9-4
+typedef enum UsbDeviceStatus {
+	devstatus_self_powered = 0x01,
+	devstatus_remote_wakeup = 0x02,
+} UsbDeviceStatus;
+
+// [USB] Figure 9-6
+typedef enum UsbEndpointStatus {
+	epstatus_halt = 0x01,
+} UsbEndpointStatus;
+
+
+// [USB]
+typedef enum UsbFeatureSelector {
+	feature_ENDPOINT_HALT = 0,
+	feature_DEVICE_REMOTE_WAKEUP = 1,
+	feature_TEST_MODE = 2,
+} UsbFeatureSelector;
+
 
 // USB device state management
 
@@ -326,7 +345,10 @@ typedef enum UsbState {
 	state_configured
 } UsbState;
 UsbState usb_state = state_powered;
-uint8_t new_address = 0;
+enum { NO_NEW_ADDRESS = 0xFF };
+uint8_t new_address = NO_NEW_ADDRESS;
+bool remote_wakeup_enabled = false;
+uint8_t usb_configuration = 0;
 
 void set_state(UsbState new_state) __using(3)
 {
@@ -350,7 +372,9 @@ void usb_reset(void) __using(3)
 	IEN = EFSR | EF;
 	UIE = URXIE0 | UTXIE0;
 
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
+	remote_wakeup_enabled = false;
+	usb_configuration = 0;
 	set_state(state_default);
 }
 
@@ -402,7 +426,9 @@ void usb_transmit_dynamic(uint8_t size) __using(3)
 
 void usb_init(void)
 {
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
+	remote_wakeup_enabled = false;
+	usb_configuration = 0;
 	set_state(state_powered);
 
 	// Set up clock
@@ -570,16 +596,75 @@ bool usb_get_device_descriptor(void) __using(3)
 	return false;
 }
 
+bool usb_get_device_status(void) __using(3)
+{
+	TXDAT = remote_wakeup_enabled ? devstatus_remote_wakeup : 0;
+	TXDAT = 0;
+	usb_transmit_dynamic(2);
+	return true;
+}
+
+bool usb_clear_device_feature(void) __using(3)
+{
+	switch (request.wValue) // Feature selector
+	{
+	case feature_DEVICE_REMOTE_WAKEUP:
+		remote_wakeup_enabled = false;
+		usb_transmit_dynamic(0);
+		return true;
+	}
+	return false;
+}
+
+bool usb_set_device_feature(void) __using(3)
+{
+	switch (request.wValue) // Feature selector
+	{
+	case feature_DEVICE_REMOTE_WAKEUP:
+		remote_wakeup_enabled = true;
+		usb_transmit_dynamic(0);
+		return true;
+	}
+	return false;
+}
+
+bool usb_get_device_configuration(void) __using(3)
+{
+	TXDAT = usb_configuration;
+	usb_transmit_dynamic(1);
+	return true;
+}
+
+bool usb_set_device_configuration(void) __using(3)
+{
+	uint8_t requested_configuration = utohs(request.wValue) & 0xFF;
+	if (requested_configuration > 1) return false;
+	usb_configuration = requested_configuration;
+	set_state(usb_configuration ? state_configured : state_address);
+	usb_transmit_dynamic(0);
+	return true;
+}
+
 bool usb_standard_device_request(void) __using(3)
 {
 	switch (request.bRequest)
 	{
+	case request_GET_STATUS:
+		return usb_get_device_status();
+	case request_CLEAR_FEATURE:
+		return usb_clear_device_feature();
+	case request_SET_FEATURE:
+		return usb_set_device_feature();
 	case request_GET_DESCRIPTOR:
 		return usb_get_device_descriptor();
 	case request_SET_ADDRESS:
 		new_address = utohs(request.wValue);
 		usb_transmit_dynamic(0);
 		return true;
+	case request_GET_CONFIGURATION:
+		return usb_get_device_configuration();
+	case request_SET_CONFIGURATION:
+		return usb_set_device_configuration();
 	}
 	return false;
 }
@@ -656,6 +741,39 @@ bool usb_interface_request(void) __using(3)
 	}
 }
 
+bool usb_get_endpoint_status(void) __using(3)
+{
+	switch (request.wIndex) // Endpoint index
+	{
+	case 0:
+		TXDAT = 0; // Not halted
+		TXDAT = 0;
+		usb_transmit_dynamic(2);
+		return true;
+	}
+	return false;
+}
+
+bool usb_standard_endpoint_request(void) __using(3)
+{
+	switch (request.bRequest)
+	{
+	case request_GET_STATUS:
+		return usb_get_endpoint_status();
+	}
+	return false;
+}
+
+bool usb_endpoint_request(void) __using(3)
+{
+	switch (request.bmRequestType & rtype_mask)
+	{
+	case rtype_standard:
+		return usb_standard_endpoint_request();
+	}
+	return false;
+}
+
 bool usb_request(void) __using(3)
 {
 	switch (request.bmRequestType & recipient_mask)
@@ -664,6 +782,8 @@ bool usb_request(void) __using(3)
 		return usb_device_request();
 	case recipient_interface:
 		return usb_interface_request();
+	case recipient_endpoint:
+		return usb_endpoint_request();
 	}
 	return false;
 }
@@ -673,11 +793,12 @@ bool usb_request(void) __using(3)
 
 void usb_transmit_done(void) __using(3)
 {
-	if (new_address)
+	if (new_address != NO_NEW_ADDRESS)
 	{
 		UADDR = new_address;
-		new_address = 0;
-		set_state(state_address);
+		usb_configuration = 0;
+		set_state(new_address ? state_address : state_default);
+		new_address = NO_NEW_ADDRESS;
 	}
 }
 
