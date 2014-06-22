@@ -4,8 +4,25 @@
 #include "mg84fl54bd.h"
 #include "timer.h"
 
+typedef enum UsbState {
+	state_powered,
+	state_default,
+	state_address,
+	state_configured
+} UsbState;
+UsbState usb_state = state_powered;
+
+void set_state(UsbState new_state) __using(3)
+{
+	usb_state = new_state;
+	P3_5 = !(new_state & 1);
+	P3_6 = !(new_state & 2);
+}
+
 void usb_init(void)
 {
+	set_state(state_powered);
+
 	// Set up clock
 	CKCON2 |= EN_PLL;
 	while (!(CKCON2 & PLL_RDY)) {}
@@ -26,10 +43,6 @@ void usb_isr(void) __interrupt(15) __using(3)
 	if (upcon & URST)
 	{
 		UPCON |= URST;
-		P3_6 = false;
-	}
-	else
-	{
-		P3_5 = !P3_6;
+		set_state(state_default);
 	}
 }
