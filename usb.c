@@ -327,7 +327,8 @@ UsbState usb_state = state_powered;
 // The device must not actually change address until it signals OK to the host
 // and this OK is successfully received. So store the new address and activate
 // when handling Transmit Done.
-uint8_t new_address;
+enum { NO_NEW_ADDRESS = 0xFF };
+uint8_t new_address = NO_NEW_ADDRESS;
 
 void set_state(UsbState new_state) __using(3)
 {
@@ -341,7 +342,7 @@ void set_state(UsbState new_state) __using(3)
 
 void init_usb(void)
 {
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
 	set_state(state_powered);
 
 	// Set up clock
@@ -371,7 +372,7 @@ void usb_reset(void) __using(3)
 	IEN = EFSR | EF;
 	UIE = URXIE0 | UTXIE0;
 
-	new_address = 0;
+	new_address = NO_NEW_ADDRESS;
 	set_state(state_default);
 }
 
@@ -629,11 +630,11 @@ bool usb_request(void) __using(3)
 
 void usb_transmit_done(void) __using(3)
 {
-	if (new_address)
+	if (new_address != NO_NEW_ADDRESS)
 	{
 		UADDR = new_address;
-		new_address = 0;
-		set_state(state_address);
+		set_state(new_address ? state_address : state_default);
+		new_address = NO_NEW_ADDRESS;
 	}
 }
 
