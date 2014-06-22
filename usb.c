@@ -17,6 +17,7 @@ typedef uint16_t bcd;
 // Data types and constants from:
 // [USB] Universal Serial Bus Specification, Revision 2.0, Chapter 9
 // [HID] Device Class Definition for Human Interface Devices (HID), Version 1.11
+// [UT] HID Usage Tables, Version 1.12
 
 // [USB] Table 9-2
 typedef enum UsbRequestType {
@@ -72,21 +73,30 @@ typedef enum UsbDescriptorType
 	dtype_DEVICE_QUALIFIER = 6,
 	dtype_OTHER_SPEED_CONFIGURATION = 7,
 	dtype_INTERFACE_POWER = 8,
+	// [HID] 7.1
+	dtype_HID = 0x21,
+	dtype_HID_REPORT = 0x22,
+	dtype_HID_PHYSICAL = 0x23
 } UsbDescriptorType;
 
 typedef enum UsbDeviceClass
 {
 	dclass_PER_INTERFACE = 0, // [USB] Table 9-8
+	dclass_HID = 3 // [HID] 4.1
 } UsbDeviceClass;
 
 typedef enum UsbDeviceSubClass
 {
 	dsubclass_PER_INTERFACE = 0, // [USB] Table 9-8
+	dsubclass_HID_BOOT = 1 // [HID] 4.2
 } UsbDeviceSubClass;
 
 typedef enum UsbDeviceProtocol
 {
 	dproto_PER_INTERFACE = 0, // [USB] Table 9-8
+	// [HID] 4.3
+	dproto_HID_BOOT_KEYBOARD = 1,
+	dproto_HID_BOOT_MOUSE = 2
 } UsbDeviceProtocol;
 
 // [USB] Table 9-8
@@ -192,6 +202,18 @@ typedef struct HidDescriptor
 	uint8_t bNumDescriptors;
 	HidClassDescriptorHeader descriptors[1];
 } HidDescriptor;
+
+
+// [USB] 9.6.3
+typedef struct UsbFullConfigurationDescriptor
+{
+	UsbConfigurationDescriptor configuration_descriptor;
+	UsbInterfaceDescriptor interface_descriptor;
+	HidDescriptor hid_descriptor;
+	UsbEndpointDescriptor endpoint_descriptor;
+	// TODO: one more interface and endpoint for media keys
+} UsbFullConfigurationDescriptor;
+
 
 
 // USB device state management
@@ -321,6 +343,51 @@ const UsbDeviceDescriptor __code device_descriptor = {
 	.iProduct = 0, // TODO:
 	.iSerialNumber = 0,
 	.bNumConfigurations = 1
+};
+
+const UsbFullConfigurationDescriptor __code full_configuration_descriptor = {
+	.configuration_descriptor = {
+		.bLength = sizeof(UsbConfigurationDescriptor),
+		.bDescriptorType = dtype_CONFIGURATION,
+		.wTotalLength = htous(sizeof(UsbFullConfigurationDescriptor)),
+		.bNumInterfaces = 1, // TODO: 2
+		.bConfigurationValue = 1,
+		.iConfiguration = 0,
+		.bmAttributes = cfa_reserved1 | cfa_remote_wakeup,
+		.bMaxPower = 50, // 100 mA
+	},
+	.interface_descriptor = {
+		.bLength = sizeof(UsbInterfaceDescriptor),
+		.bDescriptorType = dtype_INTERFACE,
+		.bInterfaceNumber = 0,
+		.bAlternateSetting = 0,
+		.bNumEndpoints = 1,
+		.bInterfaceClass = dclass_HID,
+		.bInterfaceSubClass = dsubclass_HID_BOOT,
+		.bInterfaceProtocol = dproto_HID_BOOT_KEYBOARD,
+		.iInterface = 0,
+	},
+	.hid_descriptor = {
+		.bLength = sizeof(HidDescriptor),
+		.bDescriptorType = dtype_HID,
+		.bcdHID = htous(0x111),
+		.bCountryCode = 0,
+		.bNumDescriptors = 1,
+		.descriptors = {
+			[0] = {
+				.bDescriptorType = dtype_HID_REPORT,
+				.wDescriptorLength = htous(sizeof(hid_report_descriptor))
+			}
+		}
+	},
+	.endpoint_descriptor = {
+		.bLength = sizeof(UsbEndpointDescriptor),
+		.bDescriptorType = dtype_ENDPOINT,
+		.bEndpointAddress = device_to_host | 1,
+		.bmAttributes = epattr_transfer_interrupt,
+		.wMaxPacketSize = htous(64),
+		.bInterval = 10
+	}
 };
 
 
