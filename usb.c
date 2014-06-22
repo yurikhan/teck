@@ -350,6 +350,7 @@ UsbState usb_state = state_powered;
 enum { NO_NEW_ADDRESS = 0xFF };
 uint8_t new_address = NO_NEW_ADDRESS;
 bool remote_wakeup_enabled = false;
+uint8_t usb_configuration = 0;
 
 void set_state(UsbState new_state) __using(3)
 {
@@ -365,6 +366,7 @@ void init_usb(void)
 {
 	new_address = NO_NEW_ADDRESS;
 	remote_wakeup_enabled = false;
+	usb_configuration = 0;
 	set_state(state_powered);
 
 	// Set up clock
@@ -396,6 +398,7 @@ void usb_reset(void) __using(3)
 
 	new_address = NO_NEW_ADDRESS;
 	remote_wakeup_enabled = false;
+	usb_configuration = 0;
 	set_state(state_default);
 }
 
@@ -646,6 +649,23 @@ bool usb_set_device_feature(void) __using(3)
 	return false;
 }
 
+bool usb_get_device_configuration(void) __using(3)
+{
+	TXDAT = usb_configuration;
+	usb_transmit_dynamic(1);
+	return true;
+}
+
+bool usb_set_device_configuration(void) __using(3)
+{
+	uint8_t requested_configuration = utohs(request.wValue) & 0xFF;
+	if (requested_configuration > 1) return false;
+	usb_configuration = requested_configuration;
+	set_state(usb_configuration ? state_configured : state_address);
+	usb_transmit_dynamic(0);
+	return true;
+}
+
 bool usb_standard_device_request(void) __using(3)
 {
 	switch (request.bRequest)
@@ -662,6 +682,10 @@ bool usb_standard_device_request(void) __using(3)
 		new_address = request.wValue;
 		usb_transmit_dynamic(0);
 		return true;
+	case request_GET_CONFIGURATION:
+		return usb_get_device_configuration();
+	case request_SET_CONFIGURATION:
+		return usb_set_device_configuration();
 	}
 	return false;
 }
@@ -729,6 +753,7 @@ void usb_transmit_done(void) __using(3)
 	if (new_address != NO_NEW_ADDRESS)
 	{
 		UADDR = new_address;
+		usb_configuration = 0;
 		set_state(new_address ? state_address : state_default);
 		new_address = NO_NEW_ADDRESS;
 	}
