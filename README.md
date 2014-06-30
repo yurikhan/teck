@@ -2,12 +2,19 @@ This repository hosts the reverse-engineered and modded firmware for the [Truly 
 
 [1]: https://www.trulyergonomic.com/
 
-Added features:
+**Note:** I am developing a new, Free and Open Source firmware and a cross-platform firmware upgrade tool. You can help by making a donation:
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG_global.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DJCJVJD8R5EXY)
+
+----
+
+Features added by this mod:
 
 * Table-based <kbd>Fn</kbd> and <kbd>Num Lock</kbd> layers, customizable independently of the main layer, for both PC and Mac layouts.
 * Up to 23 different media/application launch/application control keys (limit raised from original 13).
 * Media keys no longer confined to the <kbd>Fn</kbd> layer.
 * Non-synchronized <kbd>Num Lock</kbd> no longer tied to the status of the LED. If you press a <kbd>Num Lock</kbd>-sensitive key and your OS <kbd>Num Lock</kbd> is off, the firmware will turn it on first and back off when you stop typing.
+* Better debouncing algorithm.
 * Visual web-based [configurator][2].
 
 [2]: http://yurivkhan.github.io/teck/
