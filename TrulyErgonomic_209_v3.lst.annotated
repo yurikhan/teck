@@ -415,107 +415,63 @@ L0043:
 L0045:
   00FC 02027B           LJMP L9800
 
-pc_fn_keycodes:                                 ;static const byte pc_fn_keycodes[18*8] = {
-  00FF 00008B0000000000                         ;   0,    0,      Muhen,  0,       0,    0,         0,      0,
-  0107 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  010F 0000004700000000                         ;   0,    0,      0,      Scroll,  0,    0,         0,      0,
-  0117 0000490000000000                         ;   0,    0,      Ins,    0,       0,    0,         0,      0,
-  011F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  0127 0000004600000000                         ;   0,    0,      0,      PrtScr,  0,    0,         0,      0,
-  012F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  0137 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  013F 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  0147 00E900EA00930000                         ;   0,    Media1, 0,      Media2,  0,    Hiragana,  0,      0,
-  014F 00EBF5EC00000000                         ;   0,    Media3, Media13,Media4,  0,    0,         0,      0,
-  0157 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  015F 000000AD00000000                         ;   0,    0,      0,      WinBrk,  0,    0,         0,      0,
-  0167 00AE000000000000                         ;   0,    CtrlBrk,0,      0,       0,    0,         0,      0,
-  016F 00ED00EE00000000                         ;   0,    Media5, 0,      Media6,  0,    0,         0,      0,
-  0177 00EF00F000000000                         ;   0,    Media7, 0,      Media8,  0,    0,         0,      0,
-  017F 00F100F200000000                         ;   0,    Media9, 0,      Media10, 0,    0,         0,      0,
-  0187 00F300F400000000                         ;   0,    Media11,0,      Media12, 0,    0,         0,      0
-                                                ;}
-mac_fn_keycodes:                                ;static const byte mac_fn_keycodes[18*8] = {
-  018F 00008B0000000000                         ;   0,    0,      Muhen,  0,       0,    0,         0,      0,
-  0197 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  019F 0000004700000000                         ;   0,    0,      0,      Scroll,  0,    0,         0,      0,
-  01A7 0000490000000000                         ;   0,    0,      Ins,    0,       0,    0,         0,      0,
-  01AF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  01B7 0000004600000000                         ;   0,    0,      0,      PrtScr,  0,    0,         0,      0,
-  01BF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  01C7 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  01CF 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  01D7 00E900EA00930000                         ;   0,    Media1, 0,      Media2,  0,    Hiragana,  0,      0,
-  01DF 00EBF5EC00000000                         ;   0,    Media3, Media13,Media4,  0,    0,         0,      0,
-  01E7 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  01EF 000000AD00000000                         ;   0,    0,      0,      WinBrk,  0,    0,         0,      0,
-  01F7 00AE000000000000                         ;   0,    CtrlBrk,0,      0,       0,    0,         0,      0,
-  01FF 00ED00EE00000000                         ;   0,    Media5, 0,      Media6,  0,    0,         0,      0,
-  0207 00EF00F000000000                         ;   0,    Media7, 0,      Media8,  0,    0,         0,      0,
-  020F 00F100F200000000                         ;   0,    Media9, 0,      Media10, 0,    0,         0,      0,
-  0217 00F300F400000000                         ;   0,    Media11,0,      Media12, 0,    0,         0,      0
-                                                ;}
-;;; 81 bytes code
-do_get_keycode:                                 ;byte __register(R7) do_get_keycode(byte __register(R7) keyindex, byte __register(A) layer)
-  021F 900226           MOV DPTR, #0226h
-  0222 5407             ANL A, #7h
-  0224 23               RL A
-  0225 73               JMP @A+DPTR
-  0226 8025             SJMP L9200
-  0228 801C             SJMP L9201
-  022A 800A             SJMP L9202
-  022C 8011             SJMP L9203
-  022E 8039             SJMP L9204
-  0230 8030             SJMP L9205
-  0232 801E             SJMP L9206
-  0234 8025             SJMP L9207              ;   switch (layer & 7)
-                                                ;   {
-L9202:                                          ;   case 2: // PC Fn
-  0236 9000FF           MOV DPTR, #00FFh
-  0239 EF               MOV A, R7
-  023A 93               MOVC A, @A+DPTR         ;       A = pc_fn_keycodes[keyindex];
-  023B 7031             JNZ L9209               ;       if (A) return A;
-  023D 800E             SJMP L9200              ;       goto case 0;
-L9203:                                          ;   case 3: // PC Fn Num
-  023F 9000FF           MOV DPTR, #00FFh
-  0242 EF               MOV A, R7
-  0243 93               MOVC A, @A+DPTR         ;       A = pc_fn_keycodes[keyindex];
-  0244 7028             JNZ L9209               ;       if (A) return A;
-L9201:                                          ;   case 1: // PC Num
-  0246 9008AE           MOV DPTR, #08AEh
-  0249 EF               MOV A, R7
-  024A 93               MOVC A, @A+DPTR         ;       A = pc_num_keycodes[keyindex];
-  024B 7021             JNZ L9209               ;       if (A) return A;
-L9200:                                          ;   case 0: // PC Main
-  024D 90072B           MOV DPTR, #072Bh        ;       A = pc_keycodes[keyindex];
-  0250 801A             SJMP L9208              ;       return A;
-L9206:                                          ;   case 6: // Mac Fn
-  0252 90018F           MOV DPTR, #018Fh
-  0255 EF               MOV A, R7
-  0256 93               MOVC A, @A+DPTR         ;       A = mac_fn_keycodes[keyindex];
-  0257 7015             JNZ L9209               ;       if (A) return A;
-  0259 800E             SJMP L9204              ;       goto case 4;
-L9207:                                          ;   case 7: // Mac Fn Num
-  025B 90018F           MOV DPTR, #018Fh
-  025E EF               MOV A, R7
-  025F 93               MOVC A, @A+DPTR         ;       A = mac_fn_keycodes[keyindex];
-  0260 700C             JNZ L9209               ;       if (A) return A;
-L9205:                                          ;   case 5: // Mac Num
-  0262 900A8E           MOV DPTR, #0A8Eh
-  0265 EF               MOV A, R7
-  0266 93               MOVC A, @A+DPTR         ;       A = mac_num_keycodes[keyindex];
-  0267 7005             JNZ L9209               ;       if (A) return A;
-L9204:                                          ;   case 4: // Mac Main
-  0269 9007BB           MOV DPTR, #07BBh
-L9208:
-  026C EF               MOV A, R7
-  026D 93               MOVC A, @A+DPTR         ;       A = mac_keycodes[keyindex];
-L9209:
-  026E FF               MOV R7, A
-  026F 22               RET                     ;       return A;
+;;; 288 bytes free
+
+CSEG AT 021Fh
+;;; 41 bytes code
+;;; in: keyindex [0..144)
+;;; in: layer [0..64)
+;;; out: keycode [0..255]
+;;; Layer is encoded as a bit mask: ddddnf
+;;; where:
+;;; * f is the Fn state (0 up, 1 down)
+;;; * n is the Internal NumLock state (0 off, 1 on)
+;;; * dddd is the state of all DIP switches 1−4, 1 being the high-order bit
+;;; This does not mean we have 64 keycode tables;
+;;; * If Fn is pressed, use the single Fn table: if (layer & 1) result = fn_keycodes[keyindex]; if (result) return result;
+;;; * Iif Num Lock is on, use the single Num tables: if (layer & 2) return num_keycodes[keyindex]; if (result) return result;
+;;; * Use the specified Main table: return main_keycodes[layer >> 2][keyindex];
+;;; (if only we can place all main tables contiguously).
+;;; One keycode table uses 144 (0x90) bytes, 16 tables = 2304 (0x900);
+;;; if placed at 0x1B46 will end at 0x2446, IAP memory starts at 0x2800 — just enough room.
+do_get_keycode:                                 ;byte __register(R7) do_get_keycode(byte __register(R7) keyindex, byte __register(A) layer) // B DPTR
+                                                ;{
+                                                ;   byte __register(R7) result;
+  021F 13               RRC A
+  0220 500B             JNC do_get_keycode_fn   ;   if (layer & 1) {
+  0222 90072B           MOV DPTR, #072Bh
+  0225 F5F0             MOV B, A
+  0227 EF               MOV A, R7
+  0228 93               MOVC A, @A+DPTR         ;       result = fn_keycodes[keyindex]; // A == result
+  0229 7022             JNZ do_get_keycode_return ;     if (result) return result;
+  022B E5F0             MOV A, B
                                                 ;   }
+do_get_keycode_fn:
+  022D 13               RRC A
+  022E 500B             JNC do_get_keycode_num  ;   if (layer & 2) {
+  0230 9007BB           MOV DPTR, #07BBh
+  0233 F5F0             MOV B, A
+  0235 EF               MOV A, R7
+  0236 93               MOVC A, @A+DPTR         ;       result = num_keycodes[keyindex]; // A == result
+  0237 7014             JNZ do_get_keycode_return ;     if (result) return result;
+  0239 E5F0             MOV A, B
+                                                ;   }
+do_get_keycode_num:
+  023B 540F             ANL A, #0Fh
+  023D 75F090           MOV B, #90h
+  0240 A4               MUL AB
+  0241 2446             ADD A, #46h
+  0243 F582             MOV DPL, A
+  0245 741B             MOV A, #1Bh
+  0247 35F0             ADDC A, B
+  0249 F583             MOV DPH, A
+  024B EF               MOV A, R7
+  024C 93               MOVC A, @A+DPTR         ;   result = main_keycodes[layer >> 2][keyindex];
+do_get_keycode_return:
+  024D FF               MOV R7, A
+  024E 22               RET                     ;   return result;
                                                 ;}
-;;; 11 bytes free
+;;; 50 bytes free
 CSEG AT 027Bh
 L9800:
   027B 784D             MOV R0, #4Dh
@@ -1375,56 +1331,46 @@ L0370:                                          ;   } else {
   0729 F2               MOVX @R0, A             ;       tx_rx_count = requested_size;
   072A 22               RET                     ;}  }                       // tx_rx_count = max(requested_size, Xw64); // wtf
 
-; Read from pc_keycode()
-                                                ;byte pc_keycodes[18*8] = {
-  072B 00008A0000643500                         ;   0,    0,      Henkan, 0,       0,    Euro2,     `~,     0,
+fn_keycodes:                                    ;static const byte fn_keycodes[18*8] = {
+  072B 00008B0000000000                         ;   0,    0,      Muhen,  0,       0,    0,         0,      0,
   0733 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
-  073B 041F2BE31E141D00                         ;   A,    2@,     Tab,    LGUI,    1!,   Q,         Z,      0,
-                                                ;                         ^^^^
-  0743 8781392C83E0E48B                         ;   Ro,   Vol-,   Caps,   Space,   Num,  LCtrl,     RCtrl,  Muhenkan,
-                                                ;   ^^                                   ^^^^^      ^^^^^
-  074B 004FE76552008A88                         ;   0,    Right,  RGUI,   App,     Up,   0,         Henkan, Kata/Hira,
-  0753 E25600DE890087E6                         ;   LAlt, KP-,    0,      IntNum,  Yen,  0,         Ro,     RAlt,
-  075B 0048000000E1E500                         ;   0,    Pause,  0,      0,       0,    LShift,    RShift, 0,
-  0763 00474858DF880000                         ;   0,    Scroll, Pause,  KPEnter, Fn,   Kata/Hira, 0,      0,
-                                                ;                                        ^^^^^^^^^
-  076B 5C465565545F5957                         ;   KP4,  PrtScr, KP*,    App,     KP/,  KP7,       KP1,    KP+,
-  0773 1A3A4E3B4B291B16                         ;   W,    F1,     PgDn,   F2,      PgUp, Esc,       X,      S,
-  077B 5E3C4C3D4961635B                         ;   KP6,  F3,     Del,    F4,      Ins,  KP9,       KP.,    KP3,
-  0783 072008250C0E3606                         ;   D,    3#,     E,      8*,      I,    K,         [,<],   C,
-  078B 0A21172215090519                         ;   G,    4$,     T,      5%,      R,    F,         B,      V,
-  0793 0D2318241C0B1011                         ;   J,    6^,     U,      7&,      Y,    H,         M,      N,
-  079B 313E283F2E302A50                         ;   \|,   F5,     Enter,  F6,      =+,   ]},        Bksp,   Left,
-  07A3 2F402D412612370F                         ;   [{,   F7,     -_,     F8,      9(,   O,         .>,     L,
-  07AB 3442514327331338                         ;   '",   F9,     Down,   F10,     0),   ;:,        P,      /?,
-  07B3 5D444D454A60625A                         ;   KP5,  F11,    End,    F12,     Home, KP8,       KP0,    KP2
+  073B 0000004700000000                         ;   0,    0,      0,      Scroll,  0,    0,         0,      0,
+  0743 0000490000000000                         ;   0,    0,      Ins,    0,       0,    0,         0,      0,
+  074B 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0753 0000004600000000                         ;   0,    0,      0,      PrtScr,  0,    0,         0,      0,
+  075B 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0763 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  076B 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  0773 00E800E900930000                         ;   0,    Media0, 0,      Media1,  0,    Hiragana,  0,      0,
+  077B 00EAF4EB00000000                         ;   0,    Media2, Media12,Media3,  0,    0,         0,      0,
+  0783 0000000000000000                         ;   0,    0,      0,      0,       0,    0,         0,      0,
+  078B 004800AD00000000                         ;   0,    Pause,  0,      WinBrk,  0,    0,         0,      0,
+  0793 00AE000000000000                         ;   0,    CtrlBrk,0,      0,       0,    0,         0,      0,
+  079B 00EC00ED00000000                         ;   0,    Media4, 0,      Media5,  0,    0,         0,      0,
+  07A3 00EE00EF00000000                         ;   0,    Media6, 0,      Media7,  0,    0,         0,      0,
+  07AB 00F000F100000000                         ;   0,    Media8, 0,      Media9,  0,    0,         0,      0,
+  07B3 00F200F300000000                         ;   0,    Media10,0,      Media11, 0,    0,         0,      0
                                                 ;}
-
-; Read from mac_keycode()
-                                                ;byte mac_keycodes[18*8] = {
-  07BB 00008A0000643500                         ;   0,     0,      Henkan, 0,       0,    Euro2,  `~,     0,
-  07C3 0000000000000000                         ;   0,     0,      0,      0,       0,    0,      0,      0,
-  07CB 041F2BE31E141D00                         ;   A,     2@,     Tab,    LGUI,    1!,   Q,      Z,      0,
-                                                ;                          ^^^^
-  07D3 E481392C83E3E78B                         ;   RCtrl, Vol-,   Caps,   Space,   Num,  LGUI,   RGUI,   Muhenkan,
-                                                ;   ^^^^^                                 ^^^^    ^^^^
-  07DB 004FE76552008A88                         ;   0,     Right,  RGUI,   App,     Up,   0,      Henkan, Kata/Hira,
-  07E3 E25600DE890087E6                         ;   LAlt,  KP-,    0,      IntNum,  Yen,  0,      Ro,     RAlt,
-  07EB 0048000000E1E500                         ;   0,     Pause,  0,      0,       0,    LShift, RShift, 0,
-  07F3 00474858DFE00000                         ;   0,     Scroll, Pause,  KPEnter, Fn,   LCtrl,  0,      0,
-                                                ;                                         ^^^^^
-  07FB 5C465565545F5957                         ;   KP4,   PrtScr, KP*,    App,     KP/,  KP7,    KP1,    KP+,
-  0803 1A3A4E3B4B291B16                         ;   W,     F1,     PgDn,   F2,      PgUp, Esc,    X,      S,
-  080B 5E3C4C3D4961635B                         ;   KP6,   F3,     Del,    F4,      Ins,  KP9,    KP.,    KP3,
-  0813 072008250C0E3606                         ;   D,     3#,     E,      8*,      I,    K,      [,<],   C,
-  081B 0A21172215090519                         ;   G,     4$,     T,      5%,      R,    F,      B,      V,
-  0823 0D2318241C0B1011                         ;   J,     6^,     U,      7&,      Y,    H,      M,      N,
-  082B 313E283F2E302A50                         ;   \|,    F5,     Enter,  F6,      =+,   ]},     Bksp,   Left,
-  0833 2F402D412612370F                         ;   [{,    F7,     -_,     F8,      9(,   O,      .>,     L,
-  083B 3442514327331338                         ;   '",    F9,     Down,   F10,     0),   ;:,     P,      /?,
-  0843 5D444D454A60625A                         ;   KP5,   F11,    End,    F12,     Home, KP8,    KP0,    KP2
+num_keycodes:                                   ;static const byte num_keycodes[18*8] = {
+  07BB 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07C3 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07CB 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07D3 0000005700000000                         ;   0,   0, 0,       KP+, 0,   0,   0,   0,
+  07DB 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07E3 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07EB 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07F3 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  07FB 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0803 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  080B 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0813 000000605D5A0000                         ;   0,   0, KP/,     KP8, KP5, KP2, 0,   0,
+  081B 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
+  0823 59005C5F00006200                         ;   KP1, 0, KP4,     KP7, 0,   0,   KP0, 0,
+  082B 0000580000000000                         ;   0,   0, KPEnter, 0,   0,   0,   0,   0,
+  0833 57000000615E635B                         ;   KP+, 0, 0,       0,   KP9, KP6, KP., KP3,
+  083B 5400000000555600                         ;   KP/, 0, 0,       0,   0,   KP*, KP-, 0,
+  0843 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
                                                 ;}
-
 decode_numlock:                                 ;void decode_numlock() {
   084B E4               CLR A
   084C 7853             MOV R0, #53h
@@ -1494,32 +1440,14 @@ scan_delay__loop:
   08A1 121AA5           LCALL micro_delay       ;       micro_delay(250);
   08A4 DEF9             DJNZ R6, scan_delay__loop
 scan_delay__skip:                               ;   }
-  08A6 7F46             MOV R7, #46h
-  08A8 021AA5           LJMP micro_delay        ;   micro_delay(70);
+  08A6 7F45             MOV R7, #45h
+  08A8 021AA5           LJMP micro_delay        ;   micro_delay(69);
                                                 ;}
 ;;; 3 bytes free
 
-pc_num_keycodes:                                ;static const byte pc_num_keycodes[18*8] = {
-  08AE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08B6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08BE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08C6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08CE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08D6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08DE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08E6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08EE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08F6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  08FE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0906 00000054605D5A00                         ;   0,   0, 0,       KP/, KP8, KP5, KP2, 0,
-  090E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0916 5C005F6700005900                         ;   KP4, 0, KP7,     KP=, 0,   0,   KP1, 0,
-  091E 0000580000000000                         ;   0,   0, KPEnter, 0,   0,   0,   0,   0,
-  0926 0000000055615B5E                         ;   0,   0, 0,       0,   KP*, KP9, KP3, KP6,
-  092E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
-  0936 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
-                                                ;}
+;;; 144 bytes free
 
+CSEG AT 093Eh
 ;;; 6 bytes code, 24 bytes relocation unit
 get_changed_keycode:                            ;byte __register(R7) get_changed_keycode(byte __register(R7) keyindex) { // R1 A
   093E E524             MOV A, 24h
@@ -1742,46 +1670,36 @@ L9000:                                          ;    }
   0A8C F6               MOV @R0, A              ;    hid_report2[1] = 0;
   0A8D 22               RET                     ;}
 
-mac_num_keycodes:                               ;static const byte mac_num_keycodes[18*8] = {
-  0A8E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0A96 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0A9E 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AA6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AAE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AB6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0ABE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AC6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0ACE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AD6 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0ADE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AE6 00000054605D5A00                         ;   0,   0, 0,       KP/, KP8, KP5, KP2, 0,
-  0AEE 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0,
-  0AF6 5C005F6700005900                         ;   KP4, 0, KP7,     KP=, 0,   0,   KP1, 0,
-  0AFE 0000580000000000                         ;   0,   0, KPEnter, 0,   0,   0,   0,   0,
-  0B06 0000000055615B5E                         ;   0,   0, 0,       0,   KP*, KP9, KP3, KP6,
-  0B0E 6300000056625700                         ;   KP., 0, 0,       0,   KP-, KP0, KP+, 0,
-  0B16 0000000000000000                         ;   0,   0, 0,       0,   0,   0,   0,   0
-                                                ;}
+;;; 134 bytes free
 
-;;; 17 bytes code
+CSEG AT 0B14h
+;;; 27 bytes code
 get_layer:                                      ;byte __register(A) get_layer() { // R0
-  0B1E 7803             MOV R0, #3h
-  0B20 E2               MOVX A, @R0
-  0B21 6002             JZ L9503
-  0B23 7402             MOV A, #2h
-L9503:                                          ;   byte __register(A) layer = fn_down ? 2 : 0;
-  0B25 30E902           JNB 0E9h, L9501
-  0B28 4404             ORL A, #4h
-L9501:                                          ;   layer |= P4./DIP2 ? 4 : 0;
-  0B2A 20B501           JB P3.5, L9502
-  0B2D 04               INC A
-L9502:                                          ;   layer |= not P3./NUM ? 1 : 0;
-  0B2E 22               RET                     ;   return layer;
+  0B14 7803             MOV R0, #3h
+  0B16 E2               MOVX A, @R0
+  0B17 6002             JZ get_layer_fnup
+  0B19 7404             MOV A, #4h
+get_layer_fnup:
+  0B1B 6407             XRL A, #7h              ;   bool fnup = !fn_down;
+
+  0B1D A2EA             MOV C, 0EAh
+  0B1F 33               RLC A                   ;   return ~((((((3 << 1 | P4./DIP1)
+  0B20 A2E9             MOV C, 0E9h
+  0B22 33               RLC A                   ;                   << 1 | P4./DIP2)
+  0B23 A2B2             MOV C, P3.2
+  0B25 33               RLC A                   ;                   << 1 | P3./DIP3)
+  0B26 A2B1             MOV C, P3.1
+  0B28 33               RLC A                   ;                   << 1 | P3./DIP4)
+  0B29 A2B5             MOV C, P3.5
+  0B2B 33               RLC A                   ;                   << 1 | P3./NUM)
+  0B2C 23               RL A                    ;                   << 1 | fnup);
+  0B2D F4               CPL A
+  0B2E 22               RET
                                                 ;}
 
 ;;; 6 bytes code
 get_pressed_keycode:                            ;byte __register(R7) get_pressed_keycode(byte __register(R7) keyindex) { // R0 R1 A DPTR R7
-  0B2F 120B1E           LCALL get_layer
+  0B2F 120B14           LCALL get_layer
   0B32 02021F           LJMP do_get_keycode     ;   return do_get_keycode(keyindex, get_layer());
                                                 ;}
 
@@ -1795,7 +1713,7 @@ store_pressed_key__loop:
   0B3A E8               MOV A, R0
   0B3B F7               MOV @R1, A              ;           p->keyindex = keyindex;
   0B3C 09               INC R1
-  0B3D 120B1E           LCALL get_layer
+  0B3D 120B14           LCALL get_layer
   0B40 F7               MOV @R1, A              ;           p->layer = get_layer();
   0B41 22               RET                     ;           return;
 store_pressed_key__next:                        ;       }
@@ -2248,74 +2166,74 @@ L0193:
   0D9B 95               DB 095h
   0D9C 01               DB 001h                 ;       Report Count(1);
   0D9D 0A               DB 00Ah
-  0D9E 27               DB 027h
-  0D9F 02               DB 002h                 ;       Usage(0x0227);  // 1 => AC Refresh
+  0D9E 23               DB 023h
+  0D9F 02               DB 002h                 ;       Usage(0x0223);  // 1 => AC Home
   0DA0 0A               DB 00Ah
-  0DA1 23               DB 023h
-  0DA2 02               DB 002h                 ;       Usage(0x0223);  // 2 => AC Home
+  0DA1 8A               DB 08Ah
+  0DA2 01               DB 001h                 ;       Usage(0x018A);  // 2 => AC Email Reader
   0DA3 0A               DB 00Ah
-  0DA4 8A               DB 08Ah
-  0DA5 01               DB 001h                 ;       Usage(0x018A);  // 3 => AL Email Reader
+  0DA4 21               DB 021h
+  0DA5 02               DB 002h                 ;       Usage(0x0221);  // 3 => AL Search
   0DA6 0A               DB 00Ah
-  0DA7 21               DB 021h
-  0DA8 02               DB 002h                 ;       Usage(0x0221);  // 4 => AC Search
+  0DA7 94               DB 094h
+  0DA8 01               DB 001h                 ;       Usage(0x0194);  // 4 => AL Local Machine Browser
   0DA9 0A               DB 00Ah
-  0DAA 94               DB 094h
-  0DAB 01               DB 001h                 ;       Usage(0x0194);  // 5 => AL Local Machine Browser
+  0DAA 92               DB 092h
+  0DAB 01               DB 001h                 ;       Usage(0x0194);  // 5 => AL Calculator
   0DAC 0A               DB 00Ah
-  0DAD 92               DB 092h
-  0DAE 01               DB 001h                 ;       Usage(0x0192);  // 6 => AL Calculator
+  0DAD 83               DB 083h
+  0DAE 01               DB 001h                 ;       Usage(0x0183);  // 6 => AL Consumer Control Configuration
   0DAF 0A               DB 00Ah
-  0DB0 83               DB 083h
-  0DB1 01               DB 001h                 ;       Usage(0x0183);  // 7 => AL Consumer Control Configuration
+  0DB0 B6               DB 0B6h
+  0DB1 00               DB 000h                 ;       Usage(0x00B6);  // 7 => Scan Previous Track
   0DB2 0A               DB 00Ah
-  0DB3 B6               DB 0B6h
-  0DB4 00               DB 000h                 ;       Usage(0x00B6);  // 8 => Scan Previous Track
+  0DB3 CD               DB 0CDh
+  0DB4 00               DB 000h                 ;       Usage(0x00CD);  // 8 => Play/Pause
   0DB5 0A               DB 00Ah
-  0DB6 CD               DB 0CDh
-  0DB7 00               DB 000h                 ;       Usage(0x00CD);  // 9 => Play/Pause
+  0DB6 B5               DB 0B5h
+  0DB7 00               DB 000h                 ;       Usage(0x00B5);  // 9 => Scan Next Track
   0DB8 0A               DB 00Ah
-  0DB9 B5               DB 0B5h
-  0DBA 00               DB 000h                 ;       Usage(0x00B5);  // 0x0A => Scan Next Track
+  0DB9 E2               DB 0E2h
+  0DBA 00               DB 000h                 ;       Usage(0x00E2);  // 0x0A => Mute
   0DBB 0A               DB 00Ah
-  0DBC E2               DB 0E2h
-  0DBD 00               DB 000h                 ;       Usage(0x00E2);  // 0x0B => Mute
+  0DBC EA               DB 0EAh
+  0DBD 00               DB 000h                 ;       Usage(0x00EA);  // 0x0B => Volume Decrement
   0DBE 0A               DB 00Ah
-  0DBF EA               DB 0EAh
-  0DC0 00               DB 000h                 ;       Usage(0x00EA);  // 0x0C => Volume Decrement
+  0DBF E9               DB 0E9h
+  0DC0 00               DB 000h                 ;       Usage(0x00E9);  // 0x0C => Volume Increment
   0DC1 0A               DB 00Ah
-  0DC2 E9               DB 0E9h
-  0DC3 00               DB 000h                 ;       Usage(0x00E9);  // 0x0D => Volume Increment
+  0DC2 B8               DB 0B8h
+  0DC3 00               DB 000h                 ;       Usage(0x00B8);  // 0x0D => Eject
   0DC4 0A               DB 00Ah
-  0DC5 B8               DB 0B8h
-  0DC6 00               DB 000h                 ;       Usage(0x00B8);  // 0x0E => Eject
+  0DC5 00               DB 000h
+  0DC6 00               DB 000h                 ;       Usage(0x0000);  // 0x0E =>
   0DC7 0A               DB 00Ah
-  0DC8 B7               DB 0B7h
-  0DC9 00               DB 000h                 ;       Usage(0x00B7);  // 0x0F => Stop
+  0DC8 00               DB 000h
+  0DC9 00               DB 000h                 ;       Usage(0x0000);  // 0x0F =>
   0DCA 0A               DB 00Ah
-  0DCB 96               DB 096h
-  0DCC 01               DB 001h                 ;       Usage(0x0196);  // 0x10 => AL Internet Browser
+  0DCB 00               DB 000h
+  0DCC 00               DB 000h                 ;       Usage(0x0000);  // 0x10 => 
   0DCD 0A               DB 00Ah
-  0DCE 99               DB 099h
-  0DCF 01               DB 001h                 ;       Usage(0x0199);  // 0x11 => AL Network Chat
+  0DCE 00               DB 000h
+  0DCF 00               DB 000h                 ;       Usage(0x0000);  // 0x11 => 
   0DD0 0A               DB 00Ah
-  0DD1 A7               DB 0A7h
-  0DD2 01               DB 001h                 ;       Usage(0x01A7);  // 0x12 => AL Documents
+  0DD1 00               DB 000h
+  0DD2 00               DB 000h                 ;       Usage(0x0000);  // 0x12 =>
   0DD3 0A               DB 00Ah
-  0DD4 9E               DB 09Eh
-  0DD5 01               DB 001h                 ;       Usage(0x019E);  // 0x13 => AL Terminal Lock/Screensaver
+  0DD4 00               DB 000h
+  0DD5 00               DB 000h                 ;       Usage(0x0000);  // 0x13 =>
   0DD6 0A               DB 00Ah
-  0DD7 24               DB 024h
-  0DD8 02               DB 002h                 ;       Usage(0x0224);  // 0x14 => AC Back
+  0DD7 00               DB 000h
+  0DD8 00               DB 000h                 ;       Usage(0x0000);  // 0x14 =>
   0DD9 0A               DB 00Ah
-  0DDA 25               DB 025h
-  0DDB 02               DB 002h                 ;       Usage(0x0225);  // 0x15 => AC Forward
+  0DDA 00               DB 000h
+  0DDB 00               DB 000h                 ;       Usage(0x0000);  // 0x15 =>
   0DDC 0A               DB 00Ah
-  0DDD 2A               DB 02Ah
-  0DDE 02               DB 002h                 ;       Usage(0x022A);  // 0x16 => AC Bookmarks
+  0DDD 00               DB 000h
+  0DDE 00               DB 000h                 ;       Usage(0x0000);  // 0x16 =>
   0DDF 0A               DB 00Ah
-  0DE0 91               DB 091h
-  0DE1 01               DB 001h                 ;       Usage(0x0191);  // 0x17 => AL Checkbook/Finance
+  0DE0 00               DB 000h
+  0DE1 00               DB 000h                 ;       Usage(0x0191);  // 0x17 =>
   0DE2 81               DB 081h
   0DE3 60               DB 060h                 ;       Input(Data|Array|Absolute|No Wrap|Linear|No Preferred|Null State);
   0DE4 C0               DB 0C0h                 ;   End Collection;
@@ -4957,5 +4875,309 @@ leds_off:                                       ;void leds_off() {
   1B43 D2E8             SETB 0E8h               ;   P4.0 = true;
   1B45 22               RET                     ;}
 
-;;; 2 bytes free
+main_keycodes:                                  ;static const __code byte main_keycodes[16][144] = {
+  1B46 00004C00002B3500
+  1B4E 0000000000000000
+  1B56 041F2D641E343300
+  1B5E E600392C00E1E500
+  1B66 004F002C52000000
+  1B6E E20000DE000000E4
+  1B76 0000000000E3E700
+  1B7E 00000000DFE00000
+  1B86 0000000000000000
+  1B8E 363A4E3B4B291412
+  1B96 003C4C3D00000000
+  1B9E 0820372506171A0D
+  1BA6 0C211C2213181B0E
+  1BAE 0B230A2409071005
+  1BB6 2F3E283F2A312A50
+  1BBE 38402E4126151911
+  1BC6 1D42514327160F30
+  1BCE 00444D454A000000
+
+  1BD6 00004C00002B3500
+  1BDE 0000000000000000
+  1BE6 041F2D641E343300
+  1BEE E400392C00E1E500
+  1BF6 004F002C52000000
+  1BFE E20000DE000000E6
+  1C06 0000000000E3E700
+  1C0E 00000000DFE00000
+  1C16 0000000000000000
+  1C1E 363A4E3B4B291412
+  1C26 003C4C3D00000000
+  1C2E 0820372506171A0D
+  1C36 0C211C2213181B0E
+  1C3E 0B230A2409071005
+  1C46 2F3E283F2A312A50
+  1C4E 38402E4126151911
+  1C56 1D42514327160F30
+  1C5E 00444D454A000000
+
+  1C66 00004C00002B3500
+  1C6E 0000000000000000
+  1C76 041F38641E141D00
+  1C7E E600392C00E1E500
+  1C86 004F002C52000000
+  1C8E E20000DE000000E4
+  1C96 0000000000E3E700
+  1C9E 00000000DFE00000
+  1CA6 0000000000000000
+  1CAE 1A3A4E3B4B291B16
+  1CB6 003C4C3D00000000
+  1CBE 072008250C0E3606
+  1CC6 0A21172215090519
+  1CCE 0D2318241C0B1011
+  1CD6 313E283F2A2D2A50
+  1CDE 2F402E412612370F
+  1CE6 3442514327331330
+  1CEE 00444D454A000000
+
+  1CF6 00004C00002B3500
+  1CFE 0000000000000000
+  1D06 041F2D641E141D00
+  1D0E E400392C00E1E500
+  1D16 004F002C52000000
+  1D1E E20000DE000000E6
+  1D26 0000000000E3E700
+  1D2E 00000000DFE00000
+  1D36 0000000000000000
+  1D3E 1A3A4E3B4B291B16
+  1D46 003C4C3D00000000
+  1D4E 072008250C0E3606
+  1D56 0A21172215090519
+  1D5E 0D2318241C0B1011
+  1D66 2F3E283F2A312A50
+  1D6E 34402E412612370F
+  1D76 3842514327331330
+  1D7E 00444D454A000000
+
+  1D86 00004C00002B3500
+  1D8E 0000000000000000
+  1D96 041F2D641E141D00
+  1D9E E600392C00E1E500
+  1DA6 004F002C52000000
+  1DAE E20000DE000000E4
+  1DB6 0000000000E3E700
+  1DBE 00000000DFE00000
+  1DC6 0000000000000000
+  1DCE 1A3A4E3B4B291B16
+  1DD6 003C4C3D00000000
+  1DDE 072008250C0E3606
+  1DE6 0A21172215090519
+  1DEE 0D2318241C0B1011
+  1DF6 2F3E283F2A312A50
+  1DFE 34402E412612370F
+  1E06 3842514327331330
+  1E0E 00444D454A000000
+
+  1E16 00004C00002B3500
+  1E1E 0000000000000000
+  1E26 041F38641E141D00
+  1E2E E400392C00E1E500
+  1E36 004F002C52000000
+  1E3E E20000DE000000E6
+  1E46 0000000000E3E700
+  1E4E 00000000DFE00000
+  1E56 0000000000000000
+  1E5E 1A3A4E3B4B291B16
+  1E66 003C4C3D00000000
+  1E6E 072008250C0E3606
+  1E76 0A21172215090519
+  1E7E 0D2318241C0B1011
+  1E86 313E283F2A2D2A50
+  1E8E 2F402E412612370F
+  1E96 3442514327331330
+  1E9E 00444D454A000000
+
+  1EA6 00008A00002B3500
+  1EAE 0000000000000000
+  1EB6 041F2D891E141D00
+  1EBE 8700392C00E1E500
+  1EC6 004F002C52000000
+  1ECE E20000DE000000E4
+  1ED6 0000000000E3E700
+  1EDE 00000000DF880000
+  1EE6 0000000000000000
+  1EEE 1A3A4E3B4B291B16
+  1EF6 003C4C3D00000000
+  1EFE 072008250C0E3606
+  1F06 0A21172215090519
+  1F0E 0D2318241C0B1011
+  1F16 2F3E283F2A312A50
+  1F1E 34402E412612370F
+  1F26 3842514327331330
+  1F2E 00444D454A000000
+
+  1F36 00004C00002B3500
+  1F3E 0000000000000000
+  1F46 041F2D641E141D00
+  1F4E E400392C00E1E500
+  1F56 004F002C52000000
+  1F5E E20000DE000000E6
+  1F66 0000000000E3E700
+  1F6E 00000000DFE00000
+  1F76 0000000000000000
+  1F7E 1A3A4E3B4B291B16
+  1F86 003C4C3D00000000
+  1F8E 072008250C0E3606
+  1F96 0A21172215090519
+  1F9E 0D2318241C0B1011
+  1FA6 2F3E283F2A312A50
+  1FAE 34402E412612370F
+  1FB6 3842514327331330
+  1FBE 00444D454A000000
+
+  1FC6 00004C00002B3500
+  1FCE 0000000000000000
+  1FD6 041F34E31E141D00
+  1FDE 6500392C00E0E400
+  1FE6 004F002C52000000
+  1FEE E20000DE000000E6
+  1FF6 0000000000E1E500
+  1FFE 00000000DFE30000
+  2006 0000000000000000
+  200E 1A3A4E3B4B291B16
+  2016 003C4C3D00000000
+  201E 072008250C0E3606
+  2026 0A21172215090519
+  202E 0D2318241C0B1011
+  2036 2D3E283F64312A50
+  203E 2F4030412612370F
+  2046 384251432733132E
+  204E 00444D454A000000
+
+  2056 00004C00002B3500
+  205E 0000000000000000
+  2066 041F2DE31E343300
+  206E 6500392C00E1E500
+  2076 004F002C52000000
+  207E E20000DE000000E6
+  2086 0000000000E0E400
+  208E 00000000DFE30000
+  2096 0000000000000000
+  209E 363A4E3B4B291412
+  20A6 003C4C3D00000000
+  20AE 0820372506171A0D
+  20B6 0C211C2213181B0E
+  20BE 0B230A2409071005
+  20C6 2F3E283F64312A50
+  20CE 38402E4126151911
+  20D6 1D42514327160F30
+  20DE 00444D454A000000
+
+  20E6 00004C00002B3500
+  20EE 0000000000000000
+  20F6 041F34E31E141D00
+  20FE 6500392C00E1E500
+  2106 004F002C52000000
+  210E E20000DE000000E6
+  2116 0000000000E0E400
+  211E 00000000DFE30000
+  2126 0000000000000000
+  212E 1A3A4E3B4B291B16
+  2136 003C4C3D00000000
+  213E 072008250C0E3606
+  2146 0A21172215090519
+  214E 0D2318241C0B1011
+  2156 2D3E283F64312A50
+  215E 2F4030412612370F
+  2166 384251432733132E
+  216E 00444D454A000000
+
+  2176 00004C00002B3500
+  217E 0000000000000000
+  2186 041F2DE31E141D00
+  218E 6500392C00E1E500
+  2196 004F002C52000000
+  219E E20000DE000000E6
+  21A6 0000000000E0E400
+  21AE 00000000DFE30000
+  21B6 0000000000000000
+  21BE 1A3A4E3B4B291B16
+  21C6 003C4C3D00000000
+  21CE 072008250C0E3606
+  21D6 0A21172215090519
+  21DE 0D2318241C0B1011
+  21E6 2F3E283F64312A50
+  21EE 34402E412612370F
+  21F6 3842514327331330
+  21FE 00444D454A000000
+
+  2206 00004C00002B3500
+  220E 0000000000000000
+  2216 041F2DE31E141D00
+  221E 6500392C00E0E400
+  2226 004F002C52000000
+  222E E20000DE000000E6
+  2236 0000000000E1E500
+  223E 00000000DFE30000
+  2246 0000000000000000
+  224E 1A3A4E3B4B291B16
+  2256 003C4C3D00000000
+  225E 072008250C0E3606
+  2266 0A21172215090519
+  226E 0D2318241C0B1011
+  2276 2F3E283F2A312A50
+  227E 34402E412612370F
+  2286 3842514327331330
+  228E 00444D454A000000
+
+  2296 00004C00002B3500
+  229E 0000000000000000
+  22A6 041F38E31E141D00
+  22AE 6500392C00E1E500
+  22B6 004F002C52000000
+  22BE E20000DE000000E6
+  22C6 0000000000E0E400
+  22CE 00000000DFE30000
+  22D6 0000000000000000
+  22DE 1A3A4E3B4B291B16
+  22E6 003C4C3D00000000
+  22EE 072008250C0E3606
+  22F6 0A21172215090519
+  22FE 0D2318241C0B1011
+  2306 313E283F642D2A50
+  230E 2F402E412612370F
+  2316 3442514327331330
+  231E 00444D454A000000
+
+  2326 00008A00002B3500
+  232E 0000000000000000
+  2336 041F2DE31E141D00
+  233E 8700392C00E1E500
+  2346 004F002C52000000
+  234E E20000DE000000E6
+  2356 0000000000E0E400
+  235E 00000000DF880000
+  2366 0000000000000000
+  236E 1A3A4E3B4B291B16
+  2376 003C4C3D00000000
+  237E 072008250C0E3606
+  2386 0A21172215090519
+  238E 0D2318241C0B1011
+  2396 2F3E283F89312A50
+  239E 34402E412612370F
+  23A6 3842514327331330
+  23AE 00444D454A000000
+
+  23B6 00004C00002B3500
+  23BE 0000000000000000
+  23C6 041F2DE31E141D00
+  23CE 6500392C00E1E500
+  23D6 004F002C52000000
+  23DE E20000DE000000E6
+  23E6 0000000000E0E400
+  23EE 00000000DFE30000
+  23F6 0000000000000000
+  23FE 1A3A4E3B4B291B16
+  2406 003C4C3D00000000
+  240E 072008250C0E3606
+  2416 0A21172215090519
+  241E 0D2318241C0B1011
+  2426 2F3E283F2A312A50
+  242E 34402E412612370F
+  2436 3842514327331330
+  243E 00444D454A000000
+
 END
