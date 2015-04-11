@@ -1770,9 +1770,9 @@ get_layer:                                      ;byte __register(A) get_layer() 
   0B21 6002             JZ L9503
   0B23 7402             MOV A, #2h
 L9503:                                          ;   byte __register(A) layer = fn_down ? 2 : 0;
-  0B25 30E902           JNB 0E9h, L9501
+  0B25 30EA02           JNB 0EAh, L9501
   0B28 4404             ORL A, #4h
-L9501:                                          ;   layer |= P4./DIP2 ? 4 : 0;
+L9501:                                          ;   layer |= P4./DIP1 ? 4 : 0;
   0B2A 20B501           JB P3.5, L9502
   0B2D 04               INC A
 L9502:                                          ;   layer |= not P3./NUM ? 1 : 0;
