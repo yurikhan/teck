@@ -829,13 +829,16 @@ var firmware_code = '\
 :10086B00E633333354F8785326783BF6FF120944BA\r\n\
 :10087B00783CEFF6C394594007940B5003121B01BD\r\n\
 :0F088B001213E97853067856E625E0F680BA2274\r\n\
-:10157B007823E6B41202E4F67823E6FF12169B7882\r\n\
-:10158B0024EFF618E62426F8E66F60167F64121A2D\r\n\
-:10159B00A57823E6FF12169B7856EFF67824E66FB4\r\n\
-:1015AB0070D6E4783DF67824E66007121B12783D7E\r\n\
+:01089A007EDF\r\n\
+:0B089C00EE60077FFA121AA5DEF97F5C\r\n\
+:0308A800021AA58C\r\n\
+:10157B007823E6B41202E4F67823E6FF12169BE515\r\n\
+:10158B0023FE2426F8E6FD6FFFEE24BCF82412F9A7\r\n\
+:10159B00E6675FF6E7F45FF7EFF44647F46D782400\r\n\
+:1015AB00F600E4783DF67824E66007121B12783DCE\r\n\
 :1015BB00EFF6783DE6701B7823E62426F8E67825CF\r\n\
 :1015CB00F6120C617824E6FF18E62426F8EFF612E3\r\n\
-:0915DB00084B121A9E7823062227\r\n\
+:0915DB00084B12089A782306223D\r\n\
 :10191E00784BE6FFB40205784EE66005E47822F6D1\r\n\
 :10192E0022EFB40217784DE6B44511782206E6B4DC\r\n\
 :0D193E00020A18E6F4F6E408F6121AB022C8\r\n\
@@ -1177,6 +1180,13 @@ function generate_media_keys(base, media_keys)
 	return format_bytes(bytes, base);
 }
 
+function generate_poll_interval(high, low)
+{
+	var poll_interval = parseInt(document.getElementById('cf-poll').value, 10);
+	return (format_bytes([poll_interval / 250 | 0], high) +
+			format_bytes([poll_interval % 250], low));
+}
+
 function generate_download(event)
 {
 	event.preventDefault();
@@ -1189,6 +1199,7 @@ function generate_download(event)
 						 generate_layer(2, 0x00FF, media_keys),
 						 generate_layer(5, 0x018F, media_keys),
 						 generate_media_keys(0x0D9D, media_keys),
+						 generate_poll_interval(0x089B, 0x08A7),
 						 firmware_code],
 						{type: 'application/octet-stream'});
 	var a = document.getElementById("cf-download-link");

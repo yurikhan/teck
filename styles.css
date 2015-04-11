@@ -22,7 +22,10 @@
 #cf-layer-selector { margin-bottom: 1em; text-align: left; font-size: 0.3em; }
 #cf-primary { float: left; }
 #cf-secondary { float: right; }
-#cf-model { display: block; margin-left: auto; margin-right: auto; }
+#cf-options { display: block; margin-left: auto; margin-right: auto; text-align: center; }
+#cf-options label { margin-left: 1em; }
+#cf-options label:first-child { margin-left: inherit; }
+#cf-poll { width: 5em; }
 #cft-keys { clear: both; position: relative; width: 16.5em; height: 8em; }
 #cft-keys kbd {
 	font-size: inherit;
