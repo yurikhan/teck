@@ -2,9 +2,9 @@ This repository hosts the reverse-engineered and modded firmware for the [Truly 
 
 [1]: https://www.trulyergonomic.com/
 
-**Note:** I am developing a new, Free and Open Source firmware and a cross-platform firmware upgrade tool. You can help by making a donation:
+This is for history only. No new work is being done.
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG_global.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DJCJVJD8R5EXY)
+If you have a Truly Ergonomic keyboard and want to customize the layout, I suggest that you open it up, chuck the MCU that powers it, and retrofit an MCU that is supported by the free QMK or ZMK firmwares. Be aware that the keyswitch matrix is highly irregularly organized, requiring as many as 26 GPIO pins (18 logical columns by 8 rows), and if you want LEDs, these will occupy 3 more. So a Pro Micro won’t cut it; Arduino Micro, with luck, will only barely be sufficient for the key matrix (no LEDs). Maybe get something RP2040-based, or use shift registers.
 
 ----
 
